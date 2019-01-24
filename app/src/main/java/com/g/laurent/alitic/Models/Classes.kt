@@ -5,14 +5,14 @@ import android.content.Context
 
 // -------------------------------- MEAL CLASSES ----------------------------------------------
 
-@Entity(tableName = "meal")
+@Entity(tableName = "meal", indices = [Index("id")])
 data class Meal(@PrimaryKey(autoGenerate = true) var id: Long?,
                 @ColumnInfo(name = "dateCode") var dateCode:Long,
                 @Ignore var listMealItems:List<MealItem>?){
     constructor() : this(0, 0, null)
 }
 
-@Entity(tableName = "mealItem",
+@Entity(tableName = "mealItem", indices = [Index("idMeal"), Index("idFood")],
     foreignKeys = [ForeignKey(entity = Meal::class,
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("idMeal"),
@@ -38,7 +38,8 @@ data class EventType(@PrimaryKey(autoGenerate = true) var id: Long?,
                      @ColumnInfo(name = "minTime") var minTime:Long,
                      @ColumnInfo(name = "maxTime") var maxTime:Long)
 
-@Entity(tableName = "event", foreignKeys = [ForeignKey(entity = Event::class,
+@Entity(tableName = "event", indices = [Index("idEventType")],
+    foreignKeys = [ForeignKey(entity = EventType::class,
     parentColumns = arrayOf("id"),
     childColumns = arrayOf("idEventType"),
     onDelete = ForeignKey.CASCADE)]
@@ -148,7 +149,7 @@ interface EventTypeDao {
 
 // ----------------------------------- DATABASE --------------------------------------------
 
-@Database(entities = [Meal::class, MealItem::class, Food::class, Event::class, EventType::class], version = 2)
+@Database(entities = [Meal::class, MealItem::class, Food::class, Event::class, EventType::class], version = 2, exportSchema = false)
 abstract class AppDataBase : RoomDatabase() {
 
     abstract fun mealDao(): MealDao

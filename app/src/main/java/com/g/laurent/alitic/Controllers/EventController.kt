@@ -9,6 +9,7 @@ import com.g.laurent.alitic.getEndDayDate
 import com.g.laurent.alitic.getTodayDate
 
 
+
 fun saveNewEvent(idEventType: Long?, dateCode:Long = getTodayDate(), mode:Boolean = false, context:Context):Long?{
     AppDataBase.TEST_MODE = mode
     val eventDao = AppDataBase.getInstance(context)?.eventDao()

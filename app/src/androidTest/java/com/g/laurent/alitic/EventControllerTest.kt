@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.g.laurent.alitic.Controllers.*
+import com.g.laurent.alitic.Models.AppDataBase
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -16,7 +17,7 @@ class EventControllerTest {
     fun test_save_event(){
 
         val context = InstrumentationRegistry.getTargetContext()
-
+        
         saveEventsAndEventTypes(context)
 
         val list = getEventsFromDate(getDateAsLong(14,1,2019,12,0), true, context)
@@ -40,6 +41,7 @@ class EventControllerTest {
         Assert.assertEquals(1, list?.size)
 
         list = getListEventType("Refli", true, context)
+
         Assert.assertEquals(0, list?.size)
     }
 
@@ -51,22 +53,22 @@ class EventControllerTest {
 
         saveNewEvent(idEventType = id1,
             dateCode = getDateAsLong(2,12,2018,12,0),
-            context = context)
+            mode = true, context = context)
 
         saveNewEvent(idEventType = id2,
             dateCode = getDateAsLong(12,12,2018,12,0),
-            context = context)
+            mode = true, context = context)
 
         saveNewEvent(idEventType = id3,
             dateCode = getDateAsLong(14,1,2019,11,0),
-            context = context)
+            mode = true, context = context)
 
         saveNewEvent(idEventType = id1,
             dateCode = getDateAsLong(14,1,2019,14,0),
-            context = context)
+            mode = true, context = context)
 
         saveNewEvent(idEventType = id3,
             dateCode = getDateAsLong(24,1,2019,12,0),
-            context = context)
+            mode = true, context = context)
     }
 }
