@@ -69,6 +69,9 @@ interface MealDao {
 
     @Query("DELETE from meal")
     fun deleteAll()
+
+    @Query("DELETE from meal WHERE id=:idMeal")
+    fun deleteMeal(idMeal:Long?)
 }
 
 @Dao
@@ -82,6 +85,9 @@ interface MealItemDao {
 
     @Query("DELETE from mealItem WHERE idMeal=:idMeal")
     fun deleteItemsFromMeal(idMeal:Long?)
+
+    @Query("DELETE from mealItem")
+    fun deleteAll()
 }
 
 @Dao
@@ -93,11 +99,17 @@ interface FoodDao {
     @Query("SELECT * from food WHERE id=:idFood")
     fun getFood(idFood: Long?): Food?
 
+    @Query("SELECT * from food WHERE foodType=:type")
+    fun getFoodByType(type: String): List<Food>?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(food: Food):Long
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(food: Food)
+
+    @Query("DELETE from food WHERE id=:idFood")
+    fun deleteFood(idFood:Long?)
 
     @Query("DELETE from food")
     fun deleteAll()
@@ -149,7 +161,7 @@ interface EventTypeDao {
 
 // ----------------------------------- DATABASE --------------------------------------------
 
-@Database(entities = [Meal::class, MealItem::class, Food::class, Event::class, EventType::class], version = 2, exportSchema = false)
+@Database(entities = [Meal::class, MealItem::class, Food::class, Event::class, EventType::class], version = 3, exportSchema = false)
 abstract class AppDataBase : RoomDatabase() {
 
     abstract fun mealDao(): MealDao
@@ -170,16 +182,22 @@ abstract class AppDataBase : RoomDatabase() {
                     synchronized(AppDataBase::class) {
                         INSTANCE = Room.inMemoryDatabaseBuilder(context, AppDataBase::class.java)
                             .allowMainThreadQueries()
+                            .fallbackToDestructiveMigration()
                             .build()
                     }
                 } else {
                     synchronized(AppDataBase::class) {
                         INSTANCE = Room.databaseBuilder(context, AppDataBase::class.java, "appDataBase.db")
+                            .fallbackToDestructiveMigration()
                             .build()
                     }
                 }
             }
             return INSTANCE
+        }
+
+        fun clearDatabase() {
+            INSTANCE?.clearAllTables()
         }
 
         fun destroyInstance() {

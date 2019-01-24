@@ -35,7 +35,22 @@ fun getMealFromDatabase(idMeal:Long?, context: Context):Meal?{
     return meal
 }
 
-fun deleteMeal(){
+fun deleteMeal(idMeal:Long?, context: Context){
 
+    AppDataBase.TEST_MODE = false
+    val mealDao = AppDataBase.getInstance(context)?.mealDao()
+    val mealItemDao = AppDataBase.getInstance(context)?.mealItemDao()
 
+    mealItemDao?.deleteItemsFromMeal(idMeal)
+    mealDao?.deleteMeal(idMeal)
+}
+
+fun deleteAllMeals(context: Context){
+
+    AppDataBase.TEST_MODE = false
+    val mealDao = AppDataBase.getInstance(context)?.mealDao()
+    val mealItemDao = AppDataBase.getInstance(context)?.mealItemDao()
+
+    mealItemDao?.deleteAll()
+    mealDao?.deleteAll()
 }
