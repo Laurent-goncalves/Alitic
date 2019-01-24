@@ -17,7 +17,7 @@ class EventControllerTest {
     fun test_save_event(){
 
         val context = InstrumentationRegistry.getTargetContext()
-        
+
         saveEventsAndEventTypes(context)
 
         val list = getEventsFromDate(getDateAsLong(14,1,2019,12,0), true, context)
@@ -29,6 +29,9 @@ class EventControllerTest {
     fun test_update_event_type(){
 
         val context = InstrumentationRegistry.getTargetContext()
+
+        val eventTypeDao = AppDataBase.getInstance(InstrumentationRegistry.getTargetContext())?.eventTypeDao()
+        eventTypeDao?.deleteAll()
 
         val id1 = saveNewEventType("Reflux", 0,23, true, context)
 

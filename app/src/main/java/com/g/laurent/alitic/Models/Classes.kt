@@ -109,7 +109,7 @@ interface EventDao {
     @Query("SELECT * from event")
     fun getAll(): List<Event>?
 
-    @Query("SELECT * from event WHERE dateCode>:minDate AND dateCode <:maxDate")
+    @Query("SELECT * from event WHERE dateCode>=:minDate AND dateCode <=:maxDate")
     fun getEventsDate(minDate: Long, maxDate:Long): List<Event>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

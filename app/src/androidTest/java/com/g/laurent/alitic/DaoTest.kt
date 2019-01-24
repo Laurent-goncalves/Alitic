@@ -198,8 +198,9 @@ class DaoTest {
 
         if (list != null) {
             for(e in list)
-                if(e.idEventType == getIdEventName())
+                if(e.idEventType == event.id) {
                     event = e
+                }
         }
 
         Assert.assertEquals(event.dateCode, 2222255555)
@@ -211,11 +212,13 @@ class DaoTest {
         eventDao?.update(event)
         event.dateCode = 0
 
-        list = eventDao?.getEventsDate(11111444441,11111444445)!!
+        list = eventDao?.getEventsDate(11111444441,11111444445)
 
-        for(e in list)
-            if(e.idEventType == getIdEventName())
-                event = e
+        if (list != null) {
+            for(e in list)
+                if(e.idEventType == getIdEventName())
+                    event = e
+        }
 
         Assert.assertEquals(event.dateCode, 11111444444)
 
