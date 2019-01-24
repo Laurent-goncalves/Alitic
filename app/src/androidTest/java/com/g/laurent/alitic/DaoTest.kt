@@ -2,6 +2,7 @@ package com.g.laurent.alitic
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
+import com.g.laurent.alitic.Models.*
 import org.junit.After
 import org.junit.Assert
 import org.junit.runner.RunWith
@@ -10,19 +11,19 @@ import org.junit.Test
 
 
 @RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest {
+class DaoTest {
 
-    var mealDao:MealDao?= null
-    var eventDao:EventDao?= null
-    var mealItemDao:MealItemDao?= null
-    var foodDao:FoodDao?= null
-    var eventNameDao:EventNameDao?= null
+    var mealDao: MealDao?= null
+    var eventDao: EventDao?= null
+    var mealItemDao: MealItemDao?= null
+    var foodDao: FoodDao?= null
+    var eventTypeDao: EventTypeDao?= null
 
     @Before
     fun setup() {
         AppDataBase.TEST_MODE = true
         foodDao = AppDataBase.getInstance(InstrumentationRegistry.getTargetContext())?.foodDao()
-        eventNameDao = AppDataBase.getInstance(InstrumentationRegistry.getTargetContext())?.eventNameDao()
+        eventTypeDao = AppDataBase.getInstance(InstrumentationRegistry.getTargetContext())?.eventTypeDao()
         eventDao = AppDataBase.getInstance(InstrumentationRegistry.getTargetContext())?.eventDao()
         mealItemDao = AppDataBase.getInstance(InstrumentationRegistry.getTargetContext())?.mealItemDao()
         mealDao = AppDataBase.getInstance(InstrumentationRegistry.getTargetContext())?.mealDao()
@@ -38,7 +39,7 @@ class ExampleInstrumentedTest {
     @Test
     fun testFoodDAO(){
 
-        var fruit = Food(0, "Banane")
+        var fruit = Food(0, "Banane", "Fruit")
 
         // ---------- INSERT
         foodDao?.insert(fruit)
@@ -76,7 +77,7 @@ class ExampleInstrumentedTest {
     fun testMealDAO(){
 
         var dateCode:Long = 222333444
-        var meal = Meal(0, dateCode)
+        var meal = Meal(0, dateCode, null)
 
         // ---------- INSERT
         mealDao?.insert(meal)
@@ -150,14 +151,14 @@ class ExampleInstrumentedTest {
     @Test
     fun testEventNameDAO(){
 
-        var eventName = EventName(0, "Reflux gastrique")
+        var eventName = EventType(0, "Reflux gastrique", 0,0)
 
         // ---------- INSERT
-        eventNameDao?.insert(eventName)
+        eventTypeDao?.insert(eventName)
         eventName.name = ""
 
         // ---------- GET
-        var list:List<EventName>? = eventNameDao?.getAll()
+        var list:List<EventType>? = eventTypeDao?.getAll()
 
         if(list?.get(0)?.name == "Reflux gastrique")
             eventName = list[0]
@@ -168,25 +169,25 @@ class ExampleInstrumentedTest {
 
         eventName.name = "Digestion difficile"
 
-        eventNameDao?.update(eventName)
+        eventTypeDao?.update(eventName)
         eventName.name = ""
 
-        eventName = eventNameDao?.getEventName(eventName.id)!!
+        eventName = eventTypeDao?.getEventType(eventName.id)!!
 
         Assert.assertEquals(eventName.name, "Digestion difficile")
 
         // ---------- DELETE
 
-        eventNameDao?.deleteEventName(eventName.id)
+        eventTypeDao?.deleteEventType(eventName.id)
 
-        list = eventNameDao?.getAll()
+        list = eventTypeDao?.getAll()
         Assert.assertEquals(list?.size, 0)
     }
 
     @Test
     fun testEventDAO(){
 
-        var event = Event(0, getIdEventName(),2222255555)
+        var event = Event(0, getIdEventName(), 2222255555)
 
         // ---------- INSERT
         eventDao?.insert(event)
@@ -197,7 +198,7 @@ class ExampleInstrumentedTest {
 
         if (list != null) {
             for(e in list)
-                if(e.idEventName == getIdEventName())
+                if(e.idEventType == getIdEventName())
                     event = e
         }
 
@@ -213,7 +214,7 @@ class ExampleInstrumentedTest {
         list = eventDao?.getEventsDate(11111444441,11111444445)!!
 
         for(e in list)
-            if(e.idEventName == getIdEventName())
+            if(e.idEventType == getIdEventName())
                 event = e
 
         Assert.assertEquals(event.dateCode, 11111444444)
@@ -231,9 +232,9 @@ class ExampleInstrumentedTest {
 
     fun getIdEventName(): Long? {
 
-        val eventName = EventName(0, "Reflux gastrique")
-        eventNameDao?.insert(eventName)
-        val list:List<EventName>? = eventNameDao?.getAll()
+        val eventName = EventType(0, "Reflux gastrique",0,0)
+        eventTypeDao?.insert(eventName)
+        val list:List<EventType>? = eventTypeDao?.getAll()
 
         if (list != null) {
             for(e in list){
@@ -247,7 +248,7 @@ class ExampleInstrumentedTest {
     fun getIdMeal(): Long? {
 
         val idMeal:Long = 222333555
-        val meal = Meal(0, idMeal)
+        val meal = Meal(0, idMeal, null)
 
         mealDao?.insert(meal)
         val list:List<Meal>? = mealDao?.getAll()
@@ -263,7 +264,7 @@ class ExampleInstrumentedTest {
 
     fun getIdFood(): Long? {
 
-        val food = Food(0, "Banane")
+        val food = Food(0, "Banane", "Fruit")
         foodDao?.insert(food)
         val list:List<Food>? = foodDao?.getAll()
 
