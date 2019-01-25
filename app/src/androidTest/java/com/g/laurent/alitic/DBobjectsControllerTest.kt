@@ -222,6 +222,7 @@ class DBobjectsControllerTest {
         list4.add(MealItem(null,0,idFood1))
         list4.add(MealItem(null,0,idFood3))
         list4.add(MealItem(null,0,idFood6))
+        list4.add(MealItem(null,0,idFood6))
 
         saveNewMeal(list1,time1, context)
         saveNewMeal(list2,time2, context)
