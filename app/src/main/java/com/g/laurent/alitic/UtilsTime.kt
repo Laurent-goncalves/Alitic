@@ -26,3 +26,11 @@ fun getBegDayDate(dateCode:Long):Long{
 fun getEndDayDate(dateCode:Long):Long{
     return getBegDayDate(dateCode) + 24*60*60*999
 }
+
+fun transformHourInLong(hour:Double):Long{
+    return 60 * 60 * (1000 * hour).toLong()
+}
+
+fun transformLongInHour(hour:Long):Double{
+    return (hour / 100000).toDouble() / 36
+}

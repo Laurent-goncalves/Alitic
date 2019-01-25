@@ -27,11 +27,12 @@ class DaoTest {
         eventDao = AppDataBase.getInstance(InstrumentationRegistry.getTargetContext())?.eventDao()
         mealItemDao = AppDataBase.getInstance(InstrumentationRegistry.getTargetContext())?.mealItemDao()
         mealDao = AppDataBase.getInstance(InstrumentationRegistry.getTargetContext())?.mealDao()
+        AppDataBase.clearDatabase()
     }
 
     @After
     fun tearDown() {
-
+        AppDataBase.clearDatabase()
     }
 
     // ---------------------------------------- TESTS MEALS

@@ -38,6 +38,12 @@ fun getEventsFromDate(dateCode:Long, mode:Boolean = false, context:Context):List
     return eventDao?.getEventsDate(minTime, maxTime)
 }
 
+fun getAllEvents(mode:Boolean = false, context:Context):List<Event>? {
+    AppDataBase.TEST_MODE = mode
+    val eventDao = AppDataBase.getInstance(context)?.eventDao()
+    return eventDao?.getAll()
+}
+
 fun getListEventType(search:String, mode:Boolean = false, context:Context):List<EventType>?{
 
     AppDataBase.TEST_MODE = mode
@@ -53,4 +59,10 @@ fun getListEventType(search:String, mode:Boolean = false, context:Context):List<
         result
     } else
         null
+}
+
+fun getEventType(idEventType:Long?, mode:Boolean = false, context:Context): EventType?{
+    AppDataBase.TEST_MODE = mode
+    val eventTypeDao = AppDataBase.getInstance(context)?.eventTypeDao()
+    return eventTypeDao?.getEventType(idEventType)
 }

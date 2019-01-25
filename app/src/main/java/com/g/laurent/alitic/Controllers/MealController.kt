@@ -35,6 +35,39 @@ fun getMealFromDatabase(idMeal:Long?, context: Context):Meal?{
     return meal
 }
 
+fun getFoodsFromMeal(meal:Meal, context: Context):List<Food>{
+
+    val listItems = meal.listMealItems
+    val listFood : MutableList<Food> = mutableListOf()
+    val foodDao = AppDataBase.getInstance(context)?.foodDao()
+
+    if(listItems!=null){
+        for(item in listItems){
+            val food = foodDao?.getFood(item.idFood)
+            if(food!=null)
+                listFood.add(food)
+        }
+    }
+
+    return listFood.toList()
+}
+
+fun getAllMeals(context: Context):List<Meal>?{
+    AppDataBase.TEST_MODE = false
+    val mealDao = AppDataBase.getInstance(context)?.mealDao()
+    val mealItemDao = AppDataBase.getInstance(context)?.mealItemDao()
+
+    var meals = mealDao?.getAll()
+
+    if (meals != null) {
+        for(meal in meals){
+            meal.listMealItems = mealItemDao?.getItemsFromMeal(meal.id)
+        }
+    }
+
+    return meals
+}
+
 fun deleteMeal(idMeal:Long?, context: Context){
 
     AppDataBase.TEST_MODE = false
