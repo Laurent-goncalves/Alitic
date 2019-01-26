@@ -44,6 +44,12 @@ fun getAllEvents(mode:Boolean = false, context:Context):List<Event>? {
     return eventDao?.getAll()
 }
 
+fun getListEventForOneEventType(idEventType:Long?, mode:Boolean = false, context:Context):List<Event>?{
+    AppDataBase.TEST_MODE = mode
+    val eventDao = AppDataBase.getInstance(context)?.eventDao()
+    return eventDao?.getEventsByType(idEventType)
+}
+
 fun getListEventType(search:String, mode:Boolean = false, context:Context):List<EventType>?{
 
     AppDataBase.TEST_MODE = mode

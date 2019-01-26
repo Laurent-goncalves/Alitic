@@ -124,6 +124,9 @@ interface EventDao {
     @Query("SELECT * from event WHERE dateCode>=:minDate AND dateCode <=:maxDate")
     fun getEventsDate(minDate: Long, maxDate:Long): List<Event>?
 
+    @Query("SELECT * from event WHERE idEventType =:idType")
+    fun getEventsByType(idType: Long?): List<Event>?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(event: Event):Long
 
