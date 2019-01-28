@@ -4,10 +4,10 @@ import android.content.Context
 import com.g.laurent.alitic.Models.AppDataBase
 import com.g.laurent.alitic.Models.Food
 
-fun saveNewFood(name:String, type:String, mode:Boolean = false, context: Context):Long?{
+fun saveNewFood(name:String, type:String, foodPic:String?, mode:Boolean = false, context: Context):Long?{
     AppDataBase.TEST_MODE = mode
     val foodDao = AppDataBase.getInstance(context)?.foodDao()
-    return foodDao?.insert(Food(null, name, type))
+    return foodDao?.insert(Food(null, name, type, foodPic))
 }
 
 fun getAllFood(mode:Boolean = false, context:Context):List<Food>?{

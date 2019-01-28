@@ -16,16 +16,16 @@ fun saveNewEvent(idEventType: Long?, dateCode:Long = getTodayDate(), mode:Boolea
     return eventDao?.insert(Event(null, idEventType, dateCode))
 }
 
-fun saveNewEventType(name:String, minTime:Long, maxTime:Long, mode:Boolean = false, context:Context):Long?{
+fun saveNewEventType(name:String, minTime:Long, eventPic:String?, maxTime:Long, mode:Boolean = false, context:Context):Long?{
     AppDataBase.TEST_MODE = mode
     val eventTypeDao = AppDataBase.getInstance(context)?.eventTypeDao()
-    return eventTypeDao?.insert(EventType(null, name, minTime, maxTime))
+    return eventTypeDao?.insert(EventType(null, name, eventPic, minTime, maxTime))
 }
 
-fun updateEventType(idEventType:Long?, name:String, minTime:Long, maxTime:Long, mode:Boolean = false, context:Context){
+fun updateEventType(idEventType:Long?, name:String, eventPic:String?, minTime:Long, maxTime:Long, mode:Boolean = false, context:Context){
     AppDataBase.TEST_MODE = mode
     val eventTypeDao = AppDataBase.getInstance(context)?.eventTypeDao()
-    eventTypeDao?.update(EventType(idEventType, name, minTime, maxTime))
+    eventTypeDao?.update(EventType(idEventType, name, eventPic, minTime, maxTime))
 }
 
 fun getEventsFromDate(dateCode:Long, mode:Boolean = false, context:Context):List<Event>? {

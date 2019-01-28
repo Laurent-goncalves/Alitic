@@ -2,6 +2,7 @@ package com.g.laurent.alitic.Models
 
 import android.arch.persistence.room.*
 import android.content.Context
+import java.net.URI
 
 // -------------------------------- MEAL CLASSES ----------------------------------------------
 
@@ -28,13 +29,15 @@ data class MealItem(
 @Entity(tableName = "food")
 data class Food(@PrimaryKey(autoGenerate = true) var id: Long?,
                 @ColumnInfo(name = "name") var name:String,
-                @ColumnInfo(name = "foodType") var foodType:String)
+                @ColumnInfo(name = "foodType") var foodType:String,
+                @ColumnInfo(name = "foodPic") var foodPic: String?)
 
 // ------------------------------ EVENTS CLASSES -------------------------------------------
 
 @Entity(tableName = "eventType")
 data class EventType(@PrimaryKey(autoGenerate = true) var id: Long?,
                      @ColumnInfo(name = "name") var name:String,
+                     @ColumnInfo(name = "eventPic") var eventPic:String?,
                      @ColumnInfo(name = "minTime") var minTime:Long,
                      @ColumnInfo(name = "maxTime") var maxTime:Long)
 
@@ -164,7 +167,7 @@ interface EventTypeDao {
 
 // ----------------------------------- DATABASE --------------------------------------------
 
-@Database(entities = [Meal::class, MealItem::class, Food::class, Event::class, EventType::class], version = 3, exportSchema = false)
+@Database(entities = [Meal::class, MealItem::class, Food::class, Event::class, EventType::class], version = 5, exportSchema = false)
 abstract class AppDataBase : RoomDatabase() {
 
     abstract fun mealDao(): MealDao
@@ -191,6 +194,7 @@ abstract class AppDataBase : RoomDatabase() {
                 } else {
                     synchronized(AppDataBase::class) {
                         INSTANCE = Room.databaseBuilder(context, AppDataBase::class.java, "appDataBase.db")
+                            .allowMainThreadQueries()
                             .fallbackToDestructiveMigration()
                             .build()
                     }
