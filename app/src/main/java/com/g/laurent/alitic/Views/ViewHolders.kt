@@ -11,7 +11,7 @@ import com.g.laurent.alitic.Controllers.ChronoItem
 import com.g.laurent.alitic.R
 import com.github.vipulasri.timelineview.TimelineView
 
-class TimeLineViewHolder(itemView: View, viewType: Int, val context: Context) : RecyclerView.ViewHolder(itemView) {
+class TimeLineViewHolder(itemView: View, viewType: Int, val mode:Boolean = false, val context: Context) : RecyclerView.ViewHolder(itemView) {
 
     var mTimelineView: TimelineView = itemView.findViewById(R.id.timeline)
     var buttonEdit:ImageButton
@@ -28,7 +28,7 @@ class TimeLineViewHolder(itemView: View, viewType: Int, val context: Context) : 
 
     fun configureTimeLineViewHolder(chronoItem: ChronoItem) {
         hourView.text = chronoItem.hour
-        val adapter = GridAdapter(chronoItem.item, context)
+        val adapter = GridAdapter(chronoItem.item, mode, context)
         grid.adapter = adapter
     }
 }

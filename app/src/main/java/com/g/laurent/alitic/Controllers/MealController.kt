@@ -3,9 +3,9 @@ package com.g.laurent.alitic.Controllers
 import android.content.Context
 import com.g.laurent.alitic.Models.*
 
-fun saveNewMeal(mealItems:List<MealItem>, dateCode:Long, context: Context):Long?{
+fun saveNewMeal(mealItems:List<MealItem>, dateCode:Long, mode:Boolean = false, context: Context):Long?{
 
-    AppDataBase.TEST_MODE = false
+    AppDataBase.TEST_MODE = mode
     val mealItemDao = AppDataBase.getInstance(context)?.mealItemDao()
     val mealDao = AppDataBase.getInstance(context)?.mealDao()
 
@@ -21,9 +21,9 @@ fun saveNewMeal(mealItems:List<MealItem>, dateCode:Long, context: Context):Long?
     return idMeal
 }
 
-fun getMealFromDatabase(idMeal:Long?, context: Context):Meal?{
+fun getMealFromDatabase(idMeal:Long?, mode:Boolean = false, context: Context):Meal?{
 
-    AppDataBase.TEST_MODE = false
+    AppDataBase.TEST_MODE = mode
     val mealDao = AppDataBase.getInstance(context)?.mealDao()
     val mealItemDao = AppDataBase.getInstance(context)?.mealItemDao()
 
@@ -35,8 +35,9 @@ fun getMealFromDatabase(idMeal:Long?, context: Context):Meal?{
     return meal
 }
 
-fun getFoodsFromMeal(meal:Meal, context: Context):List<Food>{
+fun getFoodsFromMeal(meal:Meal, mode:Boolean = false, context: Context):List<Food>{
 
+    AppDataBase.TEST_MODE = mode
     val listItems = meal.listMealItems
     val listFood : MutableList<Food> = mutableListOf()
     val foodDao = AppDataBase.getInstance(context)?.foodDao()
@@ -52,12 +53,13 @@ fun getFoodsFromMeal(meal:Meal, context: Context):List<Food>{
     return listFood.toList()
 }
 
-fun getAllMeals(context: Context):List<Meal>?{
-    AppDataBase.TEST_MODE = false
+fun getAllMeals(mode:Boolean = false, context: Context):List<Meal>?{
+
+    AppDataBase.TEST_MODE = mode
     val mealDao = AppDataBase.getInstance(context)?.mealDao()
     val mealItemDao = AppDataBase.getInstance(context)?.mealItemDao()
 
-    var meals = mealDao?.getAll()
+    val meals = mealDao?.getAll()
 
     if (meals != null) {
         for(meal in meals){
@@ -68,9 +70,15 @@ fun getAllMeals(context: Context):List<Meal>?{
     return meals
 }
 
-fun deleteMeal(idMeal:Long?, context: Context){
+fun getAllMealItems(mode:Boolean = false, context: Context):List<MealItem>?{
+    AppDataBase.TEST_MODE = mode
+    val mealItemDao = AppDataBase.getInstance(context)?.mealItemDao()
+    return mealItemDao?.getAll()
+}
 
-    AppDataBase.TEST_MODE = false
+fun deleteMeal(idMeal:Long?, mode:Boolean = false, context: Context){
+
+    AppDataBase.TEST_MODE = mode
     val mealDao = AppDataBase.getInstance(context)?.mealDao()
     val mealItemDao = AppDataBase.getInstance(context)?.mealItemDao()
 
@@ -78,9 +86,9 @@ fun deleteMeal(idMeal:Long?, context: Context){
     mealDao?.deleteMeal(idMeal)
 }
 
-fun deleteAllMeals(context: Context){
+fun deleteAllMeals(mode:Boolean = false, context: Context){
 
-    AppDataBase.TEST_MODE = false
+    AppDataBase.TEST_MODE = mode
     val mealDao = AppDataBase.getInstance(context)?.mealDao()
     val mealItemDao = AppDataBase.getInstance(context)?.mealItemDao()
 

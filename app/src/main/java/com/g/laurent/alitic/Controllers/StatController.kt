@@ -7,9 +7,9 @@ import com.g.laurent.alitic.Models.Meal
 
 class EventTable(val minTime:Long, val maxTime:Long)
 
-class StatList(val food:String, val type:String, val count:Int)
+class StatList(val food:String, val type:Long?, val count:Int)
 
-fun getListFoodForEventType(eventType: EventType, context:Context):List<StatList>{
+fun getListFoodForEventType(eventType: EventType, mode:Boolean = false, context:Context):List<StatList>{
 
     fun getEventTable(context:Context):List<EventTable> {
 
@@ -42,7 +42,7 @@ fun getListFoodForEventType(eventType: EventType, context:Context):List<StatList
             for(meal in listMeals){
                 if(shouldMealBeTakenIntoAccount(meal, eventTable)){
 
-                    val listFood = getFoodsFromMeal(meal, context)
+                    val listFood = getFoodsFromMeal(meal, mode, context)
 
                     for(food in listFood){
                         if(list[food] != null){
@@ -58,7 +58,8 @@ fun getListFoodForEventType(eventType: EventType, context:Context):List<StatList
         return list
     }
 
-    val listMeals = getAllMeals(context)
+    // Get the list of all meals
+    val listMeals = getAllMeals(mode, context)
 
     // Get the list of all events corresponding to eventType and their limits of time (min and max) to take into account meals
     val eventTable = getEventTable(context)
@@ -78,7 +79,7 @@ fun getListInDescendingOrder(list:HashMap<Food, Int>):List<StatList>{
     if(list.size != 0){
         for (i in 0 until list.size) {
             val max = listToCheck.maxBy { it.value }
-            result.add(StatList(max!!.key.name, max.key.foodType, max.value))
+            result.add(StatList(max!!.key.name, max.key.idFoodType, max.value))
             listToCheck.remove(max.key)
         }
     }

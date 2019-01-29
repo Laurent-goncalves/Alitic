@@ -1,8 +1,11 @@
 package com.g.laurent.alitic.Models
 
+import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.*
 import android.content.Context
-import java.net.URI
+import android.arch.persistence.room.OnConflictStrategy
+import java.util.concurrent.Executors
+
 
 // -------------------------------- MEAL CLASSES ----------------------------------------------
 
@@ -13,6 +16,8 @@ data class Meal(@PrimaryKey(autoGenerate = true) var id: Long?,
     constructor() : this(0, 0, null)
 }
 
+
+
 @Entity(tableName = "mealItem", indices = [Index("idMeal"), Index("idFood")],
     foreignKeys = [ForeignKey(entity = Meal::class,
         parentColumns = arrayOf("id"),
@@ -20,17 +25,39 @@ data class Meal(@PrimaryKey(autoGenerate = true) var id: Long?,
         onDelete = ForeignKey.CASCADE), ForeignKey(entity = Food::class,
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("idFood"),
-        onDelete = ForeignKey.CASCADE)])
+        onDelete = ForeignKey.NO_ACTION)])
 data class MealItem(
     @PrimaryKey(autoGenerate = true) var id: Long?,
     @ColumnInfo(name = "idMeal") var idMeal: Long?,
     @ColumnInfo(name = "idFood") var idFood:Long?)
 
-@Entity(tableName = "food")
+
+
+@Entity(tableName = "food", indices = [Index("idFoodType")], foreignKeys = [ForeignKey(entity = FoodType::class,
+    parentColumns = arrayOf("id"),
+    childColumns = arrayOf("idFoodType"),
+    onDelete = ForeignKey.NO_ACTION)])
 data class Food(@PrimaryKey(autoGenerate = true) var id: Long?,
                 @ColumnInfo(name = "name") var name:String,
-                @ColumnInfo(name = "foodType") var foodType:String,
+                @ColumnInfo(name = "idFoodType") var idFoodType:Long?,
+                @ColumnInfo(name = "counter") var counter:Int,
                 @ColumnInfo(name = "foodPic") var foodPic: String?)
+
+
+
+@Entity(tableName = "foodtype")
+data class FoodType(@PrimaryKey(autoGenerate = true) var id: Long?,
+                @ColumnInfo(name = "name") var name:String,
+                @ColumnInfo(name = "foodTypePic") var foodTypePic: String?)
+
+
+@Entity(tableName = "keyword", indices = [Index("idfood")], foreignKeys = [ForeignKey(entity = Food::class,
+    parentColumns = arrayOf("id"),
+    childColumns = arrayOf("idfood"),
+    onDelete = ForeignKey.NO_ACTION)])
+data class Keyword(@PrimaryKey(autoGenerate = true) var id: Long?,
+                @ColumnInfo(name = "name") var name:String,
+                @ColumnInfo(name = "idfood") var idFood:Long?)
 
 // ------------------------------ EVENTS CLASSES -------------------------------------------
 
@@ -41,12 +68,12 @@ data class EventType(@PrimaryKey(autoGenerate = true) var id: Long?,
                      @ColumnInfo(name = "minTime") var minTime:Long,
                      @ColumnInfo(name = "maxTime") var maxTime:Long)
 
+
 @Entity(tableName = "event", indices = [Index("idEventType")],
     foreignKeys = [ForeignKey(entity = EventType::class,
     parentColumns = arrayOf("id"),
     childColumns = arrayOf("idEventType"),
-    onDelete = ForeignKey.CASCADE)]
-)
+    onDelete = ForeignKey.NO_ACTION)])
 data class Event(
     @PrimaryKey(autoGenerate = true) var id: Long?,
     @ColumnInfo(name = "idEventType") var idEventType: Long?,
@@ -80,6 +107,9 @@ interface MealDao {
 @Dao
 interface MealItemDao {
 
+    @Query("SELECT * from mealItem")
+    fun getAll(): List<MealItem>?
+
     @Query("SELECT * from mealItem WHERE idMeal=:idMeal")
     fun getItemsFromMeal(idMeal:Long?): List<MealItem>?
 
@@ -102,8 +132,11 @@ interface FoodDao {
     @Query("SELECT * from food WHERE id=:idFood")
     fun getFood(idFood: Long?): Food?
 
-    @Query("SELECT * from food WHERE foodType=:type")
-    fun getFoodByType(type: String): List<Food>?
+    @Query("SELECT * from food WHERE LOWER(name) LIKE :search")
+    fun getListFoodSearch(search: String?): List<Food>
+
+    @Query("SELECT * from food WHERE idFoodType=:idFoodtype")
+    fun getFoodByType(idFoodtype: Long?): List<Food>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(food: Food):Long
@@ -115,6 +148,56 @@ interface FoodDao {
     fun deleteFood(idFood:Long?)
 
     @Query("DELETE from food")
+    fun deleteAll()
+}
+
+@Dao
+interface FoodTypeDao {
+
+    @Query("SELECT * from foodtype")
+    fun getAll(): List<FoodType>?
+
+    @Query("SELECT * from foodtype WHERE id=:idFoodType")
+    fun getFoodType(idFoodType: Long?): FoodType?
+
+    @Query("SELECT * from foodtype WHERE name=:nameFoodType")
+    fun getFoodType(nameFoodType: String?): FoodType?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(foodtype: FoodType):Long
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun update(foodtype: FoodType)
+
+    @Query("DELETE from foodtype WHERE id=:idFoodType")
+    fun deleteFoodType(idFoodType:Long?)
+
+    @Query("DELETE from foodtype")
+    fun deleteAll()
+}
+
+@Dao
+interface KeywordDao {
+
+    @Query("SELECT * from keyword")
+    fun getAll(): List<Keyword>?
+
+    @Query("SELECT * from keyword WHERE LOWER(name) LIKE :search")
+    fun getKeywords(search: String): List<Keyword>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(key: Keyword):Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(list: List<Keyword>)
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun update(key: Keyword)
+
+    @Query("DELETE from keyword WHERE id=:idKey")
+    fun deleteKeyword(idKey:Long?)
+
+    @Query("DELETE from keyword")
     fun deleteAll()
 }
 
@@ -167,12 +250,14 @@ interface EventTypeDao {
 
 // ----------------------------------- DATABASE --------------------------------------------
 
-@Database(entities = [Meal::class, MealItem::class, Food::class, Event::class, EventType::class], version = 5, exportSchema = false)
+@Database(entities = [Meal::class, MealItem::class, Food::class, FoodType::class, Keyword::class, Event::class, EventType::class], version = 6, exportSchema = false)
 abstract class AppDataBase : RoomDatabase() {
 
     abstract fun mealDao(): MealDao
     abstract fun mealItemDao(): MealItemDao
     abstract fun foodDao(): FoodDao
+    abstract fun foodTypeDao(): FoodTypeDao
+    abstract fun keywordDao(): KeywordDao
     abstract fun eventDao(): EventDao
     abstract fun eventTypeDao(): EventTypeDao
 
@@ -196,6 +281,15 @@ abstract class AppDataBase : RoomDatabase() {
                         INSTANCE = Room.databaseBuilder(context, AppDataBase::class.java, "appDataBase.db")
                             .allowMainThreadQueries()
                             .fallbackToDestructiveMigration()
+                            .addCallback(object : Callback() {
+                                override fun onCreate(db: SupportSQLiteDatabase) {
+                                    super.onCreate(db)
+                                    // insert the data on the IO Thread
+                                    ioThread {
+                                        insertData(INSTANCE?.foodTypeDao(), INSTANCE?.foodDao(), INSTANCE?.keywordDao())
+                                    }
+                                }
+                            })
                             .build()
                     }
                 }
@@ -209,6 +303,12 @@ abstract class AppDataBase : RoomDatabase() {
 
         fun destroyInstance() {
             INSTANCE = null
+        }
+
+        private val IO_EXECUTOR = Executors.newSingleThreadExecutor()
+
+        fun ioThread(f : () -> Unit) {
+            IO_EXECUTOR.execute(f)
         }
     }
 }

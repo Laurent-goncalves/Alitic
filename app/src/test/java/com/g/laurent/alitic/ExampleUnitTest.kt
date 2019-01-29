@@ -1,19 +1,13 @@
 package com.g.laurent.alitic
 
-import android.content.Context
 import com.g.laurent.alitic.Controllers.getListInDescendingOrder
 import com.g.laurent.alitic.Controllers.organizeEventsByTime
-import com.g.laurent.alitic.Controllers.saveNewEvent
-import com.g.laurent.alitic.Controllers.saveNewEventType
 import com.g.laurent.alitic.Models.Event
 import com.g.laurent.alitic.Models.Food
-import com.g.laurent.alitic.Models.MealItem
 import hirondelle.date4j.DateTime
 import org.junit.Assert
 import org.junit.Test
-
 import org.junit.Assert.*
-import java.sql.Date
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -21,18 +15,6 @@ import java.sql.Date
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
-
-    @Test
-    fun time_today() {
-
-        println(getDateAsLong(2,12,2018,1,0))
-        println(getDateAsLong(2,12,2018,10,0))
-        println(getDateAsLong(12,12,2018,11,0))
-        println(getDateAsLong(14,1,2019,8,0))
-
-
-        assertEquals(4, 2 + 2)
-    }
 
     @Test
     fun test_organize_events_by_date(){
@@ -72,22 +54,22 @@ class ExampleUnitTest {
     @Test
     fun test_descending_order() {
 
-        var list:HashMap<Food, Int> = hashMapOf()
-        list[Food(0, "Banane", "Fruit")] = 2
-        list[Food(0, "Abricot", "Fruit")] = 1
-        list[Food(0, "Pomme", "Fruit")] = 4
-        list[Food(0, "Avocat", "Fruit")] = 0
-        list[Food(0, "Cerise", "Fruit")] = 0
-        list[Food(0, "Poire", "Fruit")] = 1
+        val list:HashMap<Food, Int> = hashMapOf()
+        list[Food(0, "Banane", 0,0,null)] = 4
+        list[Food(0, "Abricot", 0,0,null)] = 2
+        list[Food(0, "Pomme", 0,0,null)] = 5
+        list[Food(0, "Avocat", 0,0,null)] = 1
+        list[Food(0, "Cerise", 0,0,null)] = 0
+        list[Food(0, "Poire", 0,0,null)] = 3
 
         val result = getListInDescendingOrder(list)
 
-        Assert.assertEquals("Pomme", result.get(0).food)
-        Assert.assertEquals("Banane", result.get(1).food)
-        Assert.assertEquals("Poire", result.get(2).food)
-        Assert.assertEquals("Abricot", result.get(3).food)
-        Assert.assertEquals("Avocat", result.get(4).food)
-        Assert.assertEquals("Cerise", result.get(5).food)
+        Assert.assertEquals("Pomme", result[0].food)
+        Assert.assertEquals("Banane", result[1].food)
+        Assert.assertEquals("Poire", result[2].food)
+        Assert.assertEquals("Abricot", result[3].food)
+        Assert.assertEquals("Avocat", result[4].food)
+        Assert.assertEquals("Cerise", result[5].food)
     }
 
     fun getListEventsForTest():List<Event>?{

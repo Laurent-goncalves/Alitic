@@ -8,7 +8,9 @@ import com.g.laurent.alitic.getBegDayDate
 import com.g.laurent.alitic.getEndDayDate
 import com.g.laurent.alitic.getTodayDate
 
-
+// ---------------------------------------------------------------------------------------------------------------
+// ------------------------------------------- EVENT -------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------
 
 fun saveNewEvent(idEventType: Long?, dateCode:Long = getTodayDate(), mode:Boolean = false, context:Context):Long?{
     AppDataBase.TEST_MODE = mode
@@ -16,16 +18,10 @@ fun saveNewEvent(idEventType: Long?, dateCode:Long = getTodayDate(), mode:Boolea
     return eventDao?.insert(Event(null, idEventType, dateCode))
 }
 
-fun saveNewEventType(name:String, minTime:Long, eventPic:String?, maxTime:Long, mode:Boolean = false, context:Context):Long?{
+fun getListEventForOneEventType(idEventType:Long?, mode:Boolean = false, context:Context):List<Event>?{
     AppDataBase.TEST_MODE = mode
-    val eventTypeDao = AppDataBase.getInstance(context)?.eventTypeDao()
-    return eventTypeDao?.insert(EventType(null, name, eventPic, minTime, maxTime))
-}
-
-fun updateEventType(idEventType:Long?, name:String, eventPic:String?, minTime:Long, maxTime:Long, mode:Boolean = false, context:Context){
-    AppDataBase.TEST_MODE = mode
-    val eventTypeDao = AppDataBase.getInstance(context)?.eventTypeDao()
-    eventTypeDao?.update(EventType(idEventType, name, eventPic, minTime, maxTime))
+    val eventDao = AppDataBase.getInstance(context)?.eventDao()
+    return eventDao?.getEventsByType(idEventType)
 }
 
 fun getEventsFromDate(dateCode:Long, mode:Boolean = false, context:Context):List<Event>? {
@@ -44,13 +40,70 @@ fun getAllEvents(mode:Boolean = false, context:Context):List<Event>? {
     return eventDao?.getAll()
 }
 
-fun getListEventForOneEventType(idEventType:Long?, mode:Boolean = false, context:Context):List<Event>?{
+fun updateEvent(event:Event, mode:Boolean = false, context:Context){
     AppDataBase.TEST_MODE = mode
     val eventDao = AppDataBase.getInstance(context)?.eventDao()
-    return eventDao?.getEventsByType(idEventType)
+    eventDao?.update(event)
 }
 
-fun getListEventType(search:String, mode:Boolean = false, context:Context):List<EventType>?{
+fun deleteEvent(idEvent:Long?, mode:Boolean = false, context:Context){
+    AppDataBase.TEST_MODE = mode
+    val eventDao = AppDataBase.getInstance(context)?.eventDao()
+    eventDao?.deleteEvent(idEvent)
+}
+
+fun deleteAllEvents(mode:Boolean = false, context:Context){
+    AppDataBase.TEST_MODE = mode
+    val eventDao = AppDataBase.getInstance(context)?.eventDao()
+    eventDao?.deleteAll()
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// ----------------------------------------- EVENTTYPE -----------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------
+
+fun saveNewEventType(name:String, eventPic:String?, minTime:Long, maxTime:Long, mode:Boolean = false, context:Context):Long?{
+    AppDataBase.TEST_MODE = mode
+    val eventTypeDao = AppDataBase.getInstance(context)?.eventTypeDao()
+    return eventTypeDao?.insert(EventType(null, name, eventPic, minTime, maxTime))
+}
+
+fun getEventType(idEventType:Long?, mode:Boolean = false, context:Context): EventType?{
+    AppDataBase.TEST_MODE = mode
+    val eventTypeDao = AppDataBase.getInstance(context)?.eventTypeDao()
+    return eventTypeDao?.getEventType(idEventType)
+}
+
+fun getAllEventTypes(mode:Boolean = false, context:Context): List<EventType>?{
+    AppDataBase.TEST_MODE = mode
+    val eventTypeDao = AppDataBase.getInstance(context)?.eventTypeDao()
+    return eventTypeDao?.getAll()
+}
+
+fun updateEventType(eventType:EventType?, mode:Boolean = false, context:Context){
+    AppDataBase.TEST_MODE = mode
+    val eventTypeDao = AppDataBase.getInstance(context)?.eventTypeDao()
+    if (eventType != null) {
+        eventTypeDao?.update(eventType)
+    }
+}
+
+fun deleteEventType(idEventType:Long?, mode:Boolean = false, context:Context){
+    AppDataBase.TEST_MODE = mode
+    val eventTypeDao = AppDataBase.getInstance(context)?.eventTypeDao()
+    eventTypeDao?.deleteEventType(idEventType)
+}
+
+fun deleteAllEventTypes(mode:Boolean = false, context:Context){
+    AppDataBase.TEST_MODE = mode
+    val eventTypeDao = AppDataBase.getInstance(context)?.eventTypeDao()
+    eventTypeDao?.deleteAll()
+}
+
+
+
+
+/*fun getListEventType(search:String, mode:Boolean = false, context:Context):List<EventType>?{
 
     AppDataBase.TEST_MODE = mode
     val eventTypeDao = AppDataBase.getInstance(context)?.eventTypeDao()
@@ -65,10 +118,4 @@ fun getListEventType(search:String, mode:Boolean = false, context:Context):List<
         result
     } else
         null
-}
-
-fun getEventType(idEventType:Long?, mode:Boolean = false, context:Context): EventType?{
-    AppDataBase.TEST_MODE = mode
-    val eventTypeDao = AppDataBase.getInstance(context)?.eventTypeDao()
-    return eventTypeDao?.getEventType(idEventType)
-}
+}*/

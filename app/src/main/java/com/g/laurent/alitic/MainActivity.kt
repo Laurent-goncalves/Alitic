@@ -31,12 +31,12 @@ class MainActivity : AppCompatActivity() {
 
         mLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recycler_view.layoutManager = mLayoutManager
-        mAdapter = TimeLineAdapter(getList(), context)
+        mAdapter = TimeLineAdapter(getList(), context = context)
         recycler_view.adapter = mAdapter
     }
 
     fun getList():List<ChronoItem>{
-
+/*
         AppDataBase.clearDatabase()
 
         val idFood1 = saveNewFood("Banane", "Fruit","https://www.auchandirect.fr/backend/media/products_images/0N_57390.jpg", false, context)
@@ -88,7 +88,8 @@ class MainActivity : AppCompatActivity() {
         list.add(ChronoItem("14:00", Meal(idM2,0,list2)))
         list.add(ChronoItem("15:00", Meal(idM3,0,list3)))
         list.add(ChronoItem("16:00", Meal(idM4,0,list4)))
-
+*/
+        val list:MutableList<ChronoItem> = mutableListOf()
         return list.toList()
     }
 }
