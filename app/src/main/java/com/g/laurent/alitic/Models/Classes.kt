@@ -38,10 +38,13 @@ data class MealItem(
     childColumns = arrayOf("idFoodType"),
     onDelete = ForeignKey.NO_ACTION)])
 data class Food(@PrimaryKey(autoGenerate = true) var id: Long?,
-                @ColumnInfo(name = "name") var name:String,
+                @ColumnInfo(name = "name") var name:String?,
                 @ColumnInfo(name = "idFoodType") var idFoodType:Long?,
                 @ColumnInfo(name = "counter") var counter:Int,
-                @ColumnInfo(name = "foodPic") var foodPic: String?)
+                @ColumnInfo(name = "foodPic") var foodPic: String?,
+                @Ignore var chosen:Boolean = false){
+    constructor() : this(null, null, null, 0, null, false)
+}
 
 
 
@@ -77,7 +80,10 @@ data class EventType(@PrimaryKey(autoGenerate = true) var id: Long?,
 data class Event(
     @PrimaryKey(autoGenerate = true) var id: Long?,
     @ColumnInfo(name = "idEventType") var idEventType: Long?,
-    @ColumnInfo(name = "dateCode") var dateCode:Long)
+    @ColumnInfo(name = "dateCode") var dateCode:Long,
+    @Ignore var chosen:Boolean = false){
+    constructor() : this(null, null, 0, false)
+}
 
 
 // -------------------------------------- DAO -----------------------------------------------
@@ -250,7 +256,7 @@ interface EventTypeDao {
 
 // ----------------------------------- DATABASE --------------------------------------------
 
-@Database(entities = [Meal::class, MealItem::class, Food::class, FoodType::class, Keyword::class, Event::class, EventType::class], version = 6, exportSchema = false)
+@Database(entities = [Meal::class, MealItem::class, Food::class, FoodType::class, Keyword::class, Event::class, EventType::class], version = 10, exportSchema = false)
 abstract class AppDataBase : RoomDatabase() {
 
     abstract fun mealDao(): MealDao
@@ -281,7 +287,7 @@ abstract class AppDataBase : RoomDatabase() {
                         INSTANCE = Room.databaseBuilder(context, AppDataBase::class.java, "appDataBase.db")
                             .allowMainThreadQueries()
                             .fallbackToDestructiveMigration()
-                            .addCallback(object : Callback() {
+                            .addCallback(object : RoomDatabase.Callback() {
                                 override fun onCreate(db: SupportSQLiteDatabase) {
                                     super.onCreate(db)
                                     // insert the data on the IO Thread

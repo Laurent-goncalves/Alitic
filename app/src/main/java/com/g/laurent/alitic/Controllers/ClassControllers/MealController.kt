@@ -1,4 +1,4 @@
-package com.g.laurent.alitic.Controllers
+package com.g.laurent.alitic.Controllers.ClassControllers
 
 import android.content.Context
 import com.g.laurent.alitic.Models.*

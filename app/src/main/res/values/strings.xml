@@ -2,4 +2,5 @@
     <string name="app_name">Alitic</string>
     <string name="save">SAVE</string>
     <string name="cancel">Cancel</string>
+    <integer name="duration_anim">500</integer>
 </resources>

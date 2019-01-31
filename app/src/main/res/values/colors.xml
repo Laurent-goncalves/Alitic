@@ -5,5 +5,9 @@
     <color name="colorAccent">#D81B60</color>
     <color name="colorTimeLine">#70dbdb</color>
     <color name="colorPanelMeal">#CCf2f2f2</color>
+    <color name="colorFoodPicked">#5bc855</color>
+
+    <color name="colorFoodTypeSelected">#ffd699</color>
+    <color name="colorFoodTypeNOTselected">#996633</color>
 
 </resources>

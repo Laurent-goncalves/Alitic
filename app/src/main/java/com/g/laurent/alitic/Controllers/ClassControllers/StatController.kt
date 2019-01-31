@@ -1,4 +1,4 @@
-package com.g.laurent.alitic.Controllers
+package com.g.laurent.alitic.Controllers.ClassControllers
 
 import android.content.Context
 import com.g.laurent.alitic.Models.EventType
@@ -7,7 +7,7 @@ import com.g.laurent.alitic.Models.Meal
 
 class EventTable(val minTime:Long, val maxTime:Long)
 
-class StatList(val food:String, val type:Long?, val count:Int)
+class StatList(val food:String?, val type:Long?, val count:Int)
 
 fun getListFoodForEventType(eventType: EventType, mode:Boolean = false, context:Context):List<StatList>{
 
@@ -19,7 +19,12 @@ fun getListFoodForEventType(eventType: EventType, mode:Boolean = false, context:
         if(listEvent!=null){
             for(e in listEvent){
                 if(e.idEventType == eventType.id)
-                    list.add(EventTable(e.dateCode-eventType.maxTime, e.dateCode-eventType.minTime))
+                    list.add(
+                        EventTable(
+                            e.dateCode - eventType.maxTime,
+                            e.dateCode - eventType.minTime
+                        )
+                    )
             }
         }
 
@@ -42,7 +47,8 @@ fun getListFoodForEventType(eventType: EventType, mode:Boolean = false, context:
             for(meal in listMeals){
                 if(shouldMealBeTakenIntoAccount(meal, eventTable)){
 
-                    val listFood = getFoodsFromMeal(meal, mode, context)
+                    val listFood =
+                        getFoodsFromMeal(meal, mode, context)
 
                     for(food in listFood){
                         if(list[food] != null){
@@ -79,7 +85,13 @@ fun getListInDescendingOrder(list:HashMap<Food, Int>):List<StatList>{
     if(list.size != 0){
         for (i in 0 until list.size) {
             val max = listToCheck.maxBy { it.value }
-            result.add(StatList(max!!.key.name, max.key.idFoodType, max.value))
+            result.add(
+                StatList(
+                    max!!.key.name,
+                    max.key.idFoodType,
+                    max.value
+                )
+            )
             listToCheck.remove(max.key)
         }
     }

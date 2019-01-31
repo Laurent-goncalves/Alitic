@@ -1,4 +1,4 @@
-package com.g.laurent.alitic.Controllers
+package com.g.laurent.alitic.Controllers.ClassControllers
 
 import android.content.Context
 import com.g.laurent.alitic.Models.Event
@@ -13,7 +13,8 @@ class Chrono(val idEventType:Long?, var count:Int, val day:DateTime)
 fun getChronoForOneEventType(idEventType:Long?, month:Int, year:Int, mode:Boolean = false, context: Context):HashMap<DateTime, MutableList<Chrono>>{
 
     // Get the list of all events related to idEventType
-    val listEventByType = getListEventForOneEventType(idEventType, mode, context)
+    val listEventByType =
+        getListEventForOneEventType(idEventType, mode, context)
 
     // Get the list of all events related to idEventType
     return organizeEventsByTime(listEventByType, month, year)
@@ -65,12 +66,24 @@ fun organizeEventsByTime(listEvents:List<Event>?, month:Int, year:Int):HashMap<D
                     val count:Int = result[list[i].day]!![index].count
                     result[list[i].day]!![index].count = count + 1
                 } else { // if not,...
-                    result[list[i].day]!!.add(Chrono(list[i].idEventType, 1, list[i].day))
+                    result[list[i].day]!!.add(
+                        Chrono(
+                            list[i].idEventType,
+                            1,
+                            list[i].day
+                        )
+                    )
                 }
 
             } else {
                 val newList : MutableList<Chrono> = mutableListOf()
-                newList.add(Chrono(list[i].idEventType, 1, list[i].day))
+                newList.add(
+                    Chrono(
+                        list[i].idEventType,
+                        1,
+                        list[i].day
+                    )
+                )
                 result[list[i].day] = newList
             }
         }

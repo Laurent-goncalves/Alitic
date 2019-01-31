@@ -1,15 +1,12 @@
-package com.g.laurent.alitic
+package com.g.laurent.alitic.Controllers.Activities
 
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import com.g.laurent.alitic.Controllers.*
-import com.g.laurent.alitic.Models.AppDataBase
-import com.g.laurent.alitic.Models.Event
-import com.g.laurent.alitic.Models.Meal
-import com.g.laurent.alitic.Models.MealItem
+import com.g.laurent.alitic.Controllers.ClassControllers.ChronoItem
+import com.g.laurent.alitic.R
 import com.g.laurent.alitic.Views.TimeLineAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -35,7 +32,11 @@ class MainActivity : AppCompatActivity() {
         recycler_view.adapter = mAdapter
     }
 
+
+
+
     fun getList():List<ChronoItem>{
+
 /*
         AppDataBase.clearDatabase()
 

@@ -4,12 +4,11 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Controllers.Activities.MainActivity">
+        tools:context=".Controllers.Activities.MealActivity">
 
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
+    <include
+            layout="@layout/pick_meal_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dp"/>
+            android:layout_height="match_parent"/>
 
 </FrameLayout>

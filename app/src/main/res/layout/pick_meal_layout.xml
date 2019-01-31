@@ -12,13 +12,14 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/food_recycler_view"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"/>
 
             <GridView
                 android:id="@+id/gridview_food"
@@ -37,7 +38,7 @@
     <View
         android:id="@+id/gradient_view"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="100dp"
         android:layout_gravity="bottom"
         android:background="@drawable/gradient"/>
 
@@ -49,22 +50,33 @@
         android:background="@drawable/panel_meal"
         android:layout_gravity="end|top"/>
 
-    <!-- BUTTON CANCEL -->
-    <Button
-            android:id="@+id/button_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|bottom"
-            android:layout_margin="10dp"
-            android:text="@string/cancel"/>
+    <!-- BUTTONS -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
 
-    <!-- BUTTON SAVE -->
-    <Button
-            android:id="@+id/button_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="10dp"
-            android:text="@string/save"/>
+        <!-- BUTTON CANCEL -->
+        <Button
+                android:id="@+id/button_cancel"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
+                android:text="@string/cancel"
+                android:textColor="@color/colorAccent"
+                android:background="@android:color/white"/>
+
+        <!-- BUTTON SAVE -->
+        <Button
+                android:id="@+id/button_save"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginStart="10dp"
+                android:text="@string/save"
+                android:textColor="@android:color/white"
+                android:background="@color/colorAccent"/>
+
+    </LinearLayout>
 
 </FrameLayout>

@@ -1,7 +1,7 @@
 package com.g.laurent.alitic
 
-import com.g.laurent.alitic.Controllers.getListInDescendingOrder
-import com.g.laurent.alitic.Controllers.organizeEventsByTime
+import com.g.laurent.alitic.Controllers.ClassControllers.getListInDescendingOrder
+import com.g.laurent.alitic.Controllers.ClassControllers.organizeEventsByTime
 import com.g.laurent.alitic.Models.Event
 import com.g.laurent.alitic.Models.Food
 import hirondelle.date4j.DateTime
@@ -19,7 +19,8 @@ class ExampleUnitTest {
     @Test
     fun test_organize_events_by_date(){
 
-        val list = organizeEventsByTime(getListEventsForTest(), 1, 2019)
+        val list =
+            organizeEventsByTime(getListEventsForTest(), 1, 2019)
 
         val date1 = DateTime.forDateOnly(2019, 1, 5)
         val date2 = DateTime.forDateOnly(2019, 1, 15)
@@ -55,12 +56,12 @@ class ExampleUnitTest {
     fun test_descending_order() {
 
         val list:HashMap<Food, Int> = hashMapOf()
-        list[Food(0, "Banane", 0,0,null)] = 4
-        list[Food(0, "Abricot", 0,0,null)] = 2
-        list[Food(0, "Pomme", 0,0,null)] = 5
-        list[Food(0, "Avocat", 0,0,null)] = 1
-        list[Food(0, "Cerise", 0,0,null)] = 0
-        list[Food(0, "Poire", 0,0,null)] = 3
+        list[Food(0, "Banane", 0,0,null, false)] = 4
+        list[Food(0, "Abricot", 0,0,null, false)] = 2
+        list[Food(0, "Pomme", 0,0,null, false)] = 5
+        list[Food(0, "Avocat", 0,0,null, false)] = 1
+        list[Food(0, "Cerise", 0,0,null, false)] = 0
+        list[Food(0, "Poire", 0,0,null, false)] = 3
 
         val result = getListInDescendingOrder(list)
 
@@ -76,17 +77,17 @@ class ExampleUnitTest {
 
         val result : MutableList<Event> = mutableListOf()
 
-        result.add(Event(0, 0, getDateAsLong(2,1,2019,12,0)))
-        result.add(Event(1, 1, getDateAsLong(2,1,2019,12,0)))
-        result.add(Event(2, 2, getDateAsLong(14,1,2019,12,0)))
-        result.add(Event(3, 1, getDateAsLong(5,1,2019,12,0)))
-        result.add(Event(4, 1, getDateAsLong(1,1,2019,12,0)))
-        result.add(Event(5, 0, getDateAsLong(1,1,2019,12,0)))
-        result.add(Event(6, 1, getDateAsLong(5,1,2019,12,0)))
-        result.add(Event(7, 1, getDateAsLong(7,1,2019,12,0)))
-        result.add(Event(8, 2, getDateAsLong(15,1,2019,12,0)))
-        result.add(Event(9, 0, getDateAsLong(8,1,2019,12,0)))
-        result.add(Event(10, 1, getDateAsLong(5,1,2019,12,0)))
+        result.add(Event(0, 0, getDateAsLong(2,1,2019,12,0), false))
+        result.add(Event(1, 1, getDateAsLong(2,1,2019,12,0), false))
+        result.add(Event(2, 2, getDateAsLong(14,1,2019,12,0), false))
+        result.add(Event(3, 1, getDateAsLong(5,1,2019,12,0), false))
+        result.add(Event(4, 1, getDateAsLong(1,1,2019,12,0), false))
+        result.add(Event(5, 0, getDateAsLong(1,1,2019,12,0), false))
+        result.add(Event(6, 1, getDateAsLong(5,1,2019,12,0), false))
+        result.add(Event(7, 1, getDateAsLong(7,1,2019,12,0), false))
+        result.add(Event(8, 2, getDateAsLong(15,1,2019,12,0), false))
+        result.add(Event(9, 0, getDateAsLong(8,1,2019,12,0), false))
+        result.add(Event(10, 1, getDateAsLong(5,1,2019,12,0), false))
 
         return result.toList()
     }
