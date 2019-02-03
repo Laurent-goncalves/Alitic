@@ -4,6 +4,7 @@ import android.content.Context
 import com.g.laurent.alitic.Models.AppDataBase
 import com.g.laurent.alitic.Models.Event
 import com.g.laurent.alitic.Models.EventType
+import com.g.laurent.alitic.Models.Food
 import com.g.laurent.alitic.getBegDayDate
 import com.g.laurent.alitic.getEndDayDate
 import com.g.laurent.alitic.getTodayDate
@@ -99,9 +100,6 @@ fun deleteAllEventTypes(mode:Boolean = false, context:Context){
     val eventTypeDao = AppDataBase.getInstance(context)?.eventTypeDao()
     eventTypeDao?.deleteAll()
 }
-
-
-
 
 /*fun getListEventType(search:String, mode:Boolean = false, context:Context):List<EventType>?{
 

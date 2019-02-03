@@ -1,10 +1,7 @@
 package com.g.laurent.alitic.Controllers.ClassControllers
 
 import android.content.Context
-import com.g.laurent.alitic.Models.AppDataBase
-import com.g.laurent.alitic.Models.Food
-import com.g.laurent.alitic.Models.FoodType
-import com.g.laurent.alitic.Models.Keyword
+import com.g.laurent.alitic.Models.*
 
 // ---------------------------------------------------------------------------------------------------------------
 // ------------------------------------------- FOOD --------------------------------------------------------------

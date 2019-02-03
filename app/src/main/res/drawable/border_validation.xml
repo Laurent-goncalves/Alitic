@@ -1,9 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-       android:shape="rectangle">
 
-    <stroke
-            android:width="3sp"
-            android:color="@color/colorFoodPicked"/>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-</shape>
+    <item
+    >
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle" >
+            <gradient
+                    android:type="linear"
+                    android:centerX="10%"
+                    android:startColor="#FFffffff"
+                    android:centerColor="#FFffffff"
+                    android:endColor="#FF00A800"
+                    android:angle="45"/>
+        </shape>
+    </item>
+    <item>
+
+
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle" >
+            <gradient
+                    android:type="radial"
+                    android:centerX="50%"
+                    android:centerY="50%"
+                    android:startColor="#FFffffff"
+                    android:endColor="#FF00A800"
+                    android:gradientRadius="700"/>
+        </shape>
+    </item>
+
+</layer-list>
+
+
+
+

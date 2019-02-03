@@ -6,7 +6,7 @@ import com.g.laurent.alitic.getDayOfMonth
 import com.g.laurent.alitic.isRightMonth
 import hirondelle.date4j.DateTime
 
-class ChronoItem(val hour:String, val item:Any)
+class ChronoItem(val hour:String, val item:List<Any>)
 
 class Chrono(val idEventType:Long?, var count:Int, val day:DateTime)
 

@@ -27,8 +27,8 @@
                 android:layout_weight="3"
                 android:layout_height="match_parent"
                 android:numColumns="3"
-                android:verticalSpacing="3dp"
-                android:horizontalSpacing="3dp"/>
+                android:verticalSpacing="5dp"
+                android:horizontalSpacing="5dp"/>
 
         </LinearLayout>
 

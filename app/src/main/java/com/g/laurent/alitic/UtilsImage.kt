@@ -8,10 +8,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.g.laurent.alitic.Controllers.ClassControllers.getEventType
 import com.g.laurent.alitic.Controllers.ClassControllers.getFoodType
 import com.g.laurent.alitic.Controllers.ClassControllers.getFoodsFromMeal
-import com.g.laurent.alitic.Models.Event
-import com.g.laurent.alitic.Models.Food
-import com.g.laurent.alitic.Models.FoodType
-import com.g.laurent.alitic.Models.Meal
+import com.g.laurent.alitic.Models.*
 
 fun getResourceId(path:String?, context: Context):Int{
     val resources = context.resources
@@ -44,48 +41,33 @@ fun getImageFromPath(path:String?, pathDraw:String?, imageView: ImageView, conte
     }
 }
 
-fun getImagePath(any: Any, position:Int, mode:Boolean, context: Context):String?{
-    when (any) {
-        is Event -> { // if event
-            val eventType =
-                getEventType(any.idEventType, mode, context)
-            return eventType?.eventPic
+fun getImagePath(any: Any):String?{
+
+    return when (any) {
+        is Food -> {
+            any.foodPic
         }
-        is Meal -> { // if meal
-            val foods = getFoodsFromMeal(any, mode, context)
-            return foods[position].foodPic
-        }
-        is List<*> -> {
-            val food = any[position] as Food
-            return food.foodPic
+        is EventType -> {
+            any.eventPic
         }
         is FoodType -> {
-            return any.foodTypePic
+            any.foodTypePic
         }
         else ->
-            return null
+            null
     }
 }
 
-fun getImageDrawPath(any: Any, position:Int, mode:Boolean, context: Context):String?{
-    when (any) {
-        is Event -> { // if event
-            val eventType =
-                getEventType(any.idEventType, mode, context)
-            return eventType?.eventPic
+fun getImageDrawPath(any: Any, mode:Boolean, context: Context):String?{
+
+    return when (any) {
+        is EventType -> { // if eventType
+            any.eventPic
         }
-        is Meal -> { // if meal
-            return getFoodType(
-                getFoodsFromMeal(any, mode, context)[position].idFoodType, context = context)?.foodTypePic
-        }
-        is List<*> -> {
-            val food = any[position] as Food
-            return getFoodType(food.idFoodType, mode, context)?.foodTypePic
-        }
-        is FoodType -> {
-            return any.foodTypePic
+        is Food -> { // if food
+            getFoodType(any.idFoodType, mode, context)?.foodTypePic
         }
         else ->
-            return null
+            null
     }
 }

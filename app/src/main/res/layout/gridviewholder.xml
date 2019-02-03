@@ -13,22 +13,24 @@
 
         <ImageView
                 android:id="@+id/image_meal"
-                android:layout_width="wrap_content"
-                android:layout_height="90dp"
-                android:scaleType="fitCenter"/>
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:scaleType="centerInside"/>
 
         <TextView
                 android:id="@+id/meal_text"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="30dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 android:gravity="center_horizontal|center_vertical"/>
 
     </LinearLayout>
 
     <ImageView
             android:id="@+id/check_item"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:src="@drawable/baseline_check_circle_white_18"
             android:visibility="gone"
             android:layout_gravity="top|end"/>

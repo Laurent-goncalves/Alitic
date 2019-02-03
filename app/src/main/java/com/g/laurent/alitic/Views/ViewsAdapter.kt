@@ -9,22 +9,21 @@ import android.widget.BaseAdapter
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.TextView
-import com.g.laurent.alitic.Controllers.ClassControllers.ChronoItem
-import com.g.laurent.alitic.Controllers.ClassControllers.getEventType
-import com.g.laurent.alitic.Controllers.ClassControllers.getFoodsFromMeal
-import com.g.laurent.alitic.Models.Event
-import com.g.laurent.alitic.Models.Meal
 import android.widget.FrameLayout
-import com.g.laurent.alitic.Models.Food
-import com.g.laurent.alitic.Models.FoodType
 import android.annotation.SuppressLint
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import com.g.laurent.alitic.*
+import com.g.laurent.alitic.Controllers.Activities.OnItemSelectionListener
+import com.g.laurent.alitic.Controllers.Activities.OnMenuSelectionListener
+import com.g.laurent.alitic.Controllers.Activities.isAlreadySelected
+import com.g.laurent.alitic.Controllers.Activities.updateListSelected
+import com.g.laurent.alitic.Controllers.ClassControllers.*
+import com.g.laurent.alitic.Models.*
 
 
 /** FOODTYPE ADAPTER**/
 @SuppressLint("RecyclerView")
-class FoodTypeAdapter(val list: List<FoodType>,val recyclerView: RecyclerView, val mode:Boolean=false, val context: Context) : RecyclerView.Adapter<FoodTypeViewHolder>() {
+class FoodTypeAdapter(val list: List<FoodType>, val recyclerView: RecyclerView, val OnMenuSelectionListener: OnMenuSelectionListener, val mode:Boolean=false, val context: Context) : RecyclerView.Adapter<FoodTypeViewHolder>() {
 
     private var selection:Int = -1
 
@@ -41,6 +40,7 @@ class FoodTypeAdapter(val list: List<FoodType>,val recyclerView: RecyclerView, v
 
         holder.itemView.setOnClickListener {
             selection = holder.adapterPosition
+            OnMenuSelectionListener.onMenuSelected(selection)
             notifyDataSetChanged()
         }
 
@@ -84,7 +84,7 @@ class TimeLineAdapter(val list: List<ChronoItem>, val mode:Boolean=false, val co
 }
 
 /** ADAPTER FOR GRIDVIEW TO DISPLAY PICTURE + NAME **/
-class GridAdapter(val any: Any, val pickmode:Boolean, val mode:Boolean=false, val context: Context): BaseAdapter() { // any is Event or Meal
+class GridAdapter(val listFood: List<*>, var listItemSelected: MutableList<Any>?, val pickmode:Boolean, val onItemSelectionListener: OnItemSelectionListener?, val mode:Boolean=false, val context: Context): BaseAdapter() { // any is Event or Meal
 
     override fun getItem(position: Int): Any {
         return this
@@ -99,53 +99,48 @@ class GridAdapter(val any: Any, val pickmode:Boolean, val mode:Boolean=false, va
         var view: View? = null
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater?
 
-        fun getTextToDisplay(any: Any):String?{
+        fun getTextToDisplay():String?{
 
-            when (any) {
-                is Event -> { // if event
-                    val eventType =
-                        getEventType(any.idEventType, mode, context)
-                    return eventType?.name
+            return when (listFood[position]) {
+                is EventType -> { // if event
+                    val eventType = listFood[position] as EventType
+                    eventType.name
                 }
-                is Meal -> { // if meal
-                    val foods = getFoodsFromMeal(any, mode, context)
-                    return foods[position].name
-                }
-                is List<*> -> {
-                    val food = any[position] as Food
-                    return food.name
+                is Food -> {
+                    val food = listFood[position] as Food
+                    food.name
                 }
                 else ->
-                    return null
+                    null
             }
         }
 
-        fun setPickItem(any:Any, frame:FrameLayout, pickIcon:ImageView, pickmode:Boolean){
+        fun setPickItem(frame:FrameLayout, pickIcon:ImageView){
 
-            fun setPicked(chosen:Boolean){
-                if(chosen){
-                    frame.setBackgroundResource(com.g.laurent.alitic.R.drawable.border_validation)
+            fun selectItem(select:Boolean){
+                if(select){
+                    frame.setBackgroundResource(R.drawable.border_validation)
                     pickIcon.visibility = View.VISIBLE
+                } else {
+                    frame.setBackgroundResource(0)
+                    pickIcon.visibility = View.GONE
                 }
             }
 
-            if(pickmode){
-                when (any) {
-                    is Event -> { setPicked(any.chosen)}    // if event
-
-                    is Meal -> {  // if meal
-                        val foods = getFoodsFromMeal(any, mode, context)
-                        setPicked(foods[position].chosen)
-                    }
-                    is List<*> -> {
-                        val food = any[position] as Food
-                        setPicked(food.chosen)
-                    }
+            when (listFood[position]) {
+                is EventType -> { // if event
+                    val eventType = listFood[position] as EventType
+                    selectItem(isAlreadySelected(eventType.id, listItemSelected))
+                }
+                is Food -> {
+                    val food = listFood[position] as Food
+                    selectItem(isAlreadySelected(food.id, listItemSelected))
                 }
             }
         }
 
-        if (inflater != null) {
+        // create view
+        if (inflater != null && listFood[position]!=null) {
             view = inflater.inflate(com.g.laurent.alitic.R.layout.gridviewholder, parent, false)
 
             val imageView = view.findViewById<ImageView>(com.g.laurent.alitic.R.id.image_meal)
@@ -153,9 +148,9 @@ class GridAdapter(val any: Any, val pickmode:Boolean, val mode:Boolean=false, va
             val frameLayout = view.findViewById<FrameLayout>(com.g.laurent.alitic.R.id.framelayout_viewholder)
             val pickIcon = view.findViewById<ImageView>(com.g.laurent.alitic.R.id.check_item)
 
-            val text = getTextToDisplay(any)
-            val image = getImagePath(any, position, mode, context)
-            val imageDraw = getImageDrawPath(any, position, mode, context)
+            val text = getTextToDisplay()
+            val image = getImagePath(listFood[position]!!)
+            val imageDraw = getImageDrawPath(listFood[position]!!, mode, context)
 
             // Put the food name in text
             textView.text = text
@@ -164,23 +159,31 @@ class GridAdapter(val any: Any, val pickmode:Boolean, val mode:Boolean=false, va
             getImageFromPath(image, imageDraw, imageView, context)
 
             // change layout in case of validation for picking
-            setPickItem(any, frameLayout, pickIcon, pickmode)
+            if(pickmode)
+                setPickItem(frameLayout, pickIcon)
+        }
+
+        // Set onClickListener
+        view?.setOnClickListener {
+
+            // Remove or add item in listSelected from Activity & from this adapter
+            if(listFood[position]!=null) {
+
+                // from Activity
+                onItemSelectionListener?.onItemSelected(listFood[position]!!)
+
+                // from this adapter
+                listItemSelected = updateListSelected(listFood[position]!!, listItemSelected)
+            }
+
+            // Update adapter
+            notifyDataSetChanged()
         }
 
         return view
     }
 
     override fun getCount(): Int {
-        return when (any) {
-            is Event -> 1
-            is Meal -> {
-                val listMealItems = any.listMealItems
-                listMealItems?.size ?: 0
-            }
-            is List<*> -> { // list foods
-                any.size
-            }
-            else -> 0
-        }
+        return listFood.size
     }
 }

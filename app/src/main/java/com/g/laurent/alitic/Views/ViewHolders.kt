@@ -27,7 +27,7 @@ class TimeLineViewHolder(itemView: View, viewType: Int, val mode:Boolean = false
 
     fun configureTimeLineViewHolder(chronoItem: ChronoItem) {
         hourView.text = chronoItem.hour
-        val adapter = GridAdapter(chronoItem.item, false, mode, context)
+        val adapter = GridAdapter(chronoItem.item, null, false,null, mode, context)
         grid.adapter = adapter
     }
 }
@@ -63,8 +63,8 @@ class FoodTypeViewHolder(itemView: View, private val mode:Boolean = false, val c
             textFood.text = foodType.name
 
             // Edit image to display
-            val image = getImagePath(foodType, -1, mode, context)
-            val imageDraw = getImageDrawPath(foodType, -1, mode, context)
+            val image = getImagePath(foodType)
+            val imageDraw = getImageDrawPath(foodType, mode, context)
             getImageFromPath(image, imageDraw, imageFood, context)
         }
 
