@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:maxWidth="280dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:orientation="vertical"
+        android:background="@drawable/background_save_dialog">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save_meal_title_dialog"
+            android:layout_marginBottom="25dp"
+            android:layout_marginTop="30dp"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="@string/save_meal_content_dialog"
+            android:layout_marginBottom="28dp"/>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <Button
+                    android:id="@+id/button_no"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="@dimen/button_height"
+                    android:textColor="@color/colorAccent"
+                    android:layout_toStartOf="@+id/button_yes"
+                    android:text="@string/no"
+                    android:layout_marginEnd="8dp"
+                    android:background="@android:color/white"/>
+
+            <Button
+                    android:id="@+id/button_yes"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="@dimen/button_height"
+                    android:textColor="@android:color/white"
+                    android:text="@string/yes"
+                    android:background="@color/colorAccent"/>
+
+    </RelativeLayout>
+    
+
+</LinearLayout>

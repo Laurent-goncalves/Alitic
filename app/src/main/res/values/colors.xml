@@ -10,4 +10,8 @@
     <color name="colorFoodTypeSelected">#ffd699</color>
     <color name="colorFoodTypeNOTselected">#996633</color>
 
+    <color name="colorUnderline">#8a8a8a</color>
+
+
+
 </resources>

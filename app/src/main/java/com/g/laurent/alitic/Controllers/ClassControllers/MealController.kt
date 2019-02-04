@@ -35,6 +35,16 @@ fun getMealFromDatabase(idMeal:Long?, mode:Boolean = false, context: Context):Me
     return meal
 }
 
+fun getMealItemsFromListFoods(listFood:List<Any>):List<MealItem>{
+
+    val listMealItems = mutableListOf<MealItem>()
+    for(any in listFood){
+        val food = any as Food
+        listMealItems.add(MealItem(null,null, food.id))
+    }
+    return listMealItems.toList()
+}
+
 fun getFoodsFromMeal(meal:Meal, mode:Boolean = false, context: Context):List<Food>{
 
     AppDataBase.TEST_MODE = mode
@@ -95,3 +105,10 @@ fun deleteAllMeals(mode:Boolean = false, context: Context){
     mealItemDao?.deleteAll()
     mealDao?.deleteAll()
 }
+
+// ------------------------------------------------------------------------------------------------------------
+// --------------------------------------------- CONSTANTS ----------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------
+
+const val MEAL_SAVE = "save_meal"
+

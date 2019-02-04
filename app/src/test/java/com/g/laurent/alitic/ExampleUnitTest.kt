@@ -53,6 +53,23 @@ class ExampleUnitTest {
     }
 
     @Test
+    fun test_get_day_month_year() {
+        val date = getDateAsLong(1,12,2018,14,55)
+        assertEquals(14, getHourAsInt(date))
+        assertEquals(55, getMinutesAsInt(date))
+        assertEquals(11, getMonth(date))
+        assertEquals(2018, getYear(date))
+    }
+
+    @Test
+    fun test_get_date_in_text_format(){
+        val date = getDateAsLong(1,12,2018,4,55)
+        assertEquals("sam. 1 déc.", getTextDate(date))
+        assertEquals("4:55", getTextTime(4, 55))
+        assertEquals("4:09", getTextTime(4, 9))
+    }
+
+    @Test
     fun test_descending_order() {
 
         val list:HashMap<Food, Int> = hashMapOf()

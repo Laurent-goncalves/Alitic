@@ -8,9 +8,13 @@ import android.support.v7.widget.RecyclerView
 import com.facebook.stetho.Stetho
 import com.g.laurent.alitic.Controllers.ClassControllers.getAllFoodTypes
 import com.g.laurent.alitic.Controllers.ClassControllers.getListFoodByType
+import com.g.laurent.alitic.Controllers.ClassControllers.getMealItemsFromListFoods
 import com.g.laurent.alitic.Models.*
+import com.g.laurent.alitic.R
 import com.g.laurent.alitic.Views.FoodTypeAdapter
 import com.g.laurent.alitic.Views.GridAdapter
+import com.g.laurent.alitic.Views.SaveDialog
+import com.g.laurent.alitic.Views.TAG_SCHEDULE_DIALOG
 import kotlinx.android.synthetic.main.pick_meal_layout.*
 
 
@@ -23,27 +27,36 @@ class MealActivity : AppCompatActivity(), OnMenuSelectionListener, OnItemSelecti
     private lateinit var listFoodTypes:List<FoodType>
     private val onMenuSelectionListener = this
     private val onItemSelectionListener = this
-    var listSelected:MutableList<Any> = mutableListOf()
+    private var listSelected:MutableList<Any> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
-        setContentView(com.g.laurent.alitic.R.layout.activity_meal)
+        setContentView(R.layout.activity_meal)
         context = applicationContext
 
-        val db = AppDataBase.getInstance(context)
-        db?.keywordDao()?.deleteAll()
-        db?.foodDao()?.deleteAll()
-        db?.foodTypeDao()?.deleteAll()
-        db?.eventDao()?.deleteAll()
-        db?.eventTypeDao()?.deleteAll()
-        db?.mealItemDao()?.deleteAll()
-        db?.mealDao()?.deleteAll()
-
-        insertData(db?.foodTypeDao(), db?.foodDao(), db?.keywordDao())
+        clearDatabase(context)
 
         Stetho.initializeWithDefaults(this)
-        listFoodTypes = getAllFoodTypes(context = context)!!
+
         displayFoodTypesMenu()
+        configureButtons()
+    }
+
+    private fun configureButtons(){
+        button_cancel.setOnClickListener {
+            // TODO configure cancel
+        }
+
+        button_save.setOnClickListener {
+            // create list of Meal items
+            val listMealItems = getMealItemsFromListFoods(listSelected.toList())
+
+            // Show dialog fragment to confirm date for saving
+            val fm = supportFragmentManager
+            val myDialogFragment = SaveDialog().newInstance(listMealItems)
+            myDialogFragment.show(fm, TAG_SCHEDULE_DIALOG)
+        }
     }
 
     override fun onMenuSelected(selection: Int) {
@@ -56,7 +69,10 @@ class MealActivity : AppCompatActivity(), OnMenuSelectionListener, OnItemSelecti
         listSelected = updateListSelected(selected, listSelected)
     }
 
-    fun displayFoodTypesMenu(){
+    private fun displayFoodTypesMenu(){
+
+        listFoodTypes = getAllFoodTypes(context = context)!!
+
         mLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         food_recycler_view.layoutManager = mLayoutManager
         menuAdapter = FoodTypeAdapter(listFoodTypes, food_recycler_view, onMenuSelectionListener,false, this)
@@ -130,4 +146,19 @@ fun isAlreadySelected(idSelected:Long?,  list:MutableList<Any>?):Boolean{
         }
     }
     return false
+}
+
+fun clearDatabase(context: Context){
+
+    val db = AppDataBase.getInstance(context)
+    db?.mealItemDao()?.deleteAll()
+    db?.mealDao()?.deleteAll()
+    db?.keywordDao()?.deleteAll()
+    db?.foodDao()?.deleteAll()
+    db?.foodTypeDao()?.deleteAll()
+    db?.eventDao()?.deleteAll()
+    db?.eventTypeDao()?.deleteAll()
+
+
+    insertData(db?.foodTypeDao(), db?.foodDao(), db?.keywordDao())
 }

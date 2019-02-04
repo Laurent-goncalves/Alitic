@@ -3,4 +3,5 @@
 
     <dimen name="button_width">100dp</dimen>
     <dimen name="button_height">36dp</dimen>
+    <dimen name="save_dialog_corners_radius">16dp</dimen>
 </resources>

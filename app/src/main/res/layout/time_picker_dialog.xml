@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+         xmlns:android="http://schemas.android.com/apk/res/android"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:background="@android:color/white"
+         android:padding="30dp">
+
+    <LinearLayout
+        android:id="@+id/date_picker_layout"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+                android:id="@+id/date_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date"
+                android:textSize="14sp"
+                android:textColor="@color/colorUnderline"/>
+
+        <TextView
+                android:id="@+id/date_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="6dp"/>
+
+        <!-- LINE UNDER TEXT DATE -->
+        <View
+                android:background="@color/colorUnderline"
+                android:layout_height="1dp"
+                android:layout_width="match_parent"
+                android:layout_marginTop="2dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/time_picker_layout"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@+id/date_picker_layout">
+
+        <TextView
+                android:id="@+id/time_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/time"
+                android:textSize="14sp"
+                android:textColor="@color/colorUnderline"/>
+
+        <TextView
+                android:id="@+id/time_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="6dp"/>
+
+        <!-- LINE UNDER TEXT DATE -->
+        <View
+                android:background="@color/colorUnderline"
+                android:layout_height="1dp"
+                android:layout_width="match_parent"
+                android:layout_marginTop="2dp"/>
+
+    </LinearLayout>
+
+    <Button
+            android:id="@+id/button_save"
+            android:layout_alignParentEnd="true"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:textColor="@color/colorAccent"
+            android:background="@android:color/white"
+            android:layout_below="@id/time_picker_layout"
+            android:layout_marginTop="20dp"
+            android:text="@string/save"/>
+
+</RelativeLayout>

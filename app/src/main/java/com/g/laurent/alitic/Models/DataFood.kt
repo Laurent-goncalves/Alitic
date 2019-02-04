@@ -57,44 +57,44 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     val oeuf = foodDao?.insert(Food(null,"Oeuf", idViandes,0,"oeuf", false))
 
     // POISSONS
-    val crustaces = foodDao?.insert(Food(null,"Fruit de mer", idPoissons,0,null, false)) // crabe, crevette, homard, langouste, langoustine, bulot, bigorneau, coquille, huitre, huître, moule, palourde,
-    val cabillaud = foodDao?.insert(Food(null,"Cabillaud", idPoissons,0,null, false)) // morue
-    val colin = foodDao?.insert(Food(null,"Colin", idPoissons,0,null, false))
-    val saumon = foodDao?.insert(Food(null,"Saumon", idPoissons,0,null, false))
-    val limande = foodDao?.insert(Food(null,"Limande", idPoissons,0,null, false))
-    val sardine = foodDao?.insert(Food(null,"Sardine", idPoissons,0,null, false))
-    val merlan = foodDao?.insert(Food(null,"Merlan", idPoissons,0,null, false))
-    val maquereau = foodDao?.insert(Food(null,"Maquereau", idPoissons,0,null, false))
-    val merlu = foodDao?.insert(Food(null,"Merlu", idPoissons,0,null, false))
-    val sole = foodDao?.insert(Food(null,"Sole", idPoissons,0,null, false))
-    val thon = foodDao?.insert(Food(null,"Thon", idPoissons,0,null, false))
-    val autresPoissons = foodDao?.insert(Food(null,"Autres poissons", idPoissons,0,null, false))
+    val crustaces = foodDao?.insert(Food(null,"Fruit de mer", idPoissons,0,"crustace", false)) // crabe, crevette, homard, langouste, langoustine, bulot, bigorneau, coquille, huitre, huître, moule, palourde,
+    val cabillaud = foodDao?.insert(Food(null,"Cabillaud", idPoissons,0,"poisson", false)) // morue
+    val colin = foodDao?.insert(Food(null,"Colin", idPoissons,0,"poisson", false))
+    val saumon = foodDao?.insert(Food(null,"Saumon", idPoissons,0,"poisson", false))
+    val limande = foodDao?.insert(Food(null,"Limande", idPoissons,0,"poisson", false))
+    val sardine = foodDao?.insert(Food(null,"Sardine", idPoissons,0,"poisson", false))
+    val merlan = foodDao?.insert(Food(null,"Merlan", idPoissons,0,"poisson", false))
+    val maquereau = foodDao?.insert(Food(null,"Maquereau", idPoissons,0,"poisson", false))
+    val merlu = foodDao?.insert(Food(null,"Merlu", idPoissons,0,"poisson", false))
+    val sole = foodDao?.insert(Food(null,"Sole", idPoissons,0,"poisson", false))
+    val thon = foodDao?.insert(Food(null,"Thon", idPoissons,0,"poisson", false))
+    val autresPoissons = foodDao?.insert(Food(null,"Autres poissons", idPoissons,0,"poisson", false))
 
     // LEGUMES
-    val avocat = foodDao?.insert(Food(null,"Avocat", idLegumes,0,null, false))
-    val artichaut = foodDao?.insert(Food(null,"Artichaut", idLegumes,0,null, false))
-    val chou = foodDao?.insert(Food(null,"Chou", idLegumes,0,null, false))
-    val carotte = foodDao?.insert(Food(null,"Carotte", idLegumes,0,null, false))
-    val celeri = foodDao?.insert(Food(null,"Céleri", idLegumes,0,null, false))
-    val concombre = foodDao?.insert(Food(null,"Concombre", idLegumes,0,null, false))
-    val courgette = foodDao?.insert(Food(null,"Courgette", idLegumes,0,null, false))
-    val endive = foodDao?.insert(Food(null,"Endive", idLegumes,0,null, false))
-    val pommeTerre = foodDao?.insert(Food(null,"Pomme de terre", idLegumes,0,null, false)) // frite
-    val tomate = foodDao?.insert(Food(null,"Tomate", idLegumes,0,null, false))
-    val melon = foodDao?.insert(Food(null,"Melon", idLegumes,0,null, false))
-    val navet = foodDao?.insert(Food(null,"Navet", idLegumes,0,null, false))
-    val oignon = foodDao?.insert(Food(null,"Oignon", idLegumes,0,null, false))
-    val mais = foodDao?.insert(Food(null,"Maïs", idLegumes,0,null, false)) // mais
-    val epinard = foodDao?.insert(Food(null,"Epinard", idLegumes,0,null, false))
-    val salade = foodDao?.insert(Food(null,"Salade", idLegumes,0,null, false)) // laitue
-    val pasteque = foodDao?.insert(Food(null,"Pastèque", idLegumes,0,null, false)) // pasteque
-    val betterave = foodDao?.insert(Food(null,"Betterave", idLegumes,0,null, false))
-    val poireau = foodDao?.insert(Food(null,"Poireau", idLegumes,0,null, false))
-    val citrouille = foodDao?.insert(Food(null,"Citrouille", idLegumes,0,null, false))
-    val radis = foodDao?.insert(Food(null,"Radis", idLegumes,0,null, false))
-    val lentille = foodDao?.insert(Food(null,"Lentille", idLegumes,0,null, false))
-    val haricot = foodDao?.insert(Food(null,"Haricot", idLegumes,0,null, false)) // peteux
-    val pois = foodDao?.insert(Food(null,"Pois", idLegumes,0,null, false)) // chiche
+    val avocat = foodDao?.insert(Food(null,"Avocat", idLegumes,0,"avocat", false))
+    val artichaut = foodDao?.insert(Food(null,"Artichaut", idLegumes,0,"artichaut", false))
+    val chou = foodDao?.insert(Food(null,"Chou", idLegumes,0,"chou", false))
+    val carotte = foodDao?.insert(Food(null,"Carotte", idLegumes,0,"carotte", false))
+    val celeri = foodDao?.insert(Food(null,"Céleri", idLegumes,0,"celeri", false))
+    val concombre = foodDao?.insert(Food(null,"Concombre", idLegumes,0,"concombre", false))
+    val courgette = foodDao?.insert(Food(null,"Courgette", idLegumes,0,"courgette", false))
+    val endive = foodDao?.insert(Food(null,"Endive", idLegumes,0,"endive", false))
+    val pommeTerre = foodDao?.insert(Food(null,"Pomme de terre", idLegumes,0,"pommeterre", false)) // frite
+    val tomate = foodDao?.insert(Food(null,"Tomate", idLegumes,0,"tomate", false))
+    val melon = foodDao?.insert(Food(null,"Melon", idLegumes,0,"melon", false))
+    val navet = foodDao?.insert(Food(null,"Navet", idLegumes,0,"navet", false))
+    val oignon = foodDao?.insert(Food(null,"Oignon", idLegumes,0,"oignon", false))
+    val mais = foodDao?.insert(Food(null,"Maïs", idLegumes,0,"mais", false)) // mais
+    val epinard = foodDao?.insert(Food(null,"Epinard", idLegumes,0,"epinard", false))
+    val salade = foodDao?.insert(Food(null,"Salade", idLegumes,0,"salade", false)) // laitue
+    val pasteque = foodDao?.insert(Food(null,"Pastèque", idLegumes,0,"pasteque", false)) // pasteque
+    val betterave = foodDao?.insert(Food(null,"Betterave", idLegumes,0,"betterave", false))
+    val poireau = foodDao?.insert(Food(null,"Poireau", idLegumes,0,"poireau", false))
+    val citrouille = foodDao?.insert(Food(null,"Citrouille", idLegumes,0,"citrouille", false))
+    val radis = foodDao?.insert(Food(null,"Radis", idLegumes,0,"radis", false))
+    val lentille = foodDao?.insert(Food(null,"Lentille", idLegumes,0,"lentille", false))
+    val haricot = foodDao?.insert(Food(null,"Haricot", idLegumes,0,"haricot", false)) // peteux
+    val pois = foodDao?.insert(Food(null,"Pois", idLegumes,0,"pois", false)) // chiche
 
     // TARTES
     val pizza = foodDao?.insert(Food(null,"Pizza", idTartes,0,null, false))
@@ -103,47 +103,47 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     val tourte = foodDao?.insert(Food(null,"Tourte", idTartes,0,null, false))
 
     // PRODUITS LAITIERS
-    val fromage = foodDao?.insert(Food(null,"Fromage", idLait,0,null, false))
-    val yaourt = foodDao?.insert(Food(null,"Yaourt", idLait,0,null, false))
-    val beurre = foodDao?.insert(Food(null,"Beurre", idLait,0,null, false))
-    val creme = foodDao?.insert(Food(null,"Crème", idLait,0,null, false))
-    val glace = foodDao?.insert(Food(null,"Glace", idLait,0,null, false))
-    val autresLait = foodDao?.insert(Food(null,"Autres produits laitiers", idSucre,0,null, false))
+    val fromage = foodDao?.insert(Food(null,"Fromage", idLait,0,"fromage", false))
+    val yaourt = foodDao?.insert(Food(null,"Yaourt", idLait,0,"yaourt", false))
+    val beurre = foodDao?.insert(Food(null,"Beurre", idLait,0,"beurre", false))
+    val creme = foodDao?.insert(Food(null,"Crème", idLait,0,"creme", false))
+    val glace = foodDao?.insert(Food(null,"Glace", idLait,0,"glace", false))
+    val autresLait = foodDao?.insert(Food(null,"Autres produits laitiers", idSucre,0,"laitage", false))
 
     // FRUITS
-    val compote = foodDao?.insert(Food(null,"Compote", idFruits,0,null, false))
-    val confiture = foodDao?.insert(Food(null,"Confiture", idFruits,0,null, false))
-    val abricot = foodDao?.insert(Food(null,"Abricot", idFruits,0,null, false))
-    val ananas = foodDao?.insert(Food(null,"Ananas", idFruits,0,null, false))
-    val banane = foodDao?.insert(Food(null,"Banane", idFruits,0,null, false))
-    val cerise = foodDao?.insert(Food(null,"Cerise", idFruits,0,null, false))
-    val clementine = foodDao?.insert(Food(null,"Clémentine", idFruits,0,null, false)) // mandarine, clementine
-    val figue = foodDao?.insert(Food(null,"Figue", idFruits,0,null, false))
-    val fraise = foodDao?.insert(Food(null,"Fraise", idFruits,0,null, false))
-    val framboise = foodDao?.insert(Food(null,"Framboise", idFruits,0,null, false))
-    val kiwi = foodDao?.insert(Food(null,"Kiwi", idFruits,0,null, false))
-    val mangue = foodDao?.insert(Food(null,"Mangue", idFruits,0,null, false))
-    val mure = foodDao?.insert(Food(null,"Mûre", idFruits,0,null, false)) // mure
-    val myrtille = foodDao?.insert(Food(null,"Myrtille", idFruits,0,null, false))
-    val orange = foodDao?.insert(Food(null,"Orange", idFruits,0,null, false))
-    val pamplemousse = foodDao?.insert(Food(null,"Pamplemousse", idFruits,0,null, false))
-    val peche = foodDao?.insert(Food(null,"Pêche", idFruits,0,null, false)) // peche, nectarine
-    val poire = foodDao?.insert(Food(null,"Poire", idFruits,0,null, false))
-    val prune = foodDao?.insert(Food(null,"Prune", idFruits,0,null, false))
-    val pomme = foodDao?.insert(Food(null,"Pomme", idFruits,0,null, false))
-    val raisin = foodDao?.insert(Food(null,"Raisin", idFruits,0,null, false))
-    val citron = foodDao?.insert(Food(null,"Citron", idFruits,0,null, false))
-    val groseille = foodDao?.insert(Food(null,"Groseille", idFruits,0,null, false))
-    val autresFruits = foodDao?.insert(Food(null,"Autres fruits", idFruits,0,null, false))
+    val compote = foodDao?.insert(Food(null,"Compote", idFruits,0,"compote", false))
+    val confiture = foodDao?.insert(Food(null,"Confiture", idFruits,0,"confiture", false))
+    val abricot = foodDao?.insert(Food(null,"Abricot", idFruits,0,"abricot", false))
+    val ananas = foodDao?.insert(Food(null,"Ananas", idFruits,0,"ananas", false))
+    val banane = foodDao?.insert(Food(null,"Banane", idFruits,0,"banane", false))
+    val cerise = foodDao?.insert(Food(null,"Cerise", idFruits,0,"cerise", false))
+    val clementine = foodDao?.insert(Food(null,"Clémentine", idFruits,0,"clementine", false)) // mandarine, clementine
+    val figue = foodDao?.insert(Food(null,"Figue", idFruits,0,"figue", false))
+    val fraise = foodDao?.insert(Food(null,"Fraise", idFruits,0,"fraise", false))
+    val framboise = foodDao?.insert(Food(null,"Framboise", idFruits,0,"framboise", false))
+    val kiwi = foodDao?.insert(Food(null,"Kiwi", idFruits,0,"kiwi", false))
+    val mangue = foodDao?.insert(Food(null,"Mangue", idFruits,0,"mangue", false))
+    val mure = foodDao?.insert(Food(null,"Mûre", idFruits,0,"mure", false)) // mure
+    val myrtille = foodDao?.insert(Food(null,"Myrtille", idFruits,0,"myrtille", false))
+    val orange = foodDao?.insert(Food(null,"Orange", idFruits,0,"orange", false))
+    val pamplemousse = foodDao?.insert(Food(null,"Pamplemousse", idFruits,0,"pamplemousse", false))
+    val peche = foodDao?.insert(Food(null,"Pêche", idFruits,0,"peche", false)) // peche, nectarine
+    val poire = foodDao?.insert(Food(null,"Poire", idFruits,0,"poire", false))
+    val prune = foodDao?.insert(Food(null,"Prune", idFruits,0,"prune", false))
+    val pomme = foodDao?.insert(Food(null,"Pomme", idFruits,0,"pomme", false))
+    val raisin = foodDao?.insert(Food(null,"Raisin", idFruits,0,"raisin", false))
+    val citron = foodDao?.insert(Food(null,"Citron", idFruits,0,"citron", false))
+    val groseille = foodDao?.insert(Food(null,"Groseille", idFruits,0,"groseille", false))
+    val autresFruits = foodDao?.insert(Food(null,"Autres fruits", idFruits,0,"fruit", false))
 
     // SUCRERIES
-    val patisserie = foodDao?.insert(Food(null,"Pâtisserie", idSucre,0,null, false))
-    val bonbon = foodDao?.insert(Food(null,"Bonbon", idSucre,0,null, false)) // friandise
-    val chocolat = foodDao?.insert(Food(null,"Chocolat", idSucre,0,null, false))
-    val biscuit = foodDao?.insert(Food(null,"Biscuits", idSucre,0,null, false))
-    val miel = foodDao?.insert(Food(null,"Miel", idSucre,0,null, false))
-    val gateau = foodDao?.insert(Food(null,"Gâteau", idSucre,0,null, false))
-    val autresSucre = foodDao?.insert(Food(null,"Autres sucreries", idSucre,0,null, false))
+    val patisserie = foodDao?.insert(Food(null,"Pâtisserie", idSucre,0,"", false))
+    val bonbon = foodDao?.insert(Food(null,"Bonbon", idSucre,0,"", false)) // friandise
+    val chocolat = foodDao?.insert(Food(null,"Chocolat", idSucre,0,"", false))
+    val biscuit = foodDao?.insert(Food(null,"Biscuits", idSucre,0,"", false))
+    val miel = foodDao?.insert(Food(null,"Miel", idSucre,0,"", false))
+    val gateau = foodDao?.insert(Food(null,"Gâteau", idSucre,0,"", false))
+    val autresSucre = foodDao?.insert(Food(null,"Autres sucreries", idSucre,0,"", false))
 
     // CEREALES - GRAINS
     val amande = foodDao?.insert(Food(null,"Amande", idCereale,0,"amande", false))
@@ -158,18 +158,18 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     val autresCereales = foodDao?.insert(Food(null,"Autres céréales", idCereale,0,"", false))
 
     // SAUCES
-    val mayonnaise = foodDao?.insert(Food(null,"Mayonnaise", idSauce,0,null, false))
-    val ketchup = foodDao?.insert(Food(null,"Ketchup", idSauce,0,null, false))
-    val vinaigrette = foodDao?.insert(Food(null,"Vinaigrette", idSauce,0,null, false))
-    val moutarde = foodDao?.insert(Food(null,"Moutarde", idSauce,0,null, false))
-    val soja = foodDao?.insert(Food(null,"Soja", idSauce,0,null, false))
-    val autresSauces = foodDao?.insert(Food(null,"Autres sauces", idSauce,0,null, false))
+    val mayonnaise = foodDao?.insert(Food(null,"Mayonnaise", idSauce,0,"", false))
+    val ketchup = foodDao?.insert(Food(null,"Ketchup", idSauce,0,"", false))
+    val vinaigrette = foodDao?.insert(Food(null,"Vinaigrette", idSauce,0,"", false))
+    val moutarde = foodDao?.insert(Food(null,"Moutarde", idSauce,0,"", false))
+    val soja = foodDao?.insert(Food(null,"Soja", idSauce,0,"", false))
+    val autresSauces = foodDao?.insert(Food(null,"Autres sauces", idSauce,0,"", false))
 
     // AUTRES
-    val pain = foodDao?.insert(Food(null,"Pain", idAutres,0,null, false))
-    val champignon = foodDao?.insert(Food(null,"Champignon", idAutres,0,null, false))
-    val huile = foodDao?.insert(Food(null,"Huile", idAutres,0,null, false))
-    val algues = foodDao?.insert(Food(null,"Algues", idAutres,0,null, false))
+    val pain = foodDao?.insert(Food(null,"Pain", idAutres,0,"", false))
+    val champignon = foodDao?.insert(Food(null,"Champignon", idAutres,0,"", false))
+    val huile = foodDao?.insert(Food(null,"Huile", idAutres,0,"", false))
+    val algues = foodDao?.insert(Food(null,"Algues", idAutres,0,"", false))
 
     /** ------------------------------------------------------------------------------------------------------
     -------------------------------------- KEYWORDS INSERTION ------------------------------------------------
@@ -227,6 +227,7 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
         Keyword(null,"laitue",salade),
         Keyword(null,"pasteque",pasteque),
         Keyword(null,"peteux",haricot),
+        Keyword(null,"potiron",citrouille),
         Keyword(null,"chiche",pois),
         Keyword(null,"feuillete",feuillete),
         Keyword(null,"creme",creme),
