@@ -11,6 +11,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.FrameLayout
 import android.annotation.SuppressLint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.support.v4.content.ContextCompat
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.Activities.OnItemSelectionListener
@@ -19,7 +22,7 @@ import com.g.laurent.alitic.Controllers.Activities.isAlreadySelected
 import com.g.laurent.alitic.Controllers.Activities.updateListSelected
 import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Models.*
-
+import com.roomorama.caldroid.CaldroidGridAdapter
 
 /** FOODTYPE ADAPTER**/
 @SuppressLint("RecyclerView")
@@ -185,5 +188,57 @@ class GridAdapter(val listFood: List<*>, var listItemSelected: MutableList<Any>?
 
     override fun getCount(): Int {
         return listFood.size
+    }
+}
+
+/** CALENDAR ADAPTER**/
+class CalendarAdapter(context: Context, month: Int, year: Int, val mode:Boolean = false, caldroidData: Map<String, Any>, extraData: Map<String, Any>) : CaldroidGridAdapter(context, month, year, caldroidData, extraData) {
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
+
+        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater?
+
+        if(inflater!=null){
+
+            val view = inflater.inflate(R.layout.calendar_item, parent, false)
+            val holder = ChronoViewHolder(view)
+
+            val chronoEvents = getChronoEvents(month, year, mode, context)
+            val dateTime = this.datetimeList[position]
+
+            // Change content of textview and imageview
+            if (dateTime.month == month) {
+
+                holder.dayNum?.text = dateTime.day.toString()
+
+                    if (chronoEvents[dateTime] != 0){ // if there is an event this day
+                    val text = "(" + chronoEvents[dateTime] + ")"
+                    holder.eventNum?.text = text
+                    holder.fireIcon?.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(context, android.R.color.holo_red_dark), PorterDuff.Mode.MULTIPLY)
+                } else { // if no event this day
+                    holder.eventNum?.visibility = View.INVISIBLE
+                    holder.fireIcon?.visibility = View.INVISIBLE
+                }
+
+                // Configure on click listener for displaying timeline
+                view.setOnClickListener(View.OnClickListener {
+
+                    
+                })
+
+            } else {
+                holder.eventNum?.setBackgroundResource(android.R.color.darker_gray)
+                holder.fireIcon?.setBackgroundResource(android.R.color.darker_gray)
+                holder.dayNum?.setBackgroundResource(android.R.color.darker_gray)
+                holder.eventNum?.visibility = View.INVISIBLE
+                holder.fireIcon?.visibility = View.INVISIBLE
+                holder.dayNum?.visibility = View.INVISIBLE
+            }
+
+
+            return view
+        }
+
+        return null
     }
 }

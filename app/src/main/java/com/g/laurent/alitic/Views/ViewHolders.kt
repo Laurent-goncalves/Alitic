@@ -82,3 +82,9 @@ class FoodTypeViewHolder(itemView: View, private val mode:Boolean = false, val c
         oldSelect = newSelect
     }
 }
+
+class ChronoViewHolder(itemView: View?){
+    var dayNum: TextView? = itemView?.findViewById(R.id.day_number)
+    var fireIcon: ImageView? = itemView?.findViewById(R.id.fire_icon)
+    var eventNum: TextView? = itemView?.findViewById(R.id.number_events)
+}

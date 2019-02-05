@@ -62,6 +62,13 @@ class ExampleUnitTest {
     }
 
     @Test
+    fun test_get_last_day_month() {
+        assertEquals(28, getLastDayMonth(2,2019))
+        assertEquals(31, getLastDayMonth(3,2019))
+        assertEquals(30, getLastDayMonth(4,2019))
+    }
+
+    @Test
     fun test_get_date_in_text_format(){
         val date = getDateAsLong(1,12,2018,4,55)
         assertEquals("sam. 1 déc.", getTextDate(date))

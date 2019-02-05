@@ -1,7 +1,11 @@
 package com.g.laurent.alitic
 
+import android.content.Context
+import com.g.laurent.alitic.Controllers.ClassControllers.getEventsFromDate
+import hirondelle.date4j.DateTime
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 fun getTodayDate(): Long {
     val date = Calendar.getInstance()
@@ -69,6 +73,37 @@ fun getYear(dateCode:Long):Int{
 
 fun getTimeAsLong(hour:Int, min:Int):Long {
     return ((min + hour * 60) * 60 * 1000).toLong()
+}
+
+fun getDateTimeFromLong(day:Int, month:Int, year:Int):DateTime{
+    return DateTime(year, month, day, 0,0,0,0)
+}
+
+fun getChronoEvents(month:Int, year:Int, mode:Boolean=false, context: Context):HashMap<DateTime, Int> {
+
+    val chronology : HashMap<DateTime, Int> = hashMapOf()
+
+    for (i in 1 .. getLastDayMonth(month, year)) {
+
+        val events = getEventsFromDate(getDateAsLong(i, month, year, 0,0), mode, context)?.size
+
+        if(events==null){
+            chronology[getDateTimeFromLong(i, month, year)] = 0
+        } else {
+            chronology[getDateTimeFromLong(i, month, year)] = events
+        }
+    }
+
+    return chronology
+}
+
+fun getLastDayMonth(month:Int, year:Int ):Int{
+    val cal = Calendar.getInstance()
+    cal.set(Calendar.MONTH, month-1)
+    cal.set(Calendar.YEAR, year)
+    cal.set(Calendar.DAY_OF_MONTH, 1)
+
+    return cal.getActualMaximum(Calendar.DAY_OF_MONTH)
 }
 
 fun getHourAsInt(dateCode:Long):Int {
