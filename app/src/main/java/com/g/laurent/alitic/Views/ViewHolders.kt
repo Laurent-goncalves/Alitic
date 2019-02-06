@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.*
 import com.g.laurent.alitic.*
-import com.g.laurent.alitic.Controllers.ClassControllers.ChronoItem
+import com.g.laurent.alitic.Controllers.ClassControllers.Chrono
 import com.g.laurent.alitic.Models.FoodType
 import com.github.vipulasri.timelineview.TimelineView
 
@@ -25,9 +25,9 @@ class TimeLineViewHolder(itemView: View, viewType: Int, val mode:Boolean = false
         grid = itemView.findViewById(R.id.grid)
     }
 
-    fun configureTimeLineViewHolder(chronoItem: ChronoItem) {
-        hourView.text = chronoItem.hour
-        val adapter = GridAdapter(chronoItem.item, null, false,null, mode, context)
+    fun configureTimeLineViewHolder(chrono: Chrono) {
+        hourView.text = chrono.hour
+        val adapter = GridAdapter(chrono.item, null, false,null, mode, context)
         grid.adapter = adapter
     }
 }
@@ -63,7 +63,7 @@ class FoodTypeViewHolder(itemView: View, private val mode:Boolean = false, val c
             textFood.text = foodType.name
 
             // Edit image to display
-            val image = getImagePath(foodType)
+            val image = getImagePath(foodType, mode, context)
             val imageDraw = getImageDrawPath(foodType, mode, context)
             getImageFromPath(image, imageDraw, imageFood, context)
         }

@@ -41,7 +41,7 @@ fun getImageFromPath(path:String?, pathDraw:String?, imageView: ImageView, conte
     }
 }
 
-fun getImagePath(any: Any):String?{
+fun getImagePath(any: Any, mode:Boolean = false, context: Context):String?{
 
     return when (any) {
         is Food -> {
@@ -52,6 +52,9 @@ fun getImagePath(any: Any):String?{
         }
         is FoodType -> {
             any.foodTypePic
+        }
+        is Event -> {
+            getEventType(any.idEventType, mode, context)?.eventPic
         }
         else ->
             null
@@ -66,6 +69,9 @@ fun getImageDrawPath(any: Any, mode:Boolean, context: Context):String?{
         }
         is Food -> { // if food
             getFoodType(any.idFoodType, mode, context)?.foodTypePic
+        }
+        is Event -> { // if event
+            getEventType(any.idEventType, mode, context)?.eventPic
         }
         else ->
             null

@@ -16,10 +16,7 @@ import android.graphics.PorterDuffColorFilter
 import android.support.v4.content.ContextCompat
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import com.g.laurent.alitic.*
-import com.g.laurent.alitic.Controllers.Activities.OnItemSelectionListener
-import com.g.laurent.alitic.Controllers.Activities.OnMenuSelectionListener
-import com.g.laurent.alitic.Controllers.Activities.isAlreadySelected
-import com.g.laurent.alitic.Controllers.Activities.updateListSelected
+import com.g.laurent.alitic.Controllers.Activities.*
 import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Models.*
 import com.roomorama.caldroid.CaldroidGridAdapter
@@ -66,7 +63,7 @@ class FoodTypeAdapter(val list: List<FoodType>, val recyclerView: RecyclerView, 
 }
 
 /** TIMELINE ADAPTER**/
-class TimeLineAdapter(val list: List<ChronoItem>, val mode:Boolean=false, val context: Context) : RecyclerView.Adapter<TimeLineViewHolder>() {
+class TimeLineAdapter(val list: List<Chrono>, val mode:Boolean=false, val context: Context) : RecyclerView.Adapter<TimeLineViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimeLineViewHolder {
         val view = View.inflate(parent.context, com.g.laurent.alitic.R.layout.timeline_viewholder, null)
@@ -105,9 +102,13 @@ class GridAdapter(val listFood: List<*>, var listItemSelected: MutableList<Any>?
         fun getTextToDisplay():String?{
 
             return when (listFood[position]) {
-                is EventType -> { // if event
+                is EventType -> { // if eventType
                     val eventType = listFood[position] as EventType
                     eventType.name
+                }
+                is Event -> { // if event
+                    val event = listFood[position] as Event
+                    getEventType(event.idEventType, mode, context)?.name
                 }
                 is Food -> {
                     val food = listFood[position] as Food
@@ -131,7 +132,7 @@ class GridAdapter(val listFood: List<*>, var listItemSelected: MutableList<Any>?
             }
 
             when (listFood[position]) {
-                is EventType -> { // if event
+                is EventType -> { // if eventType
                     val eventType = listFood[position] as EventType
                     selectItem(isAlreadySelected(eventType.id, listItemSelected))
                 }
@@ -152,7 +153,7 @@ class GridAdapter(val listFood: List<*>, var listItemSelected: MutableList<Any>?
             val pickIcon = view.findViewById<ImageView>(com.g.laurent.alitic.R.id.check_item)
 
             val text = getTextToDisplay()
-            val image = getImagePath(listFood[position]!!)
+            val image = getImagePath(listFood[position]!!, mode, context)
             val imageDraw = getImageDrawPath(listFood[position]!!, mode, context)
 
             // Put the food name in text
@@ -192,7 +193,7 @@ class GridAdapter(val listFood: List<*>, var listItemSelected: MutableList<Any>?
 }
 
 /** CALENDAR ADAPTER**/
-class CalendarAdapter(context: Context, month: Int, year: Int, val mode:Boolean = false, caldroidData: Map<String, Any>, extraData: Map<String, Any>) : CaldroidGridAdapter(context, month, year, caldroidData, extraData) {
+class CalendarAdapter(context: Context, private val onTimeLineDisplay: OnTimeLineDisplay, month: Int, year: Int, val mode:Boolean = false, caldroidData: Map<String, Any>, extraData: Map<String, Any>) : CaldroidGridAdapter(context, month, year, caldroidData, extraData) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
 
@@ -221,10 +222,9 @@ class CalendarAdapter(context: Context, month: Int, year: Int, val mode:Boolean 
                 }
 
                 // Configure on click listener for displaying timeline
-                view.setOnClickListener(View.OnClickListener {
-
-                    
-                })
+                view.setOnClickListener {
+                    onTimeLineDisplay.displayTimeLineFragment(dateTime.day, dateTime.month, dateTime.year)
+                }
 
             } else {
                 holder.eventNum?.setBackgroundResource(android.R.color.darker_gray)

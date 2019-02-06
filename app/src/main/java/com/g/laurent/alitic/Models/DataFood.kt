@@ -137,13 +137,12 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     val autresFruits = foodDao?.insert(Food(null,"Autres fruits", idFruits,0,"fruit", false))
 
     // SUCRERIES
-    val patisserie = foodDao?.insert(Food(null,"Pâtisserie", idSucre,0,"", false))
-    val bonbon = foodDao?.insert(Food(null,"Bonbon", idSucre,0,"", false)) // friandise
-    val chocolat = foodDao?.insert(Food(null,"Chocolat", idSucre,0,"", false))
-    val biscuit = foodDao?.insert(Food(null,"Biscuits", idSucre,0,"", false))
-    val miel = foodDao?.insert(Food(null,"Miel", idSucre,0,"", false))
-    val gateau = foodDao?.insert(Food(null,"Gâteau", idSucre,0,"", false))
-    val autresSucre = foodDao?.insert(Food(null,"Autres sucreries", idSucre,0,"", false))
+    val patisserie = foodDao?.insert(Food(null,"Pâtisserie", idSucre,0,"patisserie", false))
+    val bonbon = foodDao?.insert(Food(null,"Bonbon", idSucre,0,"bonbon", false)) // friandise
+    val chocolat = foodDao?.insert(Food(null,"Chocolat", idSucre,0,"chocolat", false))
+    val biscuit = foodDao?.insert(Food(null,"Biscuits", idSucre,0,"biscuit", false))
+    val miel = foodDao?.insert(Food(null,"Miel", idSucre,0,"miel", false))
+    val autresSucre = foodDao?.insert(Food(null,"Autres sucreries", idSucre,0,"gateau", false))
 
     // CEREALES - GRAINS
     val amande = foodDao?.insert(Food(null,"Amande", idCereale,0,"amande", false))
@@ -238,7 +237,7 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
         Keyword(null,"nectarine",peche),
         Keyword(null,"patisserie",patisserie),
         Keyword(null,"friandise",bonbon),
-        Keyword(null,"gateau",gateau),
+        Keyword(null,"gateau",patisserie),
         Keyword(null,"Cacahuete",cacahuete)
     )
 

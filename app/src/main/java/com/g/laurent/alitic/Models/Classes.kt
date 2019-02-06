@@ -97,6 +97,9 @@ interface MealDao {
     @Query("SELECT * from meal WHERE id =:idMeal")
     fun getMeal(idMeal:Long?): Meal
 
+    @Query("SELECT * from meal WHERE dateCode>=:minDate AND dateCode <=:maxDate")
+    fun getMealsDate(minDate: Long, maxDate:Long): List<Meal>?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(meal: Meal):Long
 

@@ -2,6 +2,9 @@ package com.g.laurent.alitic.Controllers.ClassControllers
 
 import android.content.Context
 import com.g.laurent.alitic.Models.*
+import com.g.laurent.alitic.getBegDayDate
+import com.g.laurent.alitic.getEndDayDate
+import kotlin.math.max
 
 fun saveNewMeal(mealItems:List<MealItem>, dateCode:Long, mode:Boolean = false, context: Context):Long?{
 
@@ -84,6 +87,26 @@ fun getAllMealItems(mode:Boolean = false, context: Context):List<MealItem>?{
     AppDataBase.TEST_MODE = mode
     val mealItemDao = AppDataBase.getInstance(context)?.mealItemDao()
     return mealItemDao?.getAll()
+}
+
+fun getAllMealsFromDate(dateCode:Long, mode:Boolean = false, context: Context):List<Meal>?{
+
+    AppDataBase.TEST_MODE = mode
+    val mealDao = AppDataBase.getInstance(context)?.mealDao()
+    val mealItemDao = AppDataBase.getInstance(context)?.mealItemDao()
+
+    val minTime = getBegDayDate(dateCode)
+    val maxTime = getEndDayDate(dateCode)
+
+    val meals = mealDao?.getMealsDate(minTime, maxTime)
+
+    if (meals != null) {
+        for(meal in meals){
+            meal.listMealItems = mealItemDao?.getItemsFromMeal(meal.id)
+        }
+    }
+
+    return meals
 }
 
 fun deleteMeal(idMeal:Long?, mode:Boolean = false, context: Context){
