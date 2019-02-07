@@ -295,7 +295,7 @@ abstract class AppDataBase : RoomDatabase() {
                                     super.onCreate(db)
                                     // insert the data on the IO Thread
                                     ioThread {
-                                        insertData(INSTANCE?.foodTypeDao(), INSTANCE?.foodDao(), INSTANCE?.keywordDao())
+                                        insertData(INSTANCE?.foodTypeDao(), INSTANCE?.foodDao(), INSTANCE?.keywordDao(), INSTANCE?.eventTypeDao())
                                     }
                                 }
                             })

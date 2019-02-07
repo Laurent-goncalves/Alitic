@@ -2,7 +2,7 @@
 
 package com.g.laurent.alitic.Models
 
-fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao?){
+fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao?, eventTypeDao:EventTypeDao?){
 
     /** ------------------------------------------------------------------------------------------------------
     -------------------------------------- FOODTYPE INSERTION ------------------------------------------------
@@ -96,12 +96,6 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     val haricot = foodDao?.insert(Food(null,"Haricot", idLegumes,0,"haricot", false)) // peteux
     val pois = foodDao?.insert(Food(null,"Pois", idLegumes,0,"pois", false)) // chiche
 
-    // TARTES
-    val pizza = foodDao?.insert(Food(null,"Pizza", idTartes,0,null, false))
-    val quiche = foodDao?.insert(Food(null,"Quiche", idTartes,0,null, false))
-    val feuillete = foodDao?.insert(Food(null,"Feuilleté", idTartes,0,null, false))
-    val tourte = foodDao?.insert(Food(null,"Tourte", idTartes,0,null, false))
-
     // PRODUITS LAITIERS
     val fromage = foodDao?.insert(Food(null,"Fromage", idLait,0,"fromage", false))
     val yaourt = foodDao?.insert(Food(null,"Yaourt", idLait,0,"yaourt", false))
@@ -157,18 +151,17 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     val autresCereales = foodDao?.insert(Food(null,"Autres céréales", idCereale,0,"", false))
 
     // SAUCES
-    val mayonnaise = foodDao?.insert(Food(null,"Mayonnaise", idSauce,0,"", false))
-    val ketchup = foodDao?.insert(Food(null,"Ketchup", idSauce,0,"", false))
-    val vinaigrette = foodDao?.insert(Food(null,"Vinaigrette", idSauce,0,"", false))
-    val moutarde = foodDao?.insert(Food(null,"Moutarde", idSauce,0,"", false))
-    val soja = foodDao?.insert(Food(null,"Soja", idSauce,0,"", false))
+    val mayonnaise = foodDao?.insert(Food(null,"Mayonnaise", idSauce,0,"mayonnaise", false))
+    val ketchup = foodDao?.insert(Food(null,"Ketchup", idSauce,0,"ketchup", false))
+    val vinaigrette = foodDao?.insert(Food(null,"Vinaigrette", idSauce,0,"vinaigrette", false))
+    val moutarde = foodDao?.insert(Food(null,"Moutarde", idSauce,0,"moutarde", false))
+    val soja = foodDao?.insert(Food(null,"Soja", idSauce,0,"soja", false))
     val autresSauces = foodDao?.insert(Food(null,"Autres sauces", idSauce,0,"", false))
 
     // AUTRES
-    val pain = foodDao?.insert(Food(null,"Pain", idAutres,0,"", false))
-    val champignon = foodDao?.insert(Food(null,"Champignon", idAutres,0,"", false))
-    val huile = foodDao?.insert(Food(null,"Huile", idAutres,0,"", false))
-    val algues = foodDao?.insert(Food(null,"Algues", idAutres,0,"", false))
+    val pain = foodDao?.insert(Food(null,"Pain", idAutres,0,"pain", false))
+    val champignon = foodDao?.insert(Food(null,"Champignon", idAutres,0,"champignon", false))
+    val huile = foodDao?.insert(Food(null,"Huile", idAutres,0,"huile", false))
 
     /** ------------------------------------------------------------------------------------------------------
     -------------------------------------- KEYWORDS INSERTION ------------------------------------------------
@@ -228,7 +221,6 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
         Keyword(null,"peteux",haricot),
         Keyword(null,"potiron",citrouille),
         Keyword(null,"chiche",pois),
-        Keyword(null,"feuillete",feuillete),
         Keyword(null,"creme",creme),
         Keyword(null,"mandarine",clementine),
         Keyword(null,"clementine",clementine),
@@ -242,6 +234,20 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     )
 
     keywordDao?.insertAll(listKeywords)
+
+    /** ------------------------------------------------------------------------------------------------------
+    -------------------------------------- EVENT TYPE INSERTION ----------------------------------------------
+    ------------------------------------------------------------------------------------------------------ **/
+
+    eventTypeDao?.insert(EventType(null, "Reflux", "", 0, 3))
+    eventTypeDao?.insert(EventType(null, "Mal au ventre", "", 0, 3))
+    eventTypeDao?.insert(EventType(null, "Mal à la tête", "", 0, 3))
+    eventTypeDao?.insert(EventType(null, "Diarrhée", "", 0, 3))
+    eventTypeDao?.insert(EventType(null, "Ballonnement", "", 0, 3))
+    eventTypeDao?.insert(EventType(null, "Brûlure d'estomac", "", 0, 3))
+    eventTypeDao?.insert(EventType(null, "Constipation", "", 0, 3))
+    eventTypeDao?.insert(EventType(null, "Vomissement", "", 0, 3))
+
 }
 
 
