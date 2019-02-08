@@ -7,7 +7,7 @@
         tools:context=".Controllers.Activities.MainActivity">
 
     <ImageView
-            android:id="@+id/image_test"
+            android:id="@+id/image_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="matrix"
@@ -51,4 +51,19 @@
             android:focusable="true"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"/>
+
+    <include
+            android:id="@+id/layout_meal"
+            layout="@layout/pick_meal_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+
+    <include
+            android:id="@+id/layout_event"
+            layout="@layout/pick_event_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+
 </RelativeLayout>

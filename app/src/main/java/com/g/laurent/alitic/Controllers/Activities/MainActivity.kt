@@ -1,48 +1,58 @@
 package com.g.laurent.alitic.Controllers.Activities
 
 import android.content.Context
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
-import android.view.View
-import android.widget.ImageView
+import android.content.Intent
 import android.graphics.Matrix
-import java.lang.Math.round
+import android.os.Bundle
+import android.os.Handler
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.view.View
 import android.view.ViewTreeObserver
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.animation.ValueAnimator
-import android.graphics.RectF
+import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.ImageView
+import com.g.laurent.alitic.Controllers.ClassControllers.getAllEventTypes
+import com.g.laurent.alitic.Controllers.ClassControllers.getAllFoodTypes
+import com.g.laurent.alitic.Controllers.ClassControllers.getListFoodByType
+import com.g.laurent.alitic.R
+import com.g.laurent.alitic.Views.FoodTypeAdapter
+import com.g.laurent.alitic.Views.GridAdapter
+import com.g.laurent.alitic.Views.SaveDialog
+import com.g.laurent.alitic.Views.TAG_SCHEDULE_DIALOG
+import kotlinx.android.synthetic.main.pick_event_layout.*
+import kotlinx.android.synthetic.main.pick_meal_layout.*
+import java.lang.Math.round
 
 
+class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionListener, OnItemSelectionListener {
 
-
-class MainActivity : AppCompatActivity(), View.OnClickListener {
-
-    private var centerX:Int = 0
-    private var centerY:Int = 0
-    private lateinit var context: Context
     private var matrix = Matrix()
-    private lateinit var imageView:ImageView
+    private lateinit var context: Context
+    private lateinit var imageView: ImageView
+    private lateinit var menuAdapter: FoodTypeAdapter
+    private lateinit var gridAdapter: GridAdapter
+    private val onMenuSelectionListener = this
+    private val onItemSelectionListener = this
+    private var listSelected:MutableList<Any> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.g.laurent.alitic.R.layout.activity_main)
         context = applicationContext
+        clearDatabase(context)
 
-        imageView = findViewById(com.g.laurent.alitic.R.id.image_test)
-        val View1 = findViewById<View>(com.g.laurent.alitic.R.id.top_left_corner)
-        val View2 = findViewById<View>(com.g.laurent.alitic.R.id.top_right_corner)
-        val View3 = findViewById<View>(com.g.laurent.alitic.R.id.bottom_left_corner)
-        val View4 = findViewById<View>(com.g.laurent.alitic.R.id.bottom_right_corner)
-
-        View1.setOnClickListener(this)
-        View2.setOnClickListener(this)
-        View3.setOnClickListener(this)
-        View4.setOnClickListener(this)
+        imageView = findViewById(R.id.image_background)
+        findViewById<View>(R.id.top_left_corner).setOnClickListener(this)
+        findViewById<View>(R.id.top_right_corner).setOnClickListener(this)
+        findViewById<View>(R.id.bottom_left_corner).setOnClickListener(this)
+        findViewById<View>(R.id.bottom_right_corner).setOnClickListener(this)
 
         initCamera()
     }
 
-    fun initCamera(){
+    private fun initCamera(){
 
         val vto = imageView.viewTreeObserver
         vto.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
@@ -52,13 +62,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
                 val dWidth = imageView.drawable.intrinsicWidth
                 val dHeight = imageView.drawable.intrinsicHeight
-                val height = imageView.measuredHeight
-                val width = imageView.measuredWidth
+                val sHeight = imageView.measuredHeight
+                val sWidth = imageView.measuredWidth
 
-                centerX = round((width - dWidth) * 0.5f)
-                centerY = round((height - dHeight) * 0.5f)
+                Loc.setPosition(Loc.CENTER,
+                    Position(round((dWidth - sWidth) * -0.5f).toFloat(), round((dHeight - sHeight) * -0.5f).toFloat()))
+                Loc.setPosition(Loc.TOP_RIGHT,
+                    Position(-(dWidth - sWidth).toFloat(), 0f))
+                Loc.setPosition(Loc.BOTTOM_LEFT,
+                    Position(0f, -(dHeight - sHeight).toFloat()))
+                Loc.setPosition(Loc.BOTTOM_RIGHT,
+                    Position(-(dWidth - sWidth).toFloat(), -(dHeight - sHeight).toFloat()))
 
-                moveCamera(null,null)
+                moveCamera(imageView, null, Loc.CENTER.position, matrix)
 
                 return true
             }
@@ -68,66 +84,127 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
 
         when (v?.id) {
-            com.g.laurent.alitic.R.id.top_left_corner -> {
-                moveCamera(true, true)
+            R.id.top_left_corner -> { //       |' |
+                moveCamera(imageView, Loc.CENTER.position, Loc.TOP_LEFT.position,matrix)
+                displayMealPicking()
+                configureButtons(TypeDisplay.MEAL)
             }
 
-            com.g.laurent.alitic.R.id.top_right_corner -> {
-                moveCamera(true, false)
+            R.id.top_right_corner -> {//       | '|
+                moveCamera(imageView,Loc.CENTER.position, Loc.TOP_RIGHT.position,matrix)
+                displayEventPicking()
+                configureButtons(TypeDisplay.EVENT)
             }
 
-            com.g.laurent.alitic.R.id.bottom_left_corner -> {
-                moveCamera(false, true)
+            R.id.bottom_left_corner -> {//     |, |
+                moveCamera(imageView,Loc.CENTER.position, Loc.BOTTOM_LEFT.position,matrix)
+                val intent = Intent(this, ChronoActivity::class.java)
+                startActivity(intent)
             }
 
-            com.g.laurent.alitic.R.id.bottom_right_corner -> {
-                moveCamera(false, false)
+            R.id.bottom_right_corner -> {//    | ,|
+                moveCamera(imageView,Loc.CENTER.position, Loc.BOTTOM_RIGHT.position,matrix)
             }
         }
     }
 
-    fun moveCamera(top:Boolean?, left:Boolean?){
+    private fun configureButtons(typeDisplay:TypeDisplay){
 
-        var dx = 0
-        var dy = 0
+        // Associate buttons Cancel and save
+        val buttonCancel: Button = findViewById(typeDisplay.idCancel)
+        val buttonSave:Button = findViewById(typeDisplay.idSave)
 
-        if(top==null || left == null){ // CENTER
-            matrix.reset()
-            matrix.setTranslate(centerX.toFloat(), centerY.toFloat())
-            imageView.imageMatrix = matrix
+        // Set on click listener for each button
+        buttonCancel.setOnClickListener { goToBackToMainPage(typeDisplay.type) }
 
-        } else {
-            if (top && left) { // ---------- |' |
-                dx = - centerX
-                dy = - centerY
-            } else if (top && !left) { // -- | '|
-                dx = centerX
-                dy = -centerY
-            } else if (!top && left) { // -- |, |
-                dx = -centerX
-                dy = centerY
-            } else { // -------------------- | ,|
-                dx = centerX
-                dy = centerY
-            }
-
-            val valueAnimator = ValueAnimator.ofFloat(0f, 1f)
-            valueAnimator.interpolator = AccelerateDecelerateInterpolator() // increase the speed first and then decrease
-            valueAnimator.duration = 5000
-            valueAnimator.addUpdateListener { animation ->
-
-                val progress = animation.animatedValue as Float
-
-                val tempX = progress * dx.toFloat()
-                val tempY = progress * dy.toFloat()
-
-                matrix.reset()
-                matrix.setTranslate(centerX + tempX, centerY + tempY)
-
-                imageView.imageMatrix = matrix
-            }
-
-            valueAnimator.start()
+        buttonSave.setOnClickListener {
+            /**    Show dialog fragment to confirm date for saving  **/
+            val fm = supportFragmentManager
+            val myDialogFragment = SaveDialog().newInstance(typeDisplay, listSelected.toList())
+            myDialogFragment.show(fm, TAG_SCHEDULE_DIALOG)
         }
+    }
+
+    fun goToBackToMainPage(typeDisplay:String){
+
+        when(typeDisplay){
+            EVENT -> {
+                // Hide layout for meal picking
+                findViewById<FrameLayout>(R.id.layout_event).visibility = View.GONE
+
+                // Move camera to the center of image in background
+                Handler().postDelayed({
+                    moveCamera(imageView, Loc.TOP_RIGHT.position,Loc.CENTER.position, matrix)
+                },DELAY_HIDE)
+
+            }
+            MEAL -> {
+                // Hide layout for meal picking
+                findViewById<FrameLayout>(R.id.layout_meal).visibility = View.GONE
+
+                // Move camera to the center of image in background
+                Handler().postDelayed({
+                    moveCamera(imageView, Loc.TOP_LEFT.position,Loc.CENTER.position, matrix)
+                },DELAY_HIDE)
+            }
+        }
+
+        // Re-initialize listSelected
+        listSelected = mutableListOf()
+    }
+
+    /**
+    -------------------------- MEAL PICKING --------------------------------------------------------------------------
+     */
+
+    private fun displayMealPicking(){
+
+        Handler().postDelayed({
+
+            findViewById<FrameLayout>(R.id.layout_meal).visibility = View.VISIBLE
+
+            val listFoodTypes = getAllFoodTypes(context = context)!!
+
+            val mLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+            food_recycler_view.layoutManager = mLayoutManager
+            menuAdapter = FoodTypeAdapter(listFoodTypes, food_recycler_view, onMenuSelectionListener, context = this)
+            food_recycler_view.adapter = menuAdapter
+
+            val listFoods = getListFoodByType(listFoodTypes[0].id,context = context)
+            gridAdapter = GridAdapter(listFoods!!, listSelected, true, onItemSelectionListener,context = context)
+            gridview_food.adapter = gridAdapter
+
+        }, DELAY_SHOW)
+    }
+
+    override fun onMenuSelected(selection: Int) {
+
+        val listFoodTypes = getAllFoodTypes(context = context)!!
+
+        val listFoods = getListFoodByType(listFoodTypes[selection].id, false, context)
+        gridAdapter = GridAdapter(listFoods!!, listSelected,true, onItemSelectionListener, false, context)
+        gridview_food.adapter = gridAdapter
+    }
+
+    override fun onItemSelected(selected: Any) {
+        listSelected = updateListSelected(selected, listSelected)
+    }
+
+    /**
+    -------------------------- EVENT PICKING ----------------------------------------------------------------------------
+     */
+
+    private fun displayEventPicking(){
+
+        Handler().postDelayed({
+
+            findViewById<FrameLayout>(R.id.layout_event).visibility = View.VISIBLE
+
+            val listEventTypes = getAllEventTypes(context = context)!!
+
+            gridAdapter = GridAdapter(listEventTypes, listSelected, true, onItemSelectionListener, context = context)
+            gridview_event.adapter = gridAdapter
+
+        }, DELAY_SHOW)
     }
 }

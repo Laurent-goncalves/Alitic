@@ -24,6 +24,27 @@ fun saveNewMeal(mealItems:List<MealItem>, dateCode:Long, mode:Boolean = false, c
     return idMeal
 }
 
+fun updateMeal(mealItems:List<MealItem>, dateCode:Long, mode:Boolean = false, context: Context):Long?{
+
+    AppDataBase.TEST_MODE = mode
+    val mealItemDao = AppDataBase.getInstance(context)?.mealItemDao()
+    val mealDao = AppDataBase.getInstance(context)?.mealDao()
+
+    // DELETE meal and mealitems
+    deleteMeal(mealItems[0].id, mode, context)
+
+    // INSERT NEW meal
+    val idMeal = mealDao?.insert(Meal(null, dateCode, mealItems))
+
+    // INSERT each mealItem
+    for(item in mealItems){
+        mealItemDao?.insert(MealItem(null, idMeal,item.idFood))
+    }
+
+    // RETURN idMeal
+    return idMeal
+}
+
 fun getMealFromDatabase(idMeal:Long?, mode:Boolean = false, context: Context):Meal?{
 
     AppDataBase.TEST_MODE = mode
@@ -133,5 +154,4 @@ fun deleteAllMeals(mode:Boolean = false, context: Context){
 // --------------------------------------------- CONSTANTS ----------------------------------------------------
 // ------------------------------------------------------------------------------------------------------------
 
-const val MEAL_SAVE = "save_meal"
 

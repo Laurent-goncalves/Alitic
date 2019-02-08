@@ -5,10 +5,16 @@
     <string name="yes">YES</string>
     <string name="no">NO</string>
 
-    <string name="save_meal_title_dialog">Sauvegarder repas</string>
+    <string name="save_meal_title_dialog">Sauvegarder un repas</string>
     <string name="save_meal_content_dialog">Voulez-vous sauvegarder le repas à cette heure-ci ?</string>
     <string name="save_meal_success_message_dialog">Repas sauvegardé avec succès</string>
-    <string name="save_meal_abort_message_dialog">Repas non sauvegardé. Renseignez une date.</string>
+
+    <string name="save_event_title_dialog">Sauvegarder ressenti</string>
+    <string name="save_event_content_dialog">Voulez-vous sauvegarder le ressenti à cette heure-ci ?</string>
+    <string name="save_event_success_message_dialog">Ressenti sauvegardé avec succès</string>
+
+    <string name="save_abort_message_dialog">Renseignez une date et une heure svp.</string>
+
 
     <string name="date">Date</string>
     <string name="time">Time</string>
