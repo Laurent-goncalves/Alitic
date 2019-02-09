@@ -3,6 +3,7 @@ package com.g.laurent.alitic.Controllers.Activities
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Matrix
+import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import com.facebook.stetho.Stetho
@@ -14,6 +15,7 @@ import com.g.laurent.alitic.R
 
 
 const val DURATION_MOVE_CAMERA = 3000.toLong()
+const val DURATION_MOVE_PANEL = 2000.toLong()
 const val EVENT = "EVENT"
 const val MEAL = "MEAL"
 const val DELAY_SHOW = 2000.toLong()
@@ -34,11 +36,27 @@ enum class Loc(var position : Position) {
     TOP_LEFT(Position(0.toFloat(),0.toFloat())),
     TOP_RIGHT(Position(0.toFloat(),0.toFloat())),
     BOTTOM_LEFT(Position(0.toFloat(),0.toFloat())),
-    BOTTOM_RIGHT(Position(0.toFloat(),0.toFloat()));
+    BOTTOM_RIGHT(Position(0.toFloat(),0.toFloat())),
+    SMALL_PANEL_CENTER(Position(0.toFloat(),0.toFloat())),
+    BIG_PANEL_CENTER(Position(0.toFloat(),0.toFloat()));
 
     companion object {
         fun setPosition(loc:Loc, newPosition: Position){
             loc.position = newPosition
+        }
+    }
+}
+
+enum class Pan(var min : Float, var max:Float) {
+
+    DIAMETER_PANEL(0.toFloat(),0.toFloat()),
+    DELTA_Y(0.toFloat(),0.toFloat()),
+    SCALE_PANEL(0.toFloat(),0.toFloat());
+
+    companion object {
+        fun setMinMax(pan:Pan, min : Float, max:Float){
+            pan.min = min
+            pan.max = max
         }
     }
 }
@@ -74,6 +92,96 @@ fun moveCamera(imageView: ImageView, fromPosition:Position?, toPosition:Position
         }
 
         valueAnimator.start()
+    }
+}
+
+fun openPanel(panel: View){
+
+    val start = (panel.scaleX - Pan.SCALE_PANEL.min)/ (Pan.SCALE_PANEL.max - Pan.SCALE_PANEL.min)
+
+    val valueAnimator = ValueAnimator.ofFloat(start, 1f)
+    valueAnimator.interpolator = AccelerateDecelerateInterpolator() // increase the speed first and then decrease
+    valueAnimator.duration = DURATION_MOVE_PANEL
+    valueAnimator.addUpdateListener { animation ->
+
+        val progress = animation.animatedValue as Float
+
+        val tempX = Loc.SMALL_PANEL_CENTER.position.px + progress * (Loc.BIG_PANEL_CENTER.position.px - Loc.SMALL_PANEL_CENTER.position.px)
+        val tempY = Loc.SMALL_PANEL_CENTER.position.py + progress * (Loc.BIG_PANEL_CENTER.position.py - Loc.SMALL_PANEL_CENTER.position.py)
+
+        val scale = Pan.SCALE_PANEL.min + progress * (Pan.SCALE_PANEL.max - Pan.SCALE_PANEL.min)
+
+        panel.translationX = tempX
+        panel.translationY = tempY
+        panel.scaleX = scale
+        panel.scaleY = scale
+    }
+
+    valueAnimator.start()
+}
+
+fun closePanel(panel: View){
+
+    val start = (Pan.SCALE_PANEL.max - panel.scaleX)/ (Pan.SCALE_PANEL.max - Pan.SCALE_PANEL.min)
+
+    val valueAnimator = ValueAnimator.ofFloat(start, 1f)
+    valueAnimator.interpolator = AccelerateDecelerateInterpolator() // increase the speed first and then decrease
+    valueAnimator.duration = DURATION_MOVE_PANEL
+    valueAnimator.addUpdateListener { animation ->
+
+        val progress = animation.animatedValue as Float
+
+        val tempX = Loc.BIG_PANEL_CENTER.position.px + progress * (Loc.SMALL_PANEL_CENTER.position.px - Loc.BIG_PANEL_CENTER.position.px)
+        val tempY = Loc.BIG_PANEL_CENTER.position.py + progress * (Loc.SMALL_PANEL_CENTER.position.py - Loc.BIG_PANEL_CENTER.position.py)
+
+        val scale = Pan.SCALE_PANEL.max - progress * (Pan.SCALE_PANEL.max - Pan.SCALE_PANEL.min)
+
+        panel.translationX = tempX
+        panel.translationY = tempY
+        panel.scaleX = scale
+        panel.scaleY = scale
+    }
+
+    valueAnimator.start()
+}
+
+fun calculWithLimits(value:Float, min:Float, max:Float):Float{
+    return when {
+        value in min..max -> value
+        value > max -> max
+        else -> min
+    }
+}
+
+fun movePanel(panel: View, scale1:Float, delta:Float){
+
+    if(panel.scaleX >= Pan.SCALE_PANEL.min && panel.scaleX <= Pan.SCALE_PANEL.max){
+
+        var tempX = 0f
+        var tempY = 0f
+
+        val scale = calculWithLimits(scale1 + (delta / Pan.DELTA_Y.max) * (Pan.SCALE_PANEL.max - Pan.SCALE_PANEL.min), Pan.SCALE_PANEL.min, Pan.SCALE_PANEL.max)
+
+        if(delta<0){ // DOWN direction
+
+            val progress = (scale - Pan.SCALE_PANEL.min)/ (Pan.SCALE_PANEL.max - Pan.SCALE_PANEL.min)
+            tempX = Loc.SMALL_PANEL_CENTER.position.px + progress * (Loc.BIG_PANEL_CENTER.position.px - Loc.SMALL_PANEL_CENTER.position.px)
+            tempY = Loc.SMALL_PANEL_CENTER.position.py + progress * (Loc.BIG_PANEL_CENTER.position.py - Loc.SMALL_PANEL_CENTER.position.py)
+
+        } else if(delta>0){ // UP direction
+
+            val progress = (Pan.SCALE_PANEL.max - scale)/ (Pan.SCALE_PANEL.max - Pan.SCALE_PANEL.min)
+            tempX = Loc.BIG_PANEL_CENTER.position.px + progress * (Loc.SMALL_PANEL_CENTER.position.px - Loc.BIG_PANEL_CENTER.position.px)
+            tempY = Loc.BIG_PANEL_CENTER.position.py + progress * (Loc.SMALL_PANEL_CENTER.position.py - Loc.BIG_PANEL_CENTER.position.py)
+
+        }
+
+        if(delta!=0f){
+            panel.translationX = tempX
+            panel.translationY = tempY
+            panel.scaleX = scale
+            panel.scaleY = scale
+        }
     }
 }
 

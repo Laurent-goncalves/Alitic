@@ -43,11 +43,11 @@
         android:background="@drawable/gradient"/>
 
     <!-- PANEL WITH THE MEAL -->
-    <View
-        android:id="@+id/panel_meal"
+    <include
+        android:id="@+id/panel"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:background="@drawable/panel_meal"
+        layout="@layout/panel_meal"
         android:layout_gravity="end|top"/>
 
     <!-- BUTTONS -->

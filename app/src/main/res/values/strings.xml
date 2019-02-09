@@ -15,7 +15,8 @@
 
     <string name="save_abort_message_dialog">Renseignez une date et une heure svp.</string>
 
-
+    <string name="panel_title">Mon repas</string>
+    <string name="message_no_food">aucun aliment sélectionné</string>
     <string name="date">Date</string>
     <string name="time">Time</string>
 

@@ -1,5 +1,7 @@
 package com.g.laurent.alitic.Controllers.Activities
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
 import android.graphics.Matrix
@@ -8,15 +10,13 @@ import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.ImageView
+import android.view.animation.AccelerateDecelerateInterpolator
 import com.g.laurent.alitic.Controllers.ClassControllers.getAllEventTypes
 import com.g.laurent.alitic.Controllers.ClassControllers.getAllFoodTypes
 import com.g.laurent.alitic.Controllers.ClassControllers.getListFoodByType
-import com.g.laurent.alitic.R
 import com.g.laurent.alitic.Views.FoodTypeAdapter
 import com.g.laurent.alitic.Views.GridAdapter
 import com.g.laurent.alitic.Views.SaveDialog
@@ -24,6 +24,7 @@ import com.g.laurent.alitic.Views.TAG_SCHEDULE_DIALOG
 import kotlinx.android.synthetic.main.pick_event_layout.*
 import kotlinx.android.synthetic.main.pick_meal_layout.*
 import java.lang.Math.round
+import android.widget.*
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionListener, OnItemSelectionListener {
@@ -36,6 +37,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
     private val onMenuSelectionListener = this
     private val onItemSelectionListener = this
     private var listSelected:MutableList<Any> = mutableListOf()
+    private var scale1:Float = 0f
+    private var posY1:Float = 0f
+    private var sWidth = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,11 +47,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
         context = applicationContext
         clearDatabase(context)
 
-        imageView = findViewById(R.id.image_background)
-        findViewById<View>(R.id.top_left_corner).setOnClickListener(this)
-        findViewById<View>(R.id.top_right_corner).setOnClickListener(this)
-        findViewById<View>(R.id.bottom_left_corner).setOnClickListener(this)
-        findViewById<View>(R.id.bottom_right_corner).setOnClickListener(this)
+        imageView = findViewById(com.g.laurent.alitic.R.id.image_background)
+        findViewById<View>(com.g.laurent.alitic.R.id.top_left_corner).setOnClickListener(this)
+        findViewById<View>(com.g.laurent.alitic.R.id.top_right_corner).setOnClickListener(this)
+        findViewById<View>(com.g.laurent.alitic.R.id.bottom_left_corner).setOnClickListener(this)
+        findViewById<View>(com.g.laurent.alitic.R.id.bottom_right_corner).setOnClickListener(this)
 
         initCamera()
     }
@@ -63,7 +67,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
                 val dWidth = imageView.drawable.intrinsicWidth
                 val dHeight = imageView.drawable.intrinsicHeight
                 val sHeight = imageView.measuredHeight
-                val sWidth = imageView.measuredWidth
+                sWidth = imageView.measuredWidth
 
                 Loc.setPosition(Loc.CENTER,
                     Position(round((dWidth - sWidth) * -0.5f).toFloat(), round((dHeight - sHeight) * -0.5f).toFloat()))
@@ -73,6 +77,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
                     Position(0f, -(dHeight - sHeight).toFloat()))
                 Loc.setPosition(Loc.BOTTOM_RIGHT,
                     Position(-(dWidth - sWidth).toFloat(), -(dHeight - sHeight).toFloat()))
+                Loc.setPosition(Loc.SMALL_PANEL_CENTER,
+                    Position((0.7071 * 7 * sWidth / 12).toFloat(), (-0.7071 * 7 * sWidth / 12).toFloat())) // 0.7071 = cos(45°) = sin(45°)
+                Loc.setPosition(Loc.BIG_PANEL_CENTER,
+                    Position((-sWidth/9).toFloat(), ((sHeight-sWidth)/3).toFloat()))
 
                 moveCamera(imageView, null, Loc.CENTER.position, matrix)
 
@@ -81,28 +89,87 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
         })
     }
 
+    private fun initMealPanel(){
+
+        val panel = findViewById<View>(com.g.laurent.alitic.R.id.panel)
+
+        val vto = panel.viewTreeObserver
+        vto.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+
+                panel.viewTreeObserver.removeOnPreDrawListener(this)
+
+                Pan.setMinMax(Pan.DIAMETER_PANEL, (2*sWidth/3).toFloat(), (4*sWidth/3).toFloat()) //(diameter small panel, diameter big panel)
+                Pan.setMinMax(Pan.SCALE_PANEL,Pan.DIAMETER_PANEL.min/panel.width,
+                    Pan.DIAMETER_PANEL.max/panel.height) // (scale small panel, scale big panel)
+
+                Pan.setMinMax(Pan.DELTA_Y, 0.toFloat(), Loc.SMALL_PANEL_CENTER.position.py - Loc.BIG_PANEL_CENTER.position.py)
+
+                // Position panel on the top right with the small size
+                panel.scaleX = Pan.SCALE_PANEL.min
+                panel.scaleY =Pan.SCALE_PANEL.min
+                panel.translationX =Loc.SMALL_PANEL_CENTER.position.px
+                panel.translationY =Loc.SMALL_PANEL_CENTER.position.py
+
+                return true
+            }
+        })
+
+        // Create onTouchEventListener for panel moving and scalling
+        panel.setOnTouchListener(object : View.OnTouchListener {
+
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+
+                when (event?.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        posY1 = event.rawY
+                        scale1 = panel.scaleX
+                    }
+                    MotionEvent.ACTION_MOVE -> {
+                        movePanel(panel, scale1, posY1 - event.rawY)
+                    }
+                    MotionEvent.ACTION_UP -> {
+
+                        if( event.rawY < posY1 && panel.scaleX >= Pan.SCALE_PANEL.min) { // UP direction
+                            closePanel(panel)
+                        } else if( event.rawY > posY1 && panel.scaleX >= Pan.SCALE_PANEL.min){ // DOWN direction
+                            openPanel(panel)
+                        }
+                    }
+                }
+
+                panel.invalidate()
+
+                return v?.onTouchEvent(event) ?: true
+            }
+        })
+
+        // Remove all views inside the panel
+
+    }
+
     override fun onClick(v: View?) {
 
         when (v?.id) {
-            R.id.top_left_corner -> { //       |' |
+            com.g.laurent.alitic.R.id.top_left_corner -> { //       |' |
                 moveCamera(imageView, Loc.CENTER.position, Loc.TOP_LEFT.position,matrix)
                 displayMealPicking()
                 configureButtons(TypeDisplay.MEAL)
             }
 
-            R.id.top_right_corner -> {//       | '|
+            com.g.laurent.alitic.R.id.top_right_corner -> {//       | '|
                 moveCamera(imageView,Loc.CENTER.position, Loc.TOP_RIGHT.position,matrix)
                 displayEventPicking()
                 configureButtons(TypeDisplay.EVENT)
             }
 
-            R.id.bottom_left_corner -> {//     |, |
+            com.g.laurent.alitic.R.id.bottom_left_corner -> {//     |, |
                 moveCamera(imageView,Loc.CENTER.position, Loc.BOTTOM_LEFT.position,matrix)
                 val intent = Intent(this, ChronoActivity::class.java)
                 startActivity(intent)
             }
 
-            R.id.bottom_right_corner -> {//    | ,|
+            com.g.laurent.alitic.R.id.bottom_right_corner -> {//    | ,|
                 moveCamera(imageView,Loc.CENTER.position, Loc.BOTTOM_RIGHT.position,matrix)
             }
         }
@@ -130,7 +197,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
         when(typeDisplay){
             EVENT -> {
                 // Hide layout for meal picking
-                findViewById<FrameLayout>(R.id.layout_event).visibility = View.GONE
+                findViewById<FrameLayout>(com.g.laurent.alitic.R.id.layout_event).visibility = View.GONE
 
                 // Move camera to the center of image in background
                 Handler().postDelayed({
@@ -140,7 +207,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
             }
             MEAL -> {
                 // Hide layout for meal picking
-                findViewById<FrameLayout>(R.id.layout_meal).visibility = View.GONE
+                findViewById<FrameLayout>(com.g.laurent.alitic.R.id.layout_meal).visibility = View.GONE
 
                 // Move camera to the center of image in background
                 Handler().postDelayed({
@@ -161,7 +228,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
 
         Handler().postDelayed({
 
-            findViewById<FrameLayout>(R.id.layout_meal).visibility = View.VISIBLE
+            findViewById<FrameLayout>(com.g.laurent.alitic.R.id.layout_meal).visibility = View.VISIBLE
+
+            initMealPanel()
 
             val listFoodTypes = getAllFoodTypes(context = context)!!
 
@@ -198,7 +267,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
 
         Handler().postDelayed({
 
-            findViewById<FrameLayout>(R.id.layout_event).visibility = View.VISIBLE
+            findViewById<FrameLayout>(com.g.laurent.alitic.R.id.layout_event).visibility = View.VISIBLE
 
             val listEventTypes = getAllEventTypes(context = context)!!
 
