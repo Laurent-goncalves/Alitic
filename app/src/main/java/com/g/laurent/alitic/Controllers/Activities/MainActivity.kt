@@ -1,7 +1,5 @@
 package com.g.laurent.alitic.Controllers.Activities
 
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
 import android.graphics.Matrix
@@ -13,18 +11,17 @@ import android.support.v7.widget.RecyclerView
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
-import android.view.animation.AccelerateDecelerateInterpolator
 import com.g.laurent.alitic.Controllers.ClassControllers.getAllEventTypes
 import com.g.laurent.alitic.Controllers.ClassControllers.getAllFoodTypes
 import com.g.laurent.alitic.Controllers.ClassControllers.getListFoodByType
-import com.g.laurent.alitic.Views.FoodTypeAdapter
-import com.g.laurent.alitic.Views.GridAdapter
-import com.g.laurent.alitic.Views.SaveDialog
-import com.g.laurent.alitic.Views.TAG_SCHEDULE_DIALOG
 import kotlinx.android.synthetic.main.pick_event_layout.*
 import kotlinx.android.synthetic.main.pick_meal_layout.*
 import java.lang.Math.round
 import android.widget.*
+import com.g.laurent.alitic.Models.Food
+import com.g.laurent.alitic.R
+import com.g.laurent.alitic.Views.*
+
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionListener, OnItemSelectionListener {
@@ -134,6 +131,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
                             closePanel(panel)
                         } else if( event.rawY > posY1 && panel.scaleX >= Pan.SCALE_PANEL.min){ // DOWN direction
                             openPanel(panel)
+                            Handler().postDelayed({
+                                showMeal()
+                            }, 1000)
                         }
                     }
                 }
@@ -143,9 +143,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
                 return v?.onTouchEvent(event) ?: true
             }
         })
-
-        // Remove all views inside the panel
-
     }
 
     override fun onClick(v: View?) {
@@ -244,6 +241,35 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
             gridview_food.adapter = gridAdapter
 
         }, DELAY_SHOW)
+    }
+
+    fun showMeal(){
+
+        val panel = findViewById<LinearLayout>(R.id.panel_content)
+        panel.visibility = View.VISIBLE
+
+        val panelLayout = panel.findViewById<FoodLayout>(R.id.layout_all_foods)
+
+        // Show relevant views of panel
+        panel.findViewById<TextView>(R.id.title_meal).visibility = View.VISIBLE
+        panelLayout.visibility = View.VISIBLE
+
+        if(listSelected.size > 0){
+            panelLayout.visibility = View.VISIBLE
+
+            val listIds = mutableListOf<FoodViewId>()
+
+            for(i in 0 until listSelected.size) {
+                val id = panelLayout.addFood(listSelected[i] as Food)
+                if(id!=null)
+                    listIds.add(id)
+            }
+
+            panelLayout.organize(listIds)
+
+        } else {
+            panel.findViewById<TextView>(R.id.no_food_in_meal).visibility = View.VISIBLE
+        }
     }
 
     override fun onMenuSelected(selection: Int) {

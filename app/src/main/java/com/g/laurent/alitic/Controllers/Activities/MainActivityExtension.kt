@@ -6,12 +6,15 @@ import android.graphics.Matrix
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import com.facebook.stetho.Stetho
 import com.g.laurent.alitic.Models.AppDataBase
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.Models.Food
 import com.g.laurent.alitic.Models.insertData
 import com.g.laurent.alitic.R
+import com.g.laurent.alitic.Views.FoodLayout
 
 
 const val DURATION_MOVE_CAMERA = 3000.toLong()
@@ -62,8 +65,8 @@ enum class Pan(var min : Float, var max:Float) {
 }
 
 enum class TypeDisplay(val type:String, val idCancel : Int, val idSave : Int, var isNew:Boolean){
-    EVENT("EVENT", R.id.button_cancel_event,R.id.button_save_event, true),
-    MEAL("MEAL",R.id.button_cancel_meal,R.id.button_save_meal, true);
+    EVENT("EVENT", com.g.laurent.alitic.R.id.button_cancel_event, com.g.laurent.alitic.R.id.button_save_event, true),
+    MEAL("MEAL", com.g.laurent.alitic.R.id.button_cancel_meal, com.g.laurent.alitic.R.id.button_save_meal, true);
 }
 
 fun moveCamera(imageView: ImageView, fromPosition:Position?, toPosition:Position, matrix: Matrix){
@@ -115,9 +118,26 @@ fun openPanel(panel: View){
         panel.translationY = tempY
         panel.scaleX = scale
         panel.scaleY = scale
+
     }
 
     valueAnimator.start()
+}
+
+fun createFoodListSelected(view: FoodLayout, listSelected:List<Food>){
+
+
+
+/*
+for(food in listSelected){
+
+    val params = RelativeLayout.LayoutParams(
+        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+    )
+    view.addView(tv, params)
+}
+*/
+
 }
 
 fun closePanel(panel: View){

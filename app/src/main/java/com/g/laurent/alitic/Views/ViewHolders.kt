@@ -88,3 +88,9 @@ class ChronoViewHolder(itemView: View?){
     var fireIcon: ImageView? = itemView?.findViewById(R.id.fire_icon)
     var eventNum: TextView? = itemView?.findViewById(R.id.number_events)
 }
+
+class FoodViewHolder(itemView: View?){
+    var dayNum: TextView? = itemView?.findViewById(R.id.day_number)
+    var fireIcon: ImageView? = itemView?.findViewById(R.id.fire_icon)
+    var eventNum: TextView? = itemView?.findViewById(R.id.number_events)
+}
