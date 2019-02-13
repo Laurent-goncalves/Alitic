@@ -5,6 +5,8 @@
         android:layout_height="30dp"
         android:orientation="horizontal"
         android:layout_margin="10dp"
+        android:clickable="true"
+        android:focusable="true"
         android:background="@drawable/background_food_select">
 
     <ImageView

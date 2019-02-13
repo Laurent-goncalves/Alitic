@@ -32,6 +32,10 @@ interface OnItemSelectionListener {
     fun onItemSelected(selected:Any)
 }
 
+interface OnFoodToDeleteListener {
+    fun onFoodToDelete(nameFood: String)
+}
+
 class Position(val px:Float, val py:Float)
 
 enum class Loc(var position : Position) {

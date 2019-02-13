@@ -11,23 +11,31 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.g.laurent.alitic.Models.Food
 import android.support.constraint.ConstraintSet
+import android.support.constraint.Group
+import com.g.laurent.alitic.Controllers.Activities.OnFoodToDeleteListener
+import com.g.laurent.alitic.R
 
 
-class FoodLayout: ConstraintLayout {
+class FoodLayout : ConstraintLayout {
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    lateinit var onFoodToDeleteListener:OnFoodToDeleteListener
+    private val groupVisible = Group(context)
 
     fun removeFood(view: View) {
-        this.removeView(view)
+        val listIdDel = groupVisible.referencedIds.toMutableList()
+        listIdDel.remove(view.id)
+        onFoodToDeleteListener.onFoodToDelete(view.findViewById<TextView>(R.id.food_name).text.toString())
+        groupVisible.referencedIds = listIdDel.toIntArray()
+        view.visibility=View.GONE
     }
 
     fun addFood(food: Food): FoodViewId? {
 
         val view = getFoodView(food)
         if (view != null) {
-            view.id = View.generateViewId()
             this.addView(view,0)
             return FoodViewId(view.id, food.name!!)
         }
@@ -35,24 +43,24 @@ class FoodLayout: ConstraintLayout {
         return null
     }
 
-    fun getFoodView(food:Food):View?{
+    private fun getFoodView(food:Food):View?{
 
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater?
         if (inflater != null){
 
             val view: View = inflater.inflate(com.g.laurent.alitic.R.layout.food_selected_layout, this, false)
+            view.id = View.generateViewId()
             view.findViewById<TextView>(com.g.laurent.alitic.R.id.food_name).text = food.name
             view.findViewById<ImageView>(com.g.laurent.alitic.R.id.button_delete)
                 .setColorFilter(ContextCompat.getColor(context, android.R.color.holo_red_dark),  PorterDuff.Mode.MULTIPLY)
-            view.findViewById<ImageView>(com.g.laurent.alitic.R.id.button_delete).setOnClickListener { removeFood(this)
+            view.setOnClickListener { removeFood(view)
             }
-
             return view
         }
         return null
     }
 
-    fun organize(listFoodViewIds:List<FoodViewId>){
+    fun organizeViews(listFoodViewIds:List<FoodViewId>){
 
         val list = listFoodViewIds.toMutableList()
         var topId = ConstraintSet.PARENT_ID
@@ -105,6 +113,15 @@ class FoodLayout: ConstraintLayout {
                 }
             }
         }
+
+
+        val result = mutableListOf<Int>()
+        if(this.childCount > 0){
+            for(i in 0 until this.childCount)
+                result.add(this.getChildAt(i).id)
+        }
+
+        groupVisible.referencedIds = result.toIntArray()
 
         set.applyTo(this)
     }

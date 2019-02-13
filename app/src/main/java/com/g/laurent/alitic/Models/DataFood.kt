@@ -13,7 +13,6 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     val viandes = FoodType(null, "Viandes", "viande")
     val poissons = FoodType(null, "Poissons", "poisson")
     val legumes = FoodType(null, "Légumes", "legume")
-    val tartes = FoodType(null, "Tartes", "tarte")
     val prodlait = FoodType(null, "Laitages", "laitage")
     val fruits = FoodType(null, "Fruits", "fruit")
     val sucrerie = FoodType(null, "Sucreries", "gateau")
@@ -26,7 +25,6 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     val idViandes = foodTypeDao?.insert(viandes)
     val idPoissons = foodTypeDao?.insert(poissons)
     val idLegumes = foodTypeDao?.insert(legumes)
-    val idTartes = foodTypeDao?.insert(tartes)
     val idLait = foodTypeDao?.insert(prodlait)
     val idFruits = foodTypeDao?.insert(fruits)
     val idSucre = foodTypeDao?.insert(sucrerie)
@@ -102,7 +100,7 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     val beurre = foodDao?.insert(Food(null,"Beurre", idLait,0,"beurre", false))
     val creme = foodDao?.insert(Food(null,"Crème", idLait,0,"creme", false))
     val glace = foodDao?.insert(Food(null,"Glace", idLait,0,"glace", false))
-    val autresLait = foodDao?.insert(Food(null,"Autres produits laitiers", idSucre,0,"laitage", false))
+    val autresLait = foodDao?.insert(Food(null,"Autres produits laitiers", idLait,0,"laitage", false))
 
     // FRUITS
     val compote = foodDao?.insert(Food(null,"Compote", idFruits,0,"compote", false))

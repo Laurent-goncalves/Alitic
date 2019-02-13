@@ -19,12 +19,11 @@ import kotlinx.android.synthetic.main.pick_meal_layout.*
 import java.lang.Math.round
 import android.widget.*
 import com.g.laurent.alitic.Models.Food
-import com.g.laurent.alitic.R
 import com.g.laurent.alitic.Views.*
 
 
+class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionListener, OnItemSelectionListener, OnFoodToDeleteListener {
 
-class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionListener, OnItemSelectionListener {
 
     private var matrix = Matrix()
     private lateinit var context: Context
@@ -125,6 +124,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
                     MotionEvent.ACTION_MOVE -> {
                         movePanel(panel, scale1, posY1 - event.rawY)
                     }
+
                     MotionEvent.ACTION_UP -> {
 
                         if( event.rawY < posY1 && panel.scaleX >= Pan.SCALE_PANEL.min) { // UP direction
@@ -143,6 +143,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
                 return v?.onTouchEvent(event) ?: true
             }
         })
+    }
+
+    override fun onFoodToDelete(nameFood: String) {
+
+        for(any in listSelected){
+            if(any is Food){
+                if(any.name.equals(nameFood)) {
+                    listSelected.remove(any)
+                    gridAdapter.listItemSelected = listSelected
+                    gridAdapter.notifyDataSetChanged()
+                    break
+                }
+            }
+        }
     }
 
     override fun onClick(v: View?) {
@@ -245,13 +259,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
 
     fun showMeal(){
 
-        val panel = findViewById<LinearLayout>(R.id.panel_content)
+        val panel = findViewById<LinearLayout>(com.g.laurent.alitic.R.id.panel_content)
         panel.visibility = View.VISIBLE
 
-        val panelLayout = panel.findViewById<FoodLayout>(R.id.layout_all_foods)
+        val panelLayout = panel.findViewById<FoodLayout>(com.g.laurent.alitic.R.id.layout_all_foods)
+        panelLayout.onFoodToDeleteListener = this
 
         // Show relevant views of panel
-        panel.findViewById<TextView>(R.id.title_meal).visibility = View.VISIBLE
+        panel.findViewById<TextView>(com.g.laurent.alitic.R.id.title_meal).visibility = View.VISIBLE
         panelLayout.visibility = View.VISIBLE
 
         if(listSelected.size > 0){
@@ -265,10 +280,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
                     listIds.add(id)
             }
 
-            panelLayout.organize(listIds)
+            panelLayout.organizeViews(listIds)
 
         } else {
-            panel.findViewById<TextView>(R.id.no_food_in_meal).visibility = View.VISIBLE
+            panel.findViewById<TextView>(com.g.laurent.alitic.R.id.no_food_in_meal).visibility = View.VISIBLE
         }
     }
 
@@ -291,15 +306,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
 
     private fun displayEventPicking(){
 
+        findViewById<FrameLayout>(com.g.laurent.alitic.R.id.layout_event).visibility = View.VISIBLE
+        val listEventTypes = getAllEventTypes(context = context)!!
+        gridAdapter = GridAdapter(listEventTypes, listSelected, true, onItemSelectionListener, context = context)
+
+
         Handler().postDelayed({
 
-            findViewById<FrameLayout>(com.g.laurent.alitic.R.id.layout_event).visibility = View.VISIBLE
-
-            val listEventTypes = getAllEventTypes(context = context)!!
-
-            gridAdapter = GridAdapter(listEventTypes, listSelected, true, onItemSelectionListener, context = context)
             gridview_event.adapter = gridAdapter
 
-        }, DELAY_SHOW)
+        },2000)
+
     }
 }
