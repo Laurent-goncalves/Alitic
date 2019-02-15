@@ -19,7 +19,12 @@ import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.Activities.*
 import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Models.*
+import com.github.mikephil.charting.data.BarData
 import com.roomorama.caldroid.CaldroidGridAdapter
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
+
 
 /** FOODTYPE ADAPTER**/
 @SuppressLint("RecyclerView")
@@ -241,4 +246,65 @@ class CalendarAdapter(context: Context, private val onTimeLineDisplay: OnTimeLin
 
         return null
     }
+}
+
+/** STAT ADAPTER**/
+class StatAdapter(val context: Context, val listStats:List<StatList>): RecyclerView.Adapter<StatViewHolder>(){
+
+    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): StatViewHolder {
+        val inflatedView = LayoutInflater.from(p0.context).inflate(R.layout.barchart_layout, p0, false)
+        return StatViewHolder(inflatedView)
+    }
+
+    override fun getItemCount(): Int {
+        return listStats.size
+    }
+
+    override fun onBindViewHolder(p0: StatViewHolder, position: Int) {
+
+        val valueSet = arrayListOf<BarEntry>()
+        val listStatEntries = listStats[p0.adapterPosition].listEntries
+        val listFood = mutableListOf<String>()
+        val eventType = getEventType(listStats[p0.adapterPosition].idEventType, context = context)?.name
+
+        // Set title of the chart
+        //p0.titleChart.text = eventType
+
+        // Create bar entries
+        if(listStatEntries.isNotEmpty()){
+            for(i in 0 until listStatEntries.size){
+                valueSet.add(BarEntry(i.toFloat(), listStatEntries[i].countNOK.toFloat()))
+                listFood.add(listStatEntries[i].food!!)
+            }
+        }
+
+
+
+        val barDataSet = BarDataSet(valueSet, eventType)
+        val dataSets = ArrayList<IBarDataSet>()
+        dataSets.add(barDataSet)
+
+        // hide Y-axis and gridlines
+        val left = p0.barChart.axisLeft
+        left.setDrawLabels(false)
+        left.setDrawGridLines(false)
+
+        val right = p0.barChart.axisRight
+        right.setDrawLabels(false)
+        right.setDrawGridLines(false)
+
+        // custom X-axis labels
+        val xAxis = p0.barChart.xAxis
+        xAxis.textSize = 18f
+        xAxis.granularity = 1f // restrict the minimum interval of your axis to "1"
+        xAxis.valueFormatter = MyXAxisValueFormatter(listFood.toTypedArray())
+
+        // Finalize bar chart
+        val barData = BarData(barDataSet)
+        barData.barWidth = 0.3f
+        p0.barChart.data = barData
+        p0.barChart.legend.isEnabled = false
+        p0.barChart.invalidate()
+    }
+
 }

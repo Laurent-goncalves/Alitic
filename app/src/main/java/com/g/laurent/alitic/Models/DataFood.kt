@@ -2,7 +2,12 @@
 
 package com.g.laurent.alitic.Models
 
-fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao?, eventTypeDao:EventTypeDao?){
+import android.content.Context
+import com.g.laurent.alitic.Controllers.ClassControllers.saveNewEvent
+import com.g.laurent.alitic.Controllers.ClassControllers.saveNewMeal
+import com.g.laurent.alitic.getDateAsLong
+
+fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao?, eventTypeDao:EventTypeDao?, context: Context){
 
     /** ------------------------------------------------------------------------------------------------------
     -------------------------------------- FOODTYPE INSERTION ------------------------------------------------
@@ -237,15 +242,121 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     -------------------------------------- EVENT TYPE INSERTION ----------------------------------------------
     ------------------------------------------------------------------------------------------------------ **/
 
-    eventTypeDao?.insert(EventType(null, "Reflux", "", 0, 3))
-    eventTypeDao?.insert(EventType(null, "Mal au ventre", "", 0, 3))
-    eventTypeDao?.insert(EventType(null, "Mal à la tête", "", 0, 3))
-    eventTypeDao?.insert(EventType(null, "Diarrhée", "", 0, 3))
-    eventTypeDao?.insert(EventType(null, "Ballonnement", "", 0, 3))
-    eventTypeDao?.insert(EventType(null, "Brûlure d'estomac", "", 0, 3))
-    eventTypeDao?.insert(EventType(null, "Constipation", "", 0, 3))
-    eventTypeDao?.insert(EventType(null, "Vomissement", "", 0, 3))
+    val reflux = eventTypeDao?.insert(EventType(null, "Reflux", "", 0, 3*60*60*1000))
+    val malVentre = eventTypeDao?.insert(EventType(null, "Mal au ventre", "", 0, 3*60*60*1000))
+    val malTete = eventTypeDao?.insert(EventType(null, "Mal à la tête", "", 0, 3*60*60*1000))
+    val diarrh = eventTypeDao?.insert(EventType(null, "Diarrhée", "", 0, 3*60*60*1000))
+    val balon = eventTypeDao?.insert(EventType(null, "Ballonnement", "", 0, 3*60*60*1000))
+    val brulure = eventTypeDao?.insert(EventType(null, "Brûlure d'estomac", "", 0, 3*60*60*1000))
+    val constip = eventTypeDao?.insert(EventType(null, "Constipation", "", 0, 3*60*60*1000))
+    val vomis = eventTypeDao?.insert(EventType(null, "Vomissement", "", 0, 3*60*60*1000))
 
+    /** ------------------------------------------------------------------------------------------------------
+    ------------------------------------------ MEAL INSERTION ------------------------------------------------
+    ------------------------------------------------------------------------------------------------------ **/
+
+    val list1 : MutableList<MealItem> = mutableListOf()
+    list1.add(MealItem(null,null, alcool))
+    list1.add(MealItem(null,null, bonbon))
+    list1.add(MealItem(null,null, volailles))
+
+    val list2 : MutableList<MealItem> = mutableListOf()
+    list2.add(MealItem(null,null, alcool))
+    list2.add(MealItem(null,null, bonbon))
+    list2.add(MealItem(null,null, crustaces))
+    list2.add(MealItem(null,null, chocolat))
+
+    val list3 : MutableList<MealItem> = mutableListOf()
+    list3.add(MealItem(null,null,pain))
+    list3.add(MealItem(null,null,moutarde))
+    list3.add(MealItem(null,null,patisserie))
+    list3.add(MealItem(null,null,lait))
+
+    val list4 : MutableList<MealItem> = mutableListOf()
+    list4.add(MealItem(null,null,alcool))
+    list4.add(MealItem(null,null,viandeRouge))
+    list4.add(MealItem(null,null,bonbon))
+    list4.add(MealItem(null,null,volailles))
+    list4.add(MealItem(null,null,pain))
+    list1.add(MealItem(null,null,chocolat))
+
+    val list5 : MutableList<MealItem> = mutableListOf()
+    list3.add(MealItem(null,null,haricot))
+    list3.add(MealItem(null,null,lait))
+    list3.add(MealItem(null,null,crustaces))
+    list3.add(MealItem(null,null,peche))
+
+    val list6 : MutableList<MealItem> = mutableListOf()
+    list3.add(MealItem(null,null,pain))
+    list3.add(MealItem(null,null,olives))
+    list3.add(MealItem(null,null,patisserie))
+    list3.add(MealItem(null,null,endive))
+
+    val list7 : MutableList<MealItem> = mutableListOf()
+    list3.add(MealItem(null,null,viandeRouge))
+    list3.add(MealItem(null,null,chocolat))
+    list3.add(MealItem(null,null,crustaces))
+    list3.add(MealItem(null,null,lait))
+
+    val list8 : MutableList<MealItem> = mutableListOf()
+    list3.add(MealItem(null,null,lait))
+    list3.add(MealItem(null,null,peche))
+    list3.add(MealItem(null,null,pain))
+    list3.add(MealItem(null,null,olives))
+
+    val list9 : MutableList<MealItem> = mutableListOf()
+    list3.add(MealItem(null,null,haricot))
+    list3.add(MealItem(null,null,bonbon))
+    list3.add(MealItem(null,null,pain))
+    list3.add(MealItem(null,null,crustaces))
+
+    val list10 : MutableList<MealItem> = mutableListOf()
+    list3.add(MealItem(null,null,lait))
+    list3.add(MealItem(null,null,chocolat))
+    list3.add(MealItem(null,null,endive))
+    list3.add(MealItem(null,null,viandeRouge))
+
+    val idMeal1 = saveNewMeal(list1, getDateAsLong(10, 2, 2019, 12, 0),
+        false, context)
+    val idMeal2 = saveNewMeal(list2, getDateAsLong(11, 2, 2019, 12, 0),
+        false,context)
+    val idMeal3 = saveNewMeal(list3, getDateAsLong(12, 2, 2019, 12, 0),
+        false, context)
+    val idMeal4 = saveNewMeal(list4,getDateAsLong(12, 2, 2019, 20, 0),
+        false, context)
+    val idMeal5 = saveNewMeal(list5,getDateAsLong(13, 2, 2019, 12, 0),
+        false,context)
+    val idMeal6 = saveNewMeal(list6,getDateAsLong(14, 2, 2019, 12, 0),
+        false,context)
+    val idMeal7 = saveNewMeal(list7,getDateAsLong(15, 2, 2019, 12, 0),
+        false,context)
+    val idMeal8 = saveNewMeal(list8,getDateAsLong(16, 2, 2019, 12, 0),
+        false,context)
+    val idMeal9 = saveNewMeal(list9,getDateAsLong(16, 2, 2019, 20, 0),
+        false,context)
+    val idMeal10 = saveNewMeal(list10,getDateAsLong(17, 2, 2019, 12, 0),
+        false,context)
+
+    /** ------------------------------------------------------------------------------------------------------
+    ------------------------------------------ EVENT INSERTION -----------------------------------------------
+    ------------------------------------------------------------------------------------------------------ **/
+
+    val idEvent1 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(10, 2, 2019, 12, 30),
+        context = context)
+    val idEvent2 = saveNewEvent(idEventType = malTete,dateCode = getDateAsLong(11, 2, 2019, 12, 30),
+        context = context)
+    val idEvent3 = saveNewEvent(idEventType = reflux, dateCode = getDateAsLong(12, 2, 2019, 20, 30),
+        context = context)
+    val idEvent4 = saveNewEvent(idEventType = malTete, dateCode = getDateAsLong(13, 2, 2019, 13, 0),
+        context = context)
+    val idEvent5 = saveNewEvent(idEventType = malVentre,dateCode = getDateAsLong(14, 2, 2019, 13, 0),
+        context = context)
+    val idEvent6 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(15, 2, 2019, 13, 0),
+        context = context)
+    val idEvent7 = saveNewEvent(idEventType = malVentre,dateCode = getDateAsLong(16, 2, 2019, 20, 0),
+        context = context)
+    val idEvent8 = saveNewEvent(idEventType = malVentre,dateCode = getDateAsLong(17, 2, 2019, 13, 0),
+        context = context)
 }
 
 

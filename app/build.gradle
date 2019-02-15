@@ -53,6 +53,7 @@ dependencies {
 
     // Library for charts
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
+    implementation 'org.apache.commons:commons-math3:3.6.1'
 
     //Library for checking database tables
     implementation 'com.facebook.stetho:stetho:1.5.0'

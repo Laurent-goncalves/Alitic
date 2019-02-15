@@ -66,11 +66,10 @@ data class Keyword(@PrimaryKey(autoGenerate = true) var id: Long?,
 
 @Entity(tableName = "eventType")
 data class EventType(@PrimaryKey(autoGenerate = true) var id: Long?,
-                     @ColumnInfo(name = "name") var name:String,
+                     @ColumnInfo(name = "name") var name:String?,
                      @ColumnInfo(name = "eventPic") var eventPic:String?,
                      @ColumnInfo(name = "minTime") var minTime:Long,
                      @ColumnInfo(name = "maxTime") var maxTime:Long)
-
 
 @Entity(tableName = "event", indices = [Index("idEventType")],
     foreignKeys = [ForeignKey(entity = EventType::class,
@@ -99,6 +98,12 @@ interface MealDao {
 
     @Query("SELECT * from meal WHERE dateCode>=:minDate AND dateCode <=:maxDate")
     fun getMealsDate(minDate: Long, maxDate:Long): List<Meal>?
+
+    @Query("SELECT dateCode from meal WHERE dateCode = (SELECT min(dateCode) FROM meal)")
+    fun getOldestMealDate(): Long?
+
+    @Query("SELECT dateCode from meal WHERE dateCode = (SELECT max(dateCode) FROM meal)")
+    fun getLatestMealDate(): Long?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(meal: Meal):Long
@@ -222,6 +227,12 @@ interface EventDao {
     @Query("SELECT * from event WHERE idEventType =:idType")
     fun getEventsByType(idType: Long?): List<Event>?
 
+    @Query("SELECT dateCode from event WHERE dateCode = (SELECT min(dateCode) FROM event)")
+    fun getOldestEventDate(): Long?
+
+    @Query("SELECT dateCode from event WHERE dateCode = (SELECT max(dateCode) FROM event)")
+    fun getLatestEventDate(): Long?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(event: Event):Long
 
@@ -259,7 +270,7 @@ interface EventTypeDao {
 
 // ----------------------------------- DATABASE --------------------------------------------
 
-@Database(entities = [Meal::class, MealItem::class, Food::class, FoodType::class, Keyword::class, Event::class, EventType::class], version = 10, exportSchema = false)
+@Database(entities = [Meal::class, MealItem::class, Food::class, FoodType::class, Keyword::class, Event::class, EventType::class], version = 11, exportSchema = false)
 abstract class AppDataBase : RoomDatabase() {
 
     abstract fun mealDao(): MealDao
@@ -295,7 +306,7 @@ abstract class AppDataBase : RoomDatabase() {
                                     super.onCreate(db)
                                     // insert the data on the IO Thread
                                     ioThread {
-                                        insertData(INSTANCE?.foodTypeDao(), INSTANCE?.foodDao(), INSTANCE?.keywordDao(), INSTANCE?.eventTypeDao())
+                                        insertData(INSTANCE?.foodTypeDao(), INSTANCE?.foodDao(), INSTANCE?.keywordDao(), INSTANCE?.eventTypeDao(), context)
                                     }
                                 }
                             })

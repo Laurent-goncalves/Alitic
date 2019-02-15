@@ -282,7 +282,7 @@ fun clearDatabase(context: Context){
     db?.eventTypeDao()?.deleteAll()
 
 
-    insertData(db?.foodTypeDao(), db?.foodDao(), db?.keywordDao(), db?.eventTypeDao())
+    insertData(db?.foodTypeDao(), db?.foodDao(), db?.keywordDao(), db?.eventTypeDao(), context)
 
     Stetho.initializeWithDefaults(context)
 }

@@ -8,6 +8,9 @@ import android.widget.*
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.ClassControllers.Chrono
 import com.g.laurent.alitic.Models.FoodType
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.charts.HorizontalBarChart
+import com.github.mikephil.charting.charts.LineChart
 import com.github.vipulasri.timelineview.TimelineView
 
 class TimeLineViewHolder(itemView: View, viewType: Int, val mode:Boolean = false, val context: Context) : RecyclerView.ViewHolder(itemView) {
@@ -93,4 +96,10 @@ class FoodViewHolder(itemView: View?){
     var dayNum: TextView? = itemView?.findViewById(R.id.day_number)
     var fireIcon: ImageView? = itemView?.findViewById(R.id.fire_icon)
     var eventNum: TextView? = itemView?.findViewById(R.id.number_events)
+}
+
+class StatViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    val statPanel:View = itemView.findViewById(R.id.stat_panel_layout)
+    val barChart:HorizontalBarChart = itemView.findViewById(R.id.barchart)
+    val lineChart:LineChart = itemView.findViewById(R.id.linechart)
 }

@@ -1,13 +1,12 @@
 package com.g.laurent.alitic
 
 import com.g.laurent.alitic.Controllers.ClassControllers.getListInDescendingOrder
-import com.g.laurent.alitic.Controllers.ClassControllers.organizeEventsByTime
 import com.g.laurent.alitic.Models.Event
 import com.g.laurent.alitic.Models.Food
-import hirondelle.date4j.DateTime
 import org.junit.Assert
 import org.junit.Test
 import org.junit.Assert.*
+import java.util.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -15,20 +14,44 @@ import org.junit.Assert.*
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
-
+/*
     @Test
     fun test_organize_events_by_date(){
 
         val list =
-            organizeEventsByTime(getListEventsForTest(), 1, 2019)
+            organizeEventsByTime(getListEventsForTest(), null, true, 1, 2019)
 
         val date1 = DateTime.forDateOnly(2019, 1, 5)
         val date2 = DateTime.forDateOnly(2019, 1, 15)
         val date3 = DateTime.forDateOnly(2019, 1, 2)
 
-        assertEquals(3, list[date1]!![0].count)
+       assertEquals(3, list[date1]!![0].count)
         assertEquals(1, list[date2]!![0].count)
         assertTrue(list[date3]!![0].count == 1 && list[date3]!![1].count == 1)
+    }*/
+
+    @Test
+    fun test_first_day_and_end_day_week(){
+
+        var date = getDateAsLong(2,2,2019,12,15)
+
+        var firstDay = getFirstDayWeek(date)
+
+        assertEquals("lun. 28 janv.", getTextDate(firstDay))
+
+        date = getDateAsLong(3,2,2019,23,15)
+        firstDay = getFirstDayWeek(date)
+
+        assertEquals("lun. 28 janv.", getTextDate(firstDay))
+    }
+
+    @Test
+    fun test_evolution(){
+
+        val dates:List<Double> = listOf(2.toDouble(),7.toDouble(),13.toDouble(),15.toDouble(),20.toDouble(),24.toDouble(),25.toDouble(),29.toDouble(),30.toDouble(),31.toDouble())
+        val counts:List<Double> = listOf(3.62, 3.78, 4.32, 4.14, 4.88, 5.01, 4.94, 5.39, 5.28, 5.42)
+
+        //assertEquals(Evolution.NEGATIVE, getEvolution(dates, counts))
     }
 
     @Test

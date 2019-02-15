@@ -290,12 +290,11 @@ class DBobjectsControllerTest {
         // Initialize database and fill with values
         val context = InstrumentationRegistry.getTargetContext()
         AppDataBase.clearDatabase()
-        val listIdMeals = getIds("meal", context)
+        getIds("meal", context)
         val listIdEvents = getIds("event", context)
 
         val eventType = getEventType(listIdEvents!![0], true, context)
-        val list:List<StatList> =
-            getListFoodForEventType(eventType!!, true, context)
+        val list:List<StatEntry> = getListFoodForEventType(eventType!!, true, context)
 
         Assert.assertEquals(list[0].food,"Banane")
         Assert.assertEquals(list[1].food,"Poulet")
@@ -319,8 +318,7 @@ class DBobjectsControllerTest {
                     "Produits laitiers",
                     null,
                     true,
-                    context
-                )
+                    context)
 
                 val idFood1 = saveNewFood(
                     "Banane",

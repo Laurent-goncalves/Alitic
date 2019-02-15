@@ -87,6 +87,18 @@ fun getFoodsFromMeal(meal:Meal, mode:Boolean = false, context: Context):List<Foo
     return listFood.toList()
 }
 
+fun getOldestMeal(mode:Boolean = false, context: Context):Long?{
+    AppDataBase.TEST_MODE = mode
+    val mealDao = AppDataBase.getInstance(context)?.mealDao()
+    return mealDao?.getOldestMealDate()
+}
+
+fun getLatestMeal(mode:Boolean = false, context: Context):Long?{
+    AppDataBase.TEST_MODE = mode
+    val mealDao = AppDataBase.getInstance(context)?.mealDao()
+    return mealDao?.getLatestMealDate()
+}
+
 fun getAllMeals(mode:Boolean = false, context: Context):List<Meal>?{
 
     AppDataBase.TEST_MODE = mode
