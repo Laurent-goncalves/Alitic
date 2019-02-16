@@ -12,6 +12,9 @@
 
     <color name="colorUnderline">#8a8a8a</color>
 
-
+    <color name="colorNoEventDay">#d8d8d8</color>
+    <color name="colorLevel1">#ff9999</color>
+    <color name="colorLevel2">#ff3333</color>
+    <color name="colorLevel3">#990000</color>
 
 </resources>

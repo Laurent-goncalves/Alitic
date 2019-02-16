@@ -2,14 +2,13 @@ package com.g.laurent.alitic.Controllers.Activities
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import com.g.laurent.alitic.Controllers.ClassControllers.StatList
 import com.g.laurent.alitic.Controllers.ClassControllers.getAllEventTypes
 import com.g.laurent.alitic.Controllers.ClassControllers.getListFoodForEventType
-import com.g.laurent.alitic.R
 import com.g.laurent.alitic.Views.StatAdapter
-import kotlinx.android.synthetic.main.activity_stat.*
+import android.support.v4.view.ViewPager
+import com.g.laurent.alitic.Controllers.Fragments.StatFragment
+import com.g.laurent.alitic.R
 
 
 class StatActivity : AppCompatActivity() {
@@ -21,7 +20,7 @@ class StatActivity : AppCompatActivity() {
         clearDatabase(applicationContext)
 
         val listEventTypes = getAllEventTypes(context = applicationContext)
-        val listStats :MutableList<StatList> = mutableListOf()
+        val listStats :MutableList<Long> = mutableListOf()
 
         if(listEventTypes!=null){
             for(eventType in listEventTypes){
@@ -29,16 +28,15 @@ class StatActivity : AppCompatActivity() {
                 val list = getListFoodForEventType(eventType, context = applicationContext)
 
                 if(list.isNotEmpty()){
-                    //StatList(eventType.id, list).toString()
-                    listStats.add(StatList(eventType.id, list))
+                    val id = eventType.id
+                    if(id!=null)
+                        listStats.add(id)
                 }
 
             }
 
-            val layoutManager = LinearLayoutManager(applicationContext, RecyclerView.VERTICAL, false)
-            stat_recycler_view.layoutManager = layoutManager
-            val adapter = StatAdapter(applicationContext, listStats)
-            stat_recycler_view.adapter = adapter
+            val pager = findViewById<ViewPager>(R.id.stat_viewpager)
+            pager.adapter = StatAdapter(supportFragmentManager, listStats)
         }
     }
 }

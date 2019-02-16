@@ -13,22 +13,21 @@ import android.widget.FrameLayout
 import android.annotation.SuppressLint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.content.ContextCompat
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.Activities.*
 import com.g.laurent.alitic.Controllers.ClassControllers.*
+import com.g.laurent.alitic.Controllers.Fragments.StatFragment
 import com.g.laurent.alitic.Models.*
-import com.github.mikephil.charting.data.BarData
 import com.roomorama.caldroid.CaldroidGridAdapter
-import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 
 
 /** FOODTYPE ADAPTER**/
 @SuppressLint("RecyclerView")
-class FoodTypeAdapter(val list: List<FoodType>, val recyclerView: RecyclerView, val OnMenuSelectionListener: OnMenuSelectionListener, val mode:Boolean=false, val context: Context) : RecyclerView.Adapter<FoodTypeViewHolder>() {
+class FoodTypeAdapter(val list: List<FoodType>, val recyclerView: RecyclerView, private val OnMenuSelectionListener: OnMenuSelectionListener, val mode:Boolean=false, val context: Context) : RecyclerView.Adapter<FoodTypeViewHolder>() {
 
     private var selection:Int = -1
 
@@ -89,7 +88,7 @@ class TimeLineAdapter(val list: List<Chrono>, val mode:Boolean=false, val contex
 }
 
 /** ADAPTER FOR GRIDVIEW TO DISPLAY PICTURE + NAME **/
-class GridAdapter(val listFood: List<*>, var listItemSelected: MutableList<Any>?, val pickmode:Boolean, val onItemSelectionListener: OnItemSelectionListener?, val mode:Boolean=false, val context: Context): BaseAdapter() { // any is Event or Meal
+class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableList<Any>?, private val pickmode:Boolean, private val onItemSelectionListener: OnItemSelectionListener?, val mode:Boolean=false, val context: Context): BaseAdapter() { // any is Event or Meal
 
     override fun getItem(position: Int): Any {
         return this
@@ -249,62 +248,77 @@ class CalendarAdapter(context: Context, private val onTimeLineDisplay: OnTimeLin
 }
 
 /** STAT ADAPTER**/
-class StatAdapter(val context: Context, val listStats:List<StatList>): RecyclerView.Adapter<StatViewHolder>(){
+class StatAdapter(mgr: FragmentManager, private val listIdEventType:List<Long>): FragmentStatePagerAdapter(mgr) {
 
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): StatViewHolder {
-        val inflatedView = LayoutInflater.from(p0.context).inflate(R.layout.barchart_layout, p0, false)
-        return StatViewHolder(inflatedView)
+    override fun getItem(p0: Int): StatFragment {
+        return StatFragment().newInstance(listIdEventType[p0])
+    }
+
+    override fun getCount(): Int {
+        return listIdEventType.size
+    }
+}
+
+/**  CHRONOLOGY STAT **/
+class StatChronoAdapter(val list:List<Long>, val context: Context): RecyclerView.Adapter<StatChronoHolder>() {
+
+    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): StatChronoHolder {
+        val view = View.inflate(p0.context, R.layout.stat_chrono_viewholder, null)
+        return StatChronoHolder(view, list, getMonthItem(list, p1), getYearItem(list, p1))
     }
 
     override fun getItemCount(): Int {
-        return listStats.size
+        return getNumberOfMonths(list)
     }
 
-    override fun onBindViewHolder(p0: StatViewHolder, position: Int) {
+    override fun onBindViewHolder(p0: StatChronoHolder, p1: Int) {
 
-        val valueSet = arrayListOf<BarEntry>()
-        val listStatEntries = listStats[p0.adapterPosition].listEntries
-        val listFood = mutableListOf<String>()
-        val eventType = getEventType(listStats[p0.adapterPosition].idEventType, context = context)?.name
+        val month = getMonthItem(list, p1)
+        val year = getYearItem(list, p1)
 
-        // Set title of the chart
-        //p0.titleChart.text = eventType
+        // Configure text date
+        p0.monthView.text = getMonthText(month, year)
 
-        // Create bar entries
-        if(listStatEntries.isNotEmpty()){
-            for(i in 0 until listStatEntries.size){
-                valueSet.add(BarEntry(i.toFloat(), listStatEntries[i].countNOK.toFloat()))
-                listFood.add(listStatEntries[i].food!!)
-            }
+        // Configure grid view
+        val list = getListDayGridForGridView(list, month, year)
+        p0.gridView.numColumns = getNumberColumnsGridView(getFirstDateGridView(month, year), getLastDateGridView(month, year))
+        val gridAdapter = GridChronoAdapter(list, context)
+        p0.gridView.adapter = gridAdapter
+    }
+}
+
+/**  GRIDVIEW CHRONOLOGY STAT **/
+class GridChronoAdapter(val list:List<DayGrid>, val context: Context): BaseAdapter() {
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
+        var view: View? = null
+        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater?
+
+        if (inflater != null) {
+            view = inflater.inflate(com.g.laurent.alitic.R.layout.grid_stat_chrono, parent, false)
+            view.background = ContextCompat.getDrawable(context, list[position].colorId)
         }
 
-
-
-        val barDataSet = BarDataSet(valueSet, eventType)
-        val dataSets = ArrayList<IBarDataSet>()
-        dataSets.add(barDataSet)
-
-        // hide Y-axis and gridlines
-        val left = p0.barChart.axisLeft
-        left.setDrawLabels(false)
-        left.setDrawGridLines(false)
-
-        val right = p0.barChart.axisRight
-        right.setDrawLabels(false)
-        right.setDrawGridLines(false)
-
-        // custom X-axis labels
-        val xAxis = p0.barChart.xAxis
-        xAxis.textSize = 18f
-        xAxis.granularity = 1f // restrict the minimum interval of your axis to "1"
-        xAxis.valueFormatter = MyXAxisValueFormatter(listFood.toTypedArray())
-
-        // Finalize bar chart
-        val barData = BarData(barDataSet)
-        barData.barWidth = 0.3f
-        p0.barChart.data = barData
-        p0.barChart.legend.isEnabled = false
-        p0.barChart.invalidate()
+        return view
     }
 
+    override fun getItemId(position: Int): Long {
+        return 0
+    }
+
+    override fun getItem(position: Int): Any {
+        return this
+    }
+
+    override fun getCount(): Int {
+        return list.size
+    }
+}
+
+enum class DayGrid(val colorId: Int){
+    DONT_EXISTS(android.R.color.transparent),
+    NO_EVENT_DAY(R.color.colorNoEventDay),
+    EVENT_LEV1(R.color.colorLevel1),
+    EVENT_LEV2(R.color.colorLevel2),
+    EVENT_LEV3(R.color.colorLevel3);
 }

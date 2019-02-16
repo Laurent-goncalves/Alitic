@@ -92,14 +92,13 @@ class ChronoViewHolder(itemView: View?){
     var eventNum: TextView? = itemView?.findViewById(R.id.number_events)
 }
 
-class FoodViewHolder(itemView: View?){
-    var dayNum: TextView? = itemView?.findViewById(R.id.day_number)
-    var fireIcon: ImageView? = itemView?.findViewById(R.id.fire_icon)
-    var eventNum: TextView? = itemView?.findViewById(R.id.number_events)
-}
+class StatChronoHolder(itemView: View, list:List<Long>, month:Int, year:Int): RecyclerView.ViewHolder(itemView){
+    var monthView: TextView = itemView.findViewById(R.id.month_text)
+    var gridView: GridView = itemView.findViewById(R.id.grid_month)
 
-class StatViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-    val statPanel:View = itemView.findViewById(R.id.stat_panel_layout)
-    val barChart:HorizontalBarChart = itemView.findViewById(R.id.barchart)
-    val lineChart:LineChart = itemView.findViewById(R.id.linechart)
+    fun configureGridView(month:Int, year:Int){
+
+
+
+    }
 }

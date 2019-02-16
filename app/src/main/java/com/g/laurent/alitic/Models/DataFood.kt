@@ -357,6 +357,41 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
         context = context)
     val idEvent8 = saveNewEvent(idEventType = malVentre,dateCode = getDateAsLong(17, 2, 2019, 13, 0),
         context = context)
+    val idEven9 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(11, 3, 2019, 13, 0),
+        context = context)
+    val idEvent10 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(15, 3, 2019, 13, 0),
+        context = context)
+    val idEvent11 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(22, 3, 2019, 13, 0),
+        context = context)
+    val idEvent12 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(8, 4, 2019, 13, 0),
+        context = context)
+    val idEvent13 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(16, 4, 2019, 13, 0),
+        context = context)
+    val idEvent14 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(28, 4, 2019, 13, 0),
+        context = context)
+    val idEvent15 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(3, 5, 2019, 13, 0),
+        context = context)
+    val idEvent16 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(19, 5, 2019, 13, 0),
+        context = context)
+    val idEvent17 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(19, 5, 2019, 13, 0),
+        context = context)
+
+    val idEvent18 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(19, 5, 2019, 13, 0),
+        context = context)
+    val idEvent19 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(3, 6, 2019, 13, 0),
+        context = context)
+    val idEvent20 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(17, 6, 2019, 13, 0),
+        context = context)
+    val idEvent21 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(17, 6, 2019, 13, 0),
+        context = context)
+    val idEvent22 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(18, 6, 2019, 13, 0),
+        context = context)
+    val idEvent23 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(11, 7, 2019, 13, 0),
+        context = context)
+    val idEvent24 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(11, 7, 2019, 13, 0),
+        context = context)
+    val idEvent25 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(12, 7, 2019, 13, 0),
+        context = context)
 }
 
 

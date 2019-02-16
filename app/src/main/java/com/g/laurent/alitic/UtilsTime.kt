@@ -17,6 +17,8 @@ fun getTodayDate(): Long {
 fun getDateAsLong(day:Int, month:Int, year:Int, hrs:Int, min:Int):Long {
     val date = Calendar.getInstance()
     date.set(year, month-1, day, hrs, min)
+    date.set(Calendar.MILLISECOND, 0)
+    date.set(Calendar.SECOND, 0)
     return date.timeInMillis
 }
 
@@ -82,10 +84,25 @@ fun getTextTime(hourOfDay: Int, minute: Int): String {
         "$hourOfDay:$minute"
 }
 
+fun getMonthText(month:Int, year:Int):String{
+    val dateFormat= SimpleDateFormat("MMM", Locale.FRENCH)
+    val dateCal = Calendar.getInstance()
+    dateCal.timeInMillis = getDateAsLong(1,month,2000,0,0)
+    val dateToConvert = dateCal.time
+    var monthText = dateFormat.format(dateToConvert)
+    monthText = monthText.replace(".", "")
+    monthText = monthText.substring(0,1).toUpperCase() + monthText.substring(1,monthText.length)
+
+    return if(month == 1 || month == 12)
+        "$monthText ${year.toString().substring(2,4)}"
+    else
+        monthText
+}
+
 fun getMonth(dateCode:Long):Int{
     val date = Calendar.getInstance()
     date.timeInMillis = dateCode
-    return date.get(Calendar.MONTH)
+    return date.get(Calendar.MONTH) + 1
 }
 
 fun getYear(dateCode:Long):Int{

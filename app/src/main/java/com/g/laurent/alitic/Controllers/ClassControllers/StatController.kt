@@ -52,8 +52,8 @@ fun getListFoodForEventType(eventType: EventType, mode:Boolean = false, context:
     // Get the hashMap list of food from meals causing events and their occurrence
     val listFoodByOccur = getMealFittingEventTable(eventTable, mode, context, listMeals)
 
-    // Sort the list in descending order
-    val listSorted = getListInDescendingOrder(listFoodByOccur)
+    // Sort the list in ascending order
+    val listSorted = getListInAscendingOrder(listFoodByOccur)
 
     return getOKmealForEachFood(listSorted, listMeals)
 }
@@ -143,23 +143,23 @@ fun getOKmealForEachFood(list:List<StatEntry>, listMeals:List<Meal>?):List<StatE
     return result.toList()
 }
 
-fun getListInDescendingOrder(list:HashMap<Food, Int>):List<StatEntry>{
+fun getListInAscendingOrder(list:HashMap<Food, Int>):List<StatEntry>{
 
     val result : MutableList<StatEntry> = mutableListOf()
 
     if(list.size != 0){
         for (i in 0 until list.size) {
-            val max = list.maxBy { it.value }
-            if(max!=null){
+            val min = list.minBy { it.value }
+            if(min!=null){
                 result.add(
                     StatEntry(
-                        max.key.name,
-                        max.key.id,
-                        max.key.idFoodType,
-                        0, max.value
+                        min.key.name,
+                        min.key.id,
+                        min.key.idFoodType,
+                        0, min.value
                     )
                 )
-                list.remove(max.key)
+                list.remove(min.key)
             }
         }
     }
@@ -192,11 +192,11 @@ fun getDatesEvents(idEventType: Long?, mode:Boolean = false, context:Context):Li
  * ------------------------------------ EVOLUTION CALCUL -----------------------------------------------------
 ----------------------------------------------------------------------------------------------------------*/
 
-enum class Evolution(val status:Int?, val icon:Int){
-    NEGATIVE(-1, R.drawable.baseline_thumb_down_white_24),
-    NEUTRAL(0, R.drawable.baseline_thumbs_up_down_white_24),
-    POSITIVE(1, R.drawable.baseline_thumb_up_white_24),
-    UNDEFINED(null,R.drawable.baseline_help_white_24);
+enum class Evolution(val status:Int?, val icon:Int, val colorId:Int){
+    NEGATIVE(-1, R.drawable.baseline_thumb_down_white_24, android.R.color.holo_red_dark),
+    NEUTRAL(0, R.drawable.baseline_thumbs_up_down_white_24, android.R.color.holo_blue_dark),
+    POSITIVE(1, R.drawable.baseline_thumb_up_white_24, android.R.color.holo_green_dark),
+    UNDEFINED(null,R.drawable.baseline_help_white_24, android.R.color.darker_gray);
 }
 
 fun getEvolution(listDates:List<Long>, mode:Boolean = false, context:Context):Evolution{
@@ -248,20 +248,12 @@ fun getEvolution(listDates:List<Long>, mode:Boolean = false, context:Context):Ev
                 for (i in 0 until dates.size)
                     regression.addData(dates[i],counts[i])
 
-                val coeff = PearsonsCorrelation().correlation(dates,counts)
+                val slope = regression.slope
 
-                return if (coeff > 0f) { // coefficient must be above 0.5 to have a good correlation
-
-                    val slope = regression.slope
-
-                    when {
-                        slope > 0 -> Evolution.NEGATIVE
-                        slope.equals(0) -> Evolution.NEUTRAL
-                        else -> Evolution.POSITIVE
-                    }
-
-                } else {
-                    Evolution.UNDEFINED
+                when {
+                    slope > 0 -> return Evolution.NEGATIVE
+                    slope.equals(0) -> return Evolution.NEUTRAL
+                    else -> return Evolution.POSITIVE
                 }
             }
         }

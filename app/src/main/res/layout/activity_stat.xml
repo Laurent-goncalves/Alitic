@@ -6,10 +6,9 @@
         android:layout_height="match_parent"
         tools:context=".Controllers.Activities.StatActivity">
 
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/stat_recycler_view"
+    <android.support.v4.view.ViewPager
+            android:id="@+id/stat_viewpager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dp"/>
+            android:layout_height="match_parent"/>
 
 </FrameLayout>
