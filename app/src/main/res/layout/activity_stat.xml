@@ -4,11 +4,46 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/fragment_place"
         tools:context=".Controllers.Activities.StatActivity">
 
     <android.support.v4.view.ViewPager
             android:id="@+id/stat_viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
+
+    <android.support.design.widget.TabLayout
+            android:id="@+id/activity_multi_tabs"
+              android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layout_gravity="bottom">
+
+        <!--  BUTTON MAP VIEW -->
+        <android.support.design.widget.TabItem
+                android:id="@+id/tab_negative_global_analysis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/baseline_cloud"
+                android:text="@string/menu_global_negative"/>
+
+        <!--  BUTTON LIST RESTO VIEW -->
+        <android.support.design.widget.TabItem
+                android:id="@+id/tab_positive_global_analysis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/baseline_wb_sunny_white_24"
+                android:text="@string/menu_global_positive"/>
+
+        <!--  BUTTON LIST MATES VIEW -->
+        <android.support.design.widget.TabItem
+                android:id="@+id/tab_detail_analysis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/baseline_zoom"
+                android:text="@string/menu_detail"/>
+
+    </android.support.design.widget.TabLayout>
 
 </FrameLayout>

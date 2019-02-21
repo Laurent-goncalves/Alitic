@@ -251,7 +251,7 @@ class CalendarAdapter(context: Context, private val onTimeLineDisplay: OnTimeLin
 class StatAdapter(mgr: FragmentManager, private val listIdEventType:List<Long>): FragmentStatePagerAdapter(mgr) {
 
     override fun getItem(p0: Int): StatFragment {
-        return StatFragment().newInstance(listIdEventType[p0])
+        return StatFragment().newInstance(listIdEventType[p0], StatType.DETAIL_ANALYSIS)
     }
 
     override fun getCount(): Int {

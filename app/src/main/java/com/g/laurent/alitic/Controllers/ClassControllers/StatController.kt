@@ -2,13 +2,13 @@ package com.g.laurent.alitic.Controllers.ClassControllers
 
 import android.content.Context
 import com.g.laurent.alitic.*
+import com.g.laurent.alitic.Controllers.Activities.StatType
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.Models.Food
 import com.g.laurent.alitic.Models.FoodType
 import com.g.laurent.alitic.Models.Meal
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
-import org.apache.commons.math3.stat.correlation.PearsonsCorrelation
 import org.apache.commons.math3.stat.regression.SimpleRegression
 
 const val DAY:Long = 24*60*60*1000
@@ -41,58 +41,88 @@ class MyXAxisValueFormatter(private val mValues: Array<String>) : IAxisValueForm
  * --------------------------------------- FOOD STAT ---------------------------------------------------------
    ----------------------------------------------------------------------------------------------------------*/
 
-fun getListFoodForEventType(eventType: EventType, mode:Boolean = false, context:Context):List<StatEntry>{
+fun getBarChartDataForDetailedAnalysis(eventType: EventType, mode:Boolean = false, context:Context):List<StatEntry>{
 
     // Get the list of all meals
     val listMeals = getAllMeals(mode, context)
 
     // Get the list of all events corresponding to eventType and their limits of time (min and max) to take into account meals
-    val eventTable = getEventTable(eventType, context)
+    val eventTable = getEventTable(StatType.DETAIL_ANALYSIS, eventType, context)
 
     // Get the hashMap list of food from meals causing events and their occurrence
-    val listFoodByOccur = getMealFittingEventTable(eventTable, mode, context, listMeals)
+    val listFoodByOccur = getMealFittingEventTable(StatType.DETAIL_ANALYSIS, eventTable, mode, context, listMeals)
 
     // Sort the list in ascending order
     val listSorted = getListInAscendingOrder(listFoodByOccur)
 
-    return getOKmealForEachFood(listSorted, listMeals)
+    return getOKmealForEachFood(listSorted, listMeals) // get "countOK" for each food
 }
 
-fun getEventTable(eventType: EventType, context:Context):List<EventTable> {
+fun getBarChartDataForGlobalAnalysis(statType:StatType, mode:Boolean = false, context: Context): List<StatEntry> {
+
+    // Get the list of all meals
+    val listMeals = getAllMeals(mode, context)
+
+    // Get the list of all events and their limits of time (min and max) to take into account meals
+    val eventTable = getEventTable(statType, null, context)
+
+    // Get the hashMap list of food from meals causing events and their occurrence
+    val listFoodByOccur = getMealFittingEventTable(statType, eventTable, mode, context, listMeals)
+
+    // Sort the list in ascending order
+    return getListInAscendingOrder(listFoodByOccur)
+}
+
+fun getEventTable(statType:StatType, eventType: EventType?, context:Context):List<EventTable> {
 
     val list : MutableList<EventTable> = mutableListOf()
     val listEvent = getAllEvents(context = context)
 
     if(listEvent!=null){
         for(e in listEvent){
-            if(e.idEventType == eventType.id)
-                list.add(
-                    EventTable(
-                        e.dateCode - eventType.maxTime,
-                        e.dateCode - eventType.minTime
-                    )
-                )
+            if(statType == StatType.DETAIL_ANALYSIS) {
+                if (e.idEventType == eventType!!.id)
+                    list.add(EventTable(
+                            e.dateCode - eventType.maxTime,
+                            e.dateCode - eventType.minTime))
+            } else {
+                val eventype = getEventType(e.idEventType, context = context)
+                if(eventype!=null){
+                    list.add(EventTable(
+                        e.dateCode - eventype.maxTime,
+                        e.dateCode - eventype.minTime))
+                }
+            }
         }
     }
 
     return list
 }
 
-fun shouldMealBeTakenIntoAccount(meal:Meal, eventTable:List<EventTable>):Boolean{
-    for(e in eventTable){
-        if(meal.dateCode in e.minTime .. e.maxTime)
-            return true
+fun shouldMealBeTakenIntoAccount(statType:StatType, meal:Meal, eventTable:List<EventTable>):Boolean{
+
+    fun isMealRelatedToOneEvent():Boolean {
+        for(e in eventTable){
+            if(meal.dateCode in e.minTime .. e.maxTime)
+                return true
+        }
+        return false
     }
-    return false
+
+    return when (statType) {
+        StatType.DETAIL_ANALYSIS -> isMealRelatedToOneEvent()
+        StatType.GLOBAL_ANALYSIS_NEG -> isMealRelatedToOneEvent()
+        else -> !isMealRelatedToOneEvent()
+    }
 }
 
-fun getMealFittingEventTable(eventTable:List<EventTable>, mode:Boolean=false, context: Context, listMeals:List<Meal>?):HashMap<Food, Int>{
+fun getMealFittingEventTable(statType:StatType, eventTable:List<EventTable>, mode:Boolean=false, context: Context, listMeals:List<Meal>?):HashMap<Food, Int>{
 
     val list:HashMap<Food, Int> = hashMapOf()
 
     if(listMeals!=null){
         for(meal in listMeals){
-            if(shouldMealBeTakenIntoAccount(meal, eventTable)){
+            if(shouldMealBeTakenIntoAccount(statType, meal, eventTable)){
 
                 val listFood =
                     getFoodsFromMeal(meal, mode, context)
@@ -156,7 +186,7 @@ fun getListInAscendingOrder(list:HashMap<Food, Int>):List<StatEntry>{
                         min.key.name,
                         min.key.id,
                         min.key.idFoodType,
-                        0, min.value
+                        min.value, min.value
                     )
                 )
                 list.remove(min.key)
@@ -188,6 +218,23 @@ fun getDatesEvents(idEventType: Long?, mode:Boolean = false, context:Context):Li
     return result.toList()
 }
 
+fun getDatesAllEvents(mode:Boolean = false, context:Context):List<Long>{
+
+    val listEvents = getAllEvents(mode, context)
+
+    val result = mutableListOf<Long>()
+
+    if(listEvents!=null){
+        if(listEvents.isNotEmpty()){
+            for(event in listEvents){
+                result.add(event.dateCode)
+            }
+        }
+    }
+
+    return result.toList()
+}
+
 /** ----------------------------------------------------------------------------------------------------------
  * ------------------------------------ EVOLUTION CALCUL -----------------------------------------------------
 ----------------------------------------------------------------------------------------------------------*/
@@ -201,7 +248,7 @@ enum class Evolution(val status:Int?, val icon:Int, val colorId:Int){
 
 fun getEvolution(listDates:List<Long>, mode:Boolean = false, context:Context):Evolution{
 
-    var count:Int = 0
+    var count = 0
 
     fun getCountsList(minTime:Long, period:Long):DoubleArray{
 
@@ -268,36 +315,43 @@ fun getEvolution(listDates:List<Long>, mode:Boolean = false, context:Context):Ev
 
 class FoodTypeStat(val foodType:FoodType, val percent:Double)
 
-fun getListFoodTypesCounts(eventType: EventType, mode:Boolean = false, context:Context):List<FoodTypeStat>{
+fun getListFoodTypesCounts(statType: StatType, eventType: EventType, mode:Boolean = false, context:Context):List<FoodTypeStat>{
 
     val listFoodTypes = mutableListOf<FoodTypeStat>()
 
-    // Get the list of all meals
-    val listMeals = getAllMeals(mode, context)
-
-    // Get the list of all events corresponding to eventType and their limits of time (min and max) to take into account meals
-    val eventTable = getEventTable(eventType, context)
-
     // Get the hashMap list of food from meals causing events and their occurrence
-    val listFoodByOccur = getMealFittingEventTable(eventTable, mode, context, listMeals)
+    val listFoodByOccur = if(statType==StatType.DETAIL_ANALYSIS)
+        getBarChartDataForDetailedAnalysis(eventType, mode, context)
+    else
+        getBarChartDataForGlobalAnalysis(statType, mode, context)
 
-    fun getListFoodTypesStat():Map<FoodType, Double>{
+    fun getListFoodTypesStat(statType: StatType):Map<FoodType, Double>{
+
+        fun getCount(statEntry:StatEntry):Double{
+            return if(statType == StatType.DETAIL_ANALYSIS)
+                statEntry.countNOK.toDouble()
+            else if(statType == StatType.GLOBAL_ANALYSIS_NEG)
+                statEntry.countNOK.toDouble()
+            else
+                statEntry.countOK.toDouble()
+        }
 
         val result = mutableMapOf<FoodType, Double>()
 
-        if(listFoodByOccur.size > 0){
+        if(listFoodByOccur.isNotEmpty()){
 
             for(food in listFoodByOccur){
 
-                val foodType = getFoodType(food.key.idFoodType, context = context)
+                val foodItem = getFood(food.idFood, mode, context)
+                val foodType = getFoodType(foodItem?.idFoodType, mode, context)
 
                 if(result.containsKey(foodType) && foodType!=null){
                     if(result[foodType]!=null)
-                        result[foodType] = food.value.toDouble() + result[foodType]!!
+                        result[foodType] = getCount(food) + result[foodType]!!
                     else
-                        result[foodType] = food.value.toDouble()
+                        result[foodType] = getCount(food)
                 } else if(foodType!=null) {
-                    result[foodType] = food.value.toDouble()
+                    result[foodType] = getCount(food)
                 }
             }
         }
@@ -305,7 +359,7 @@ fun getListFoodTypesCounts(eventType: EventType, mode:Boolean = false, context:C
         return result.toMap()
     }
 
-    val mapFoodTypes = getListFoodTypesStat()
+    val mapFoodTypes = getListFoodTypesStat(statType)
     val sumValues = mapFoodTypes.map { it.value }.sum()
 
     for(foodtype in mapFoodTypes){
@@ -314,76 +368,3 @@ fun getListFoodTypesCounts(eventType: EventType, mode:Boolean = false, context:C
 
     return listFoodTypes
 }
-
-
-/*fun getChronoStatEventType(idEventType: Long?, perMonth:Boolean, mode:Boolean = false, context:Context):List<ChronoStat>{
-
-    val listEvents = getListEventForOneEventType(idEventType, mode, context)
-
-    fun getListEventsByMonthOrWeek():HashMap<Long, Int>{
-
-        val hashmap = hashMapOf<Long, Int>()
-        if(listEvents!=null){
-            if(listEvents.isNotEmpty()){
-                for(event in listEvents){
-
-                    val key = if(perMonth){ // data per month
-                        getFirstDayMonth(event.dateCode)
-                    } else { // data per week
-                        getFirstDayWeek(event.dateCode)
-                    }
-
-                    if(hashmap.containsKey(key))
-                        hashmap[key] = hashmap[key]!! + 1
-                    else
-                        hashmap[key] =  1
-                }
-            }
-        }
-
-        return hashmap
-    }
-
-    fun createListChronoStat(hashmap:HashMap<Long, Int>):List<ChronoStat>{
-
-        val result = mutableListOf<ChronoStat>()
-
-        if(hashmap.isNotEmpty()){
-
-            val minTime:Long? = hashmap.minBy { it.key }?.key
-            val maxTime:Long? = hashmap.maxBy { it.key }?.key
-
-            if(perMonth && minTime!=null && maxTime!=null){ // PER MONTH
-
-                var count:Long = minTime
-
-                while(count<=maxTime){
-                    if(hashmap.containsKey(count))
-                        result.add(ChronoStat(idEventType, count, hashmap[count]!!))
-                    else
-                        result.add(ChronoStat(idEventType, count, 0))
-
-                    count = getFirstDayMonth(count + 33L * 24L * 60L * 60L * 1000L)
-                }
-            } else if(!perMonth && minTime!=null && maxTime!=null){ // PER WEEK
-
-                var count:Long = minTime
-
-                while(count<=maxTime){
-                    if(hashmap.containsKey(count))
-                        result.add(ChronoStat(idEventType, count, hashmap[count]!!))
-                    else
-                        result.add(ChronoStat(idEventType, count, 0))
-
-                    count = getFirstDayWeek(count + 7L * 24L * 60L * 60L * 1000L)
-                }
-            }
-        }
-
-        return result.toList()
-    }
-
-    val listEventsByMonthOrWeek = getListEventsByMonthOrWeek()
-
-    return createListChronoStat(listEventsByMonthOrWeek)
-}*/

@@ -17,4 +17,20 @@
     <color name="colorLevel2">#ff3333</color>
     <color name="colorLevel3">#990000</color>
 
+    <color name="boissons_color">#66b3ff</color>
+    <color name="viandes_color">#ff6666</color>
+    <color name="poissons_color">#9999ff</color>
+    <color name="legumes_color">#8cd98c</color>
+    <color name="prodlait_color">#cc9966</color>
+    <color name="fruits_color">#ffaa80</color>
+    <color name="sucrerie_color">#ffb3ff</color>
+    <color name="cereale_color">#ffe680</color>
+    <color name="sauces_color">#adad85</color>
+    <color name="autres_color">#c2c2d6</color>
+
+    <color name="colorFoodNOK">#f1744b</color>
+    <color name="colorFoodOK">#19b480</color>
+
+
+
 </resources>

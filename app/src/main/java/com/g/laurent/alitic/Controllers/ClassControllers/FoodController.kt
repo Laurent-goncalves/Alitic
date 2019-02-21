@@ -19,6 +19,12 @@ fun getAllFood(mode:Boolean = false, context:Context):List<Food>?{
     return foodDao?.getAll()
 }
 
+fun getFood(idFood:Long?, mode:Boolean = false, context: Context):Food?{
+    AppDataBase.TEST_MODE = mode
+    val foodDao = AppDataBase.getInstance(context)?.foodDao()
+    return foodDao?.getFood(idFood)
+}
+
 fun getListFoodByType(idFoodType:Long?, mode:Boolean = false, context:Context):List<Food>?{
     AppDataBase.TEST_MODE = mode
     val foodDao = AppDataBase.getInstance(context)?.foodDao()
@@ -70,10 +76,10 @@ fun deleteAllFood(mode:Boolean = false, context: Context){
 // ----------------------------------------- FOODTYPE ------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------------
 
-fun saveNewFoodType(name:String, foodTypeUrl:String?, mode:Boolean = false, context: Context):Long?{
+fun saveNewFoodType(name:String, foodTypeUrl:String?, foodColor:Int, mode:Boolean = false, context: Context):Long?{
     AppDataBase.TEST_MODE = mode
     val foodTypeDao = AppDataBase.getInstance(context)?.foodTypeDao()
-    return foodTypeDao?.insert(FoodType(null, name, foodTypeUrl))
+    return foodTypeDao?.insert(FoodType(null, name, foodTypeUrl, foodColor))
 }
 
 fun getAllFoodTypes(mode:Boolean = false, context:Context):List<FoodType>?{
@@ -86,6 +92,19 @@ fun getFoodType(idFoodType:Long?, mode:Boolean = false, context:Context):FoodTyp
     AppDataBase.TEST_MODE = mode
     val foodTypeDao = AppDataBase.getInstance(context)?.foodTypeDao()
     return foodTypeDao?.getFoodType(idFoodType)
+}
+
+fun getFoodTypeFromFood(idFood: Long?, mode:Boolean = false, context:Context):FoodType?{
+
+    AppDataBase.TEST_MODE = mode
+    // Recover food from idFood
+    val food = getFood(idFood, mode, context)
+
+    // Recover foodtype
+    if(food!=null){
+        return getFoodType(food.idFoodType, mode, context)
+    }
+    return null
 }
 
 fun getFoodType(nameFoodType:String?, mode:Boolean = false, context:Context):FoodType?{

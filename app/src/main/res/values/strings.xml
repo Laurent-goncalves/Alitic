@@ -21,12 +21,17 @@
     <string name="time">Time</string>
 
     <integer name="duration_anim">500</integer>
-
-
     <string name="text_nb_events">Number of events:</string>
+
+    <!-- MENU STATS -->
+    <string name="menu_global_positive">Analyse effets positifs</string>
+    <string name="menu_global_negative">Analyse globale</string>
+    <string name="menu_detail">Analyse détaillée</string>
+    <string name="menu_info">Informations</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="evolution">Evolution</string>
 
 
 </resources>

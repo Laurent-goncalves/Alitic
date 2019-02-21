@@ -5,6 +5,7 @@ package com.g.laurent.alitic.Models
 import android.content.Context
 import com.g.laurent.alitic.Controllers.ClassControllers.saveNewEvent
 import com.g.laurent.alitic.Controllers.ClassControllers.saveNewMeal
+import com.g.laurent.alitic.R
 import com.g.laurent.alitic.getDateAsLong
 
 fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao?, eventTypeDao:EventTypeDao?, context: Context){
@@ -14,16 +15,16 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     ------------------------------------------------------------------------------------------------------ **/
 
     // FOODTYPES
-    val boissons = FoodType(null, "Boissons", "verre")
-    val viandes = FoodType(null, "Viandes", "viande")
-    val poissons = FoodType(null, "Poissons", "poisson")
-    val legumes = FoodType(null, "Légumes", "legume")
-    val prodlait = FoodType(null, "Laitages", "laitage")
-    val fruits = FoodType(null, "Fruits", "fruit")
-    val sucrerie = FoodType(null, "Sucreries", "gateau")
-    val cereale = FoodType(null, "Céréales", "cereale")
-    val sauces = FoodType(null, "Sauces", "sauce")
-    val autres = FoodType(null, "Autres", "autres")
+    val boissons = FoodType(null, "Boissons", "verre", R.color.boissons_color)
+    val viandes = FoodType(null, "Viandes", "viande",R.color.viandes_color)
+    val poissons = FoodType(null, "Poissons", "poisson",R.color.poissons_color)
+    val legumes = FoodType(null, "Légumes", "legume",R.color.legumes_color)
+    val prodlait = FoodType(null, "Laitages", "laitage",R.color.prodlait_color)
+    val fruits = FoodType(null, "Fruits", "fruit",R.color.fruits_color)
+    val sucrerie = FoodType(null, "Sucreries", "gateau",R.color.sucrerie_color)
+    val cereale = FoodType(null, "Céréales", "cereale",R.color.cereale_color)
+    val sauces = FoodType(null, "Sauces", "sauce",R.color.sauces_color)
+    val autres = FoodType(null, "Autres", "autres",R.color.autres_color)
 
     // INSERT FOODTYPES
     val idBoissons = foodTypeDao?.insert(boissons)
@@ -242,7 +243,7 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     -------------------------------------- EVENT TYPE INSERTION ----------------------------------------------
     ------------------------------------------------------------------------------------------------------ **/
 
-    val reflux = eventTypeDao?.insert(EventType(null, "Reflux", "", 0, 3*60*60*1000))
+    val reflux = eventTypeDao?.insert(EventType(null, "Reflux", "reflux", 0, 3*60*60*1000))
     val malVentre = eventTypeDao?.insert(EventType(null, "Mal au ventre", "", 0, 3*60*60*1000))
     val malTete = eventTypeDao?.insert(EventType(null, "Mal à la tête", "", 0, 3*60*60*1000))
     val diarrh = eventTypeDao?.insert(EventType(null, "Diarrhée", "", 0, 3*60*60*1000))

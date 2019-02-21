@@ -1,79 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            xmlns:app="http://schemas.android.com/apk/res-auto">
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="horizontal">
 
     <!-- IMAGE EVENT TYPE -->
     <ImageView
             android:id="@+id/image_eventtype"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:background="@drawable/background_header_panel"
-            android:scaleType="centerInside"/>
+            android:scaleType="centerCrop"/>
 
     <!-- TITLE EVENT TYPE -->
     <TextView
             android:id="@+id/title_eventtype"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/image_eventtype"
-            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="0dp"
+            android:layout_weight="4"
+            android:layout_height="match_parent"
             android:background="@drawable/background_header_panel"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:gravity="center"/>
 
-    <!-- ICON FIRE -->
-    <ImageView
-            android:id="@+id/icon_fire"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_header_panel"
-            android:src="@drawable/baseline_whatshot_white_24"
-            app:layout_constraintTop_toBottomOf="@id/title_eventtype"
-            app:layout_constraintLeft_toRightOf="@id/image_eventtype"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
-    <!-- TEXT NUMBER OF EVENTS -->
-    <TextView
-            android:id="@+id/text_nb_events"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/title_eventtype"
-            app:layout_constraintLeft_toRightOf="@id/icon_fire"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@drawable/background_header_panel"
-            android:text="@string/text_nb_events"
-            android:textSize="20sp"
-            android:gravity="center"/>
+        <TextView
+                android:id="@+id/text_evolution"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:text="@string/evolution"/>
 
-    <!-- VALUE NUMBER OF EVENTS -->
-    <TextView
-            android:id="@+id/value_nb_events"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/title_eventtype"
-            app:layout_constraintLeft_toRightOf="@id/text_nb_events"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@drawable/background_header_panel"
-            android:layout_marginStart="10dp"
-            android:textSize="20sp"
-            android:gravity="center"/>
+        <!-- ICON EVOLUTION -->
+        <ImageView
+                android:id="@+id/evolution_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/text_evolution"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:padding="5dp"/>
 
-    <!-- ICON EVOLUTION -->
-    <ImageView
-            android:id="@+id/evolution_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_header_panel"
-            app:layout_constraintTop_toBottomOf="@id/title_eventtype"
-            app:layout_constraintLeft_toRightOf="@id/value_nb_events"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+    </android.support.constraint.ConstraintLayout>
 
-</android.support.constraint.ConstraintLayout>
+
+
+</LinearLayout>

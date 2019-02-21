@@ -51,7 +51,8 @@ data class Food(@PrimaryKey(autoGenerate = true) var id: Long?,
 @Entity(tableName = "foodtype")
 data class FoodType(@PrimaryKey(autoGenerate = true) var id: Long?,
                 @ColumnInfo(name = "name") var name:String,
-                @ColumnInfo(name = "foodTypePic") var foodTypePic: String?)
+                @ColumnInfo(name = "foodTypePic") var foodTypePic: String?,
+                @ColumnInfo(name = "colorFoodType") var foodTypeColor: Int)
 
 
 @Entity(tableName = "keyword", indices = [Index("idfood")], foreignKeys = [ForeignKey(entity = Food::class,
@@ -270,7 +271,7 @@ interface EventTypeDao {
 
 // ----------------------------------- DATABASE --------------------------------------------
 
-@Database(entities = [Meal::class, MealItem::class, Food::class, FoodType::class, Keyword::class, Event::class, EventType::class], version = 11, exportSchema = false)
+@Database(entities = [Meal::class, MealItem::class, Food::class, FoodType::class, Keyword::class, Event::class, EventType::class], version = 12, exportSchema = false)
 abstract class AppDataBase : RoomDatabase() {
 
     abstract fun mealDao(): MealDao

@@ -309,16 +309,13 @@ class DBobjectsControllerTest {
             "food" -> {
 
                 val idFoodType1 =
-                    saveNewFoodType("Fruits", null, true, context)
+                    saveNewFoodType("Fruits", null, R.color.colorFoodPicked, true, context)
                 val idFoodType2 =
-                    saveNewFoodType("Viandes", null, true, context)
+                    saveNewFoodType("Viandes", null, R.color.colorFoodPicked,true, context)
                 val idFoodType3 =
-                    saveNewFoodType("Légumes", null, true, context)
-                val idFoodType4 = saveNewFoodType(
-                    "Produits laitiers",
-                    null,
-                    true,
-                    context)
+                    saveNewFoodType("Légumes", null, R.color.colorFoodPicked,true, context)
+                val idFoodType4 =
+                    saveNewFoodType("Produits laitiers",null,R.color.colorFoodPicked,true,context)
 
                 val idFood1 = saveNewFood(
                     "Banane",
@@ -379,12 +376,12 @@ class DBobjectsControllerTest {
 
             "foodtype" -> {
                 return listOf(
-                    saveNewFoodType("Fruits", null, true, context),
-                    saveNewFoodType("Viandes", null, true, context),
-                    saveNewFoodType("Légumes", null, true, context),
+                    saveNewFoodType("Fruits", null, R.color.colorFoodPicked,true, context),
+                    saveNewFoodType("Viandes", null, R.color.colorFoodPicked,true, context),
+                    saveNewFoodType("Légumes", null, R.color.colorFoodPicked,true, context),
                     saveNewFoodType(
                         "Produits laitiers",
-                        null,
+                        null,R.color.colorFoodPicked,
                         true,
                         context
                     )
@@ -394,14 +391,14 @@ class DBobjectsControllerTest {
             "meal" -> {
 
                 val idFoodType1 =
-                    saveNewFoodType("Fruits", null, true, context)
+                    saveNewFoodType("Fruits", null, R.color.colorFoodPicked,true, context)
                 val idFoodType2 =
-                    saveNewFoodType("Viandes", null, true, context)
+                    saveNewFoodType("Viandes", null, R.color.colorFoodPicked,true, context)
                 val idFoodType3 =
-                    saveNewFoodType("Légumes", null, true, context)
+                    saveNewFoodType("Légumes", null, R.color.colorFoodPicked,true, context)
                 val idFoodType4 = saveNewFoodType(
                     "Produits laitiers",
-                    null,
+                    null,R.color.colorFoodPicked,
                     true,
                     context
                 )
