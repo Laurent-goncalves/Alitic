@@ -2,45 +2,76 @@ package com.g.laurent.alitic.Controllers.Activities
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import com.g.laurent.alitic.Controllers.ClassControllers.getAllEventTypes
+import android.support.design.widget.TabLayout
+import android.support.v4.content.ContextCompat
 import com.g.laurent.alitic.Views.StatAdapter
-import android.view.MenuItem
 import android.view.View
-import android.widget.PopupMenu
-import com.g.laurent.alitic.Controllers.ClassControllers.getBarChartDataForDetailedAnalysis
-import com.g.laurent.alitic.Controllers.Fragments.StatFragment
 import com.g.laurent.alitic.R
 import kotlinx.android.synthetic.main.activity_stat.*
 
+class StatActivity : AppCompatActivity() {
 
-class StatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
-
-    lateinit var statType:StatType
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stat)
 
         clearDatabase(applicationContext)
+        configureTabLayout()
+    }
 
-        statType =StatType.GLOBAL_ANALYSIS_NEG
+    /** ---------------------------------- TABS ---------------------------------------- **/
 
-        // Launch global analysis (for events) at creation of activity
-        launchGlobalAnalysis()
+    private fun configureTabLayout(){
+
+        /*tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                // Change fragment
+                if(tab.tag!=null) {
+                    when (tab.tag) {
+                        R.string.menu_global_negative -> {
+                            launchGlobalAnalysis(StatType.GLOBAL_ANALYSIS_NEG)
+                        }
+                        R.string.menu_global_positive -> {
+                            launchGlobalAnalysis(StatType.GLOBAL_ANALYSIS_POS)
+                        }
+                        R.string.menu_detail -> {
+                            launchDetailedAnalysis()
+                        }
+                    }
+                }
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })*/
+
+        val tab0 = tabs.getTabAt(0)
+        val tab1 = tabs.getTabAt(1)
+        val tab2 = tabs.getTabAt(2)
+
+        if(tab0!=null && tab1!=null && tab2!=null){
+            tab0.icon = ContextCompat.getDrawable(applicationContext, R.drawable.baseline_cloud)
+            tab1.icon = ContextCompat.getDrawable(applicationContext, R.drawable.baseline_wb_sunny_white_24)
+            tab2.icon = ContextCompat.getDrawable(applicationContext, R.drawable.baseline_zoom)
+        }
+
+        stat_viewpager.visibility = View.VISIBLE
+
+
+        tabs.tabMode = TabLayout.MODE_FIXED // Tabs have the same width
+        stat_viewpager.adapter = StatAdapter(supportFragmentManager)
+        tabs.setupWithViewPager(stat_viewpager)
     }
 
     /** --------------------------------- FRAGMENT -------------------------------------- **/
 
-    private fun launchGlobalAnalysis(){
+    /*private fun launchGlobalAnalysis(statType:StatType){
 
         // Show StatFragment
-        val statFragment = StatFragment().newInstance(-1, statType)
+        val statGlobalFragment = StatGlobalFragment().newInstance(statType)
         val fragmentManager = supportFragmentManager.beginTransaction()
-        fragmentManager.replace(R.id.fragment_place, statFragment, TAG_GLOBAL_ANALYSIS_FRAGMENT)
+        fragmentManager.replace(R.id.fragment_place, statGlobalFragment, TAG_GLOBAL_ANALYSIS_FRAGMENT)
         fragmentManager.commit()
-
-        // Hide viewpager
-        stat_viewpager.visibility = View.GONE
     }
 
     private fun launchDetailedAnalysis(){
@@ -66,41 +97,14 @@ class StatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
                     if(id!=null)
                         listStats.add(id)
                 }
-
             }
             stat_viewpager.visibility = View.VISIBLE
-            stat_viewpager.adapter = StatAdapter(supportFragmentManager, listStats)
+            stat_viewpager.adapter = StatAdapter(supportFragmentManager)
         }
-    }
+    }*/
 
     private fun displayInformations(){
         // TODO : to implement
-    }
-
-    /** --------------------------------- POP MENU -------------------------------------- **/
-
-    override fun onMenuItemClick(item: MenuItem): Boolean {
-
-        when(item.itemId){
-
-            StatType.GLOBAL_ANALYSIS_NEG.idMenuItem -> {
-                statType = StatType.GLOBAL_ANALYSIS_NEG
-                launchGlobalAnalysis()
-            }
-            StatType.GLOBAL_ANALYSIS_POS.idMenuItem -> {
-                statType = StatType.GLOBAL_ANALYSIS_POS
-                launchGlobalAnalysis()
-            }
-            StatType.DETAIL_ANALYSIS.idMenuItem -> {
-                statType = StatType.DETAIL_ANALYSIS
-                launchDetailedAnalysis()
-            }
-            StatType.INFORMATIONS.idMenuItem -> {
-                statType = StatType.INFORMATIONS
-                displayInformations()
-            }
-        }
-        return true
     }
 }
 

@@ -9,7 +9,8 @@
     </style>
 
     <style name="AliticTabLayout" parent="Widget.MaterialComponents.TabLayout.Colored">
-        <item name="tabIndicatorColor">#FF4081</item>
+        <item name="textAllCaps">false</item>
+
 
     </style>
 

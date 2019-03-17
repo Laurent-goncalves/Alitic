@@ -1,10 +1,8 @@
 package com.g.laurent.alitic
 
-import com.g.laurent.alitic.Controllers.ClassControllers.Evolution
-import com.g.laurent.alitic.Controllers.ClassControllers.getEvolution
-import com.g.laurent.alitic.Controllers.ClassControllers.getListInDescendingOrder
 import com.g.laurent.alitic.Models.Event
 import com.g.laurent.alitic.Models.Food
+import com.g.laurent.alitic.Models.Meal
 import com.g.laurent.alitic.Views.DayGrid
 import org.junit.Assert
 import org.junit.Test
@@ -244,27 +242,6 @@ class ExampleUnitTest {
         assertEquals("4:09", getTextTime(4, 9))
     }
 
-    @Test
-    fun test_descending_order() {
-
-        val list:HashMap<Food, Int> = hashMapOf()
-        list[Food(0, "Banane", 0,0,null, false)] = 4
-        list[Food(0, "Abricot", 0,0,null, false)] = 2
-        list[Food(0, "Pomme", 0,0,null, false)] = 5
-        list[Food(0, "Avocat", 0,0,null, false)] = 1
-        list[Food(0, "Cerise", 0,0,null, false)] = 0
-        list[Food(0, "Poire", 0,0,null, false)] = 3
-
-        val result = getListInDescendingOrder(list)
-
-        Assert.assertEquals("Pomme", result[0].food)
-        Assert.assertEquals("Banane", result[1].food)
-        Assert.assertEquals("Poire", result[2].food)
-        Assert.assertEquals("Abricot", result[3].food)
-        Assert.assertEquals("Avocat", result[4].food)
-        Assert.assertEquals("Cerise", result[5].food)
-    }
-
     fun getListEventsForTest():List<Event>?{
 
         val result : MutableList<Event> = mutableListOf()
@@ -282,5 +259,29 @@ class ExampleUnitTest {
         result.add(Event(10, 1, getDateAsLong(5,1,2019,12,0), false))
 
         return result.toList()
+    }
+    @Test
+    fun test(){
+
+        val list = mutableListOf<Meal>()
+        list.add(Meal(null, 1500, null))
+        list.add(Meal(null, 1400, null))
+        list.add(Meal(null, 1800, null))
+        list.add(Meal(null, 1700, null))
+        list.add(Meal(null, 1600, null))
+        list.add(Meal(null, 1900, null))
+
+        list.sortByDescending { it.dateCode }
+
+        val meal = findLastMeal(Event(null, null, 110, false), list)
+println("eee " + meal?.dateCode)
+    }
+
+    fun findLastMeal(event: Event, listMeals:List<Meal>):Meal?{
+        for(i in 0 until listMeals.size){
+            if(listMeals[i].dateCode <= event.dateCode)
+                return listMeals[i]
+        }
+        return null
     }
 }

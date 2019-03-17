@@ -42,8 +42,9 @@ data class Food(@PrimaryKey(autoGenerate = true) var id: Long?,
                 @ColumnInfo(name = "idFoodType") var idFoodType:Long?,
                 @ColumnInfo(name = "counter") var counter:Int,
                 @ColumnInfo(name = "foodPic") var foodPic: String?,
+                @ColumnInfo(name = "forAnalysis") var forAnalysis: Boolean?,
                 @Ignore var chosen:Boolean = false){
-    constructor() : this(null, null, null, 0, null, false)
+    constructor() : this(null, null, null, 0, null, true, false)
 }
 
 
@@ -70,7 +71,10 @@ data class EventType(@PrimaryKey(autoGenerate = true) var id: Long?,
                      @ColumnInfo(name = "name") var name:String?,
                      @ColumnInfo(name = "eventPic") var eventPic:String?,
                      @ColumnInfo(name = "minTime") var minTime:Long,
-                     @ColumnInfo(name = "maxTime") var maxTime:Long)
+                     @ColumnInfo(name = "maxTime") var maxTime:Long,
+                     @ColumnInfo(name = "forLastMeal") var forLastMeal:Boolean){
+    constructor() : this(null, null, null,0, 0, true)
+}
 
 @Entity(tableName = "event", indices = [Index("idEventType")],
     foreignKeys = [ForeignKey(entity = EventType::class,
@@ -271,7 +275,7 @@ interface EventTypeDao {
 
 // ----------------------------------- DATABASE --------------------------------------------
 
-@Database(entities = [Meal::class, MealItem::class, Food::class, FoodType::class, Keyword::class, Event::class, EventType::class], version = 12, exportSchema = false)
+@Database(entities = [Meal::class, MealItem::class, Food::class, FoodType::class, Keyword::class, Event::class, EventType::class], version = 13, exportSchema = false)
 abstract class AppDataBase : RoomDatabase() {
 
     abstract fun mealDao(): MealDao

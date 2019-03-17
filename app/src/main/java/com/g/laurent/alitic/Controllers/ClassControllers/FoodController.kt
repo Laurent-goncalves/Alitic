@@ -7,10 +7,10 @@ import com.g.laurent.alitic.Models.*
 // ------------------------------------------- FOOD --------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------------
 
-fun saveNewFood(name:String, idFoodType:Long?, foodUrl:String?, mode:Boolean = false, context: Context):Long?{
+fun saveNewFood(name:String, idFoodType:Long?, foodUrl:String?, forAnalysis:Boolean, mode:Boolean = false, context: Context):Long?{
     AppDataBase.TEST_MODE = mode
     val foodDao = AppDataBase.getInstance(context)?.foodDao()
-    return foodDao?.insert(Food(null, name, idFoodType, 0, foodUrl))
+    return foodDao?.insert(Food(null, name, idFoodType, 0, foodUrl, forAnalysis))
 }
 
 fun getAllFood(mode:Boolean = false, context:Context):List<Food>?{

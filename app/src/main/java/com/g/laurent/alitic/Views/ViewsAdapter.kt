@@ -21,6 +21,7 @@ import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.Activities.*
 import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Controllers.Fragments.StatFragment
+import com.g.laurent.alitic.Controllers.Fragments.StatGlobalFragment
 import com.g.laurent.alitic.Models.*
 import com.roomorama.caldroid.CaldroidGridAdapter
 
@@ -248,16 +249,33 @@ class CalendarAdapter(context: Context, private val onTimeLineDisplay: OnTimeLin
 }
 
 /** STAT ADAPTER**/
-class StatAdapter(mgr: FragmentManager, private val listIdEventType:List<Long>): FragmentStatePagerAdapter(mgr) {
+class StatAdapter(mgr: FragmentManager): FragmentStatePagerAdapter(mgr) {
 
-    override fun getItem(p0: Int): StatFragment {
-        return StatFragment().newInstance(listIdEventType[p0], StatType.DETAIL_ANALYSIS)
+    override fun getItem(position: Int): StatGlobalFragment {
+        return when (position) {
+            0 -> StatGlobalFragment().newInstance(StatType.GLOBAL_ANALYSIS_NEG)
+            1 -> StatGlobalFragment().newInstance(StatType.GLOBAL_ANALYSIS_POS)
+            else -> StatGlobalFragment().newInstance(StatType.GLOBAL_ANALYSIS_NEG)
+        }
     }
 
     override fun getCount(): Int {
-        return listIdEventType.size
+        return 3
+    }
+
+    override fun getPageTitle(position: Int): CharSequence? {
+        return when (position) {
+            0 -> StatType.GLOBAL_ANALYSIS_NEG.name
+            1 -> StatType.GLOBAL_ANALYSIS_POS.name
+            else -> StatType.GLOBAL_ANALYSIS_NEG.name
+        }
     }
 }
+
+
+
+
+
 
 /**  CHRONOLOGY STAT **/
 class StatChronoAdapter(val list:List<Long>, val context: Context): RecyclerView.Adapter<StatChronoHolder>() {

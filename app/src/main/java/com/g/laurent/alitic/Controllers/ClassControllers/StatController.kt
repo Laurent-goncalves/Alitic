@@ -3,31 +3,27 @@ package com.g.laurent.alitic.Controllers.ClassControllers
 import android.content.Context
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.Activities.StatType
-import com.g.laurent.alitic.Models.EventType
-import com.g.laurent.alitic.Models.Food
-import com.g.laurent.alitic.Models.FoodType
-import com.g.laurent.alitic.Models.Meal
+import com.g.laurent.alitic.Models.*
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import org.apache.commons.math3.stat.regression.SimpleRegression
+import java.util.*
+import kotlin.math.absoluteValue
 
 const val DAY:Long = 24*60*60*1000
 
-class EventTable(val minTime:Long, val maxTime:Long)
+class FoodStatEntry(val food:Food, val ratio:Float, val counter:Counter)
 
-class StatList(val idEventType:Long?, val listEntries:List<StatEntry>){
+class Counter(var countOK:Int, var countNOK:Int)
 
-    // TODO : to remove
-    override fun toString(): String {
-        println("eee    eventType=$idEventType")
-        for(stat in listEntries)
-            println("eee    food=${stat.food}     countOK=${stat.countOK}        countNOK=${stat.countNOK}")
-        println("eee  -----------------------------------------------------------")
-        return ""
-    }
+enum class Evolution(val status:Int?, val icon:Int, val colorId:Int){
+    NEGATIVE(-1, R.drawable.baseline_thumb_down_white_24, android.R.color.holo_red_dark),
+    NEUTRAL(0, R.drawable.baseline_thumbs_up_down_white_24, android.R.color.holo_blue_dark),
+    POSITIVE(1, R.drawable.baseline_thumb_up_white_24, android.R.color.holo_green_dark),
+    UNDEFINED(null,R.drawable.baseline_help_white_24, android.R.color.darker_gray);
 }
 
-class StatEntry(val food:String?, val idFood:Long?, val type:Long?, val countOK:Int, val countNOK:Int)
+class FoodTypeStatEntry(val foodType:FoodType, val ratio:Double)
 
 class MyXAxisValueFormatter(private val mValues: Array<String>) : IAxisValueFormatter {
 
@@ -41,171 +37,206 @@ class MyXAxisValueFormatter(private val mValues: Array<String>) : IAxisValueForm
  * --------------------------------------- FOOD STAT ---------------------------------------------------------
    ----------------------------------------------------------------------------------------------------------*/
 
-fun getBarChartDataForDetailedAnalysis(eventType: EventType, mode:Boolean = false, context:Context):List<StatEntry>{
+fun getFoodStat(statType:StatType, eventType:EventType?, mode:Boolean = false, context:Context):List<FoodStatEntry>{
 
-    // Get the list of all meals
-    val listMeals = getAllMeals(mode, context)
+    fun getListOf10Food(statType:StatType, eventType:EventType?, mode:Boolean = false, context:Context):List<FoodStatEntry>{
 
-    // Get the list of all events corresponding to eventType and their limits of time (min and max) to take into account meals
-    val eventTable = getEventTable(StatType.DETAIL_ANALYSIS, eventType, context)
+        fun getTop10(list:MutableList<FoodStatEntry>):List<FoodStatEntry>{
 
-    // Get the hashMap list of food from meals causing events and their occurrence
-    val listFoodByOccur = getMealFittingEventTable(StatType.DETAIL_ANALYSIS, eventTable, mode, context, listMeals)
+            val result:MutableList<FoodStatEntry> = mutableListOf()
 
-    // Sort the list in ascending order
-    val listSorted = getListInAscendingOrder(listFoodByOccur)
+            for(i in 0 .. 10){
+                val max = list.maxBy { it.ratio }
+                if(max!=null) {
+                    result.add(max)
+                    list.remove(max)
+                }
+            }
 
-    return getOKmealForEachFood(listSorted, listMeals) // get "countOK" for each food
-}
+            return result.toList()
+        }
 
-fun getBarChartDataForGlobalAnalysis(statType:StatType, mode:Boolean = false, context: Context): List<StatEntry> {
+        fun getListStatEntryWithRatio(statType:StatType, hashmap:HashMap<Food, Counter>):MutableList<FoodStatEntry>{
 
-    // Get the list of all meals
-    val listMeals = getAllMeals(mode, context)
+            val result:MutableList<FoodStatEntry> = mutableListOf()
 
-    // Get the list of all events and their limits of time (min and max) to take into account meals
-    val eventTable = getEventTable(statType, null, context)
-
-    // Get the hashMap list of food from meals causing events and their occurrence
-    val listFoodByOccur = getMealFittingEventTable(statType, eventTable, mode, context, listMeals)
-
-    // Sort the list in ascending order
-    return getListInAscendingOrder(listFoodByOccur)
-}
-
-fun getEventTable(statType:StatType, eventType: EventType?, context:Context):List<EventTable> {
-
-    val list : MutableList<EventTable> = mutableListOf()
-    val listEvent = getAllEvents(context = context)
-
-    if(listEvent!=null){
-        for(e in listEvent){
-            if(statType == StatType.DETAIL_ANALYSIS) {
-                if (e.idEventType == eventType!!.id)
-                    list.add(EventTable(
-                            e.dateCode - eventType.maxTime,
-                            e.dateCode - eventType.minTime))
+            if(statType == StatType.GLOBAL_ANALYSIS_NEG || statType == StatType.DETAIL_ANALYSIS){
+                for(food in hashmap){
+                    val ratio = food.value.countNOK.toFloat() / (food.value.countNOK.toFloat() + food.value.countOK.toFloat())
+                    if(ratio > 0)
+                        result.add(FoodStatEntry(food.key, ratio, food.value))
+                }
             } else {
-                val eventype = getEventType(e.idEventType, context = context)
-                if(eventype!=null){
-                    list.add(EventTable(
-                        e.dateCode - eventype.maxTime,
-                        e.dateCode - eventype.minTime))
+                for(food in hashmap){
+                    val ratio = food.value.countOK.toFloat() / (food.value.countNOK.toFloat()+food.value.countOK.toFloat())
+                    if(ratio > 0)
+                        result.add(FoodStatEntry(food.key, ratio, food.value))
                 }
             }
+
+            return result
         }
+
+        val listFoodWithCounters = getListFoodsWithCounters(statType, eventType, mode, context)
+
+        // Calculate ratio for each food
+        val listStatEntry = getListStatEntryWithRatio(statType, listFoodWithCounters)
+
+        // Get and return the top 10
+        return getTop10(listStatEntry)
     }
 
-    return list
+    return getListOf10Food(statType, eventType, mode, context)
 }
 
-fun shouldMealBeTakenIntoAccount(statType:StatType, meal:Meal, eventTable:List<EventTable>):Boolean{
+fun getListFoodsWithCounters(statType:StatType, eventType:EventType?, mode:Boolean = false, context:Context):HashMap<Food, Counter> {
 
-    fun isMealRelatedToOneEvent():Boolean {
-        for(e in eventTable){
-            if(meal.dateCode in e.minTime .. e.maxTime)
-                return true
-        }
-        return false
-    }
+    fun getListFoodWithCountersRelatedToListEvents(listEvents:List<Event>, mode:Boolean=false, context: Context):HashMap<Food, Counter>{
 
-    return when (statType) {
-        StatType.DETAIL_ANALYSIS -> isMealRelatedToOneEvent()
-        StatType.GLOBAL_ANALYSIS_NEG -> isMealRelatedToOneEvent()
-        else -> !isMealRelatedToOneEvent()
-    }
-}
+        fun getListFoodOccurrenceInAllMeals(listMeals: List<Meal>, mode:Boolean=false, context: Context):HashMap<Food, Int>{
 
-fun getMealFittingEventTable(statType:StatType, eventTable:List<EventTable>, mode:Boolean=false, context: Context, listMeals:List<Meal>?):HashMap<Food, Int>{
-
-    val list:HashMap<Food, Int> = hashMapOf()
-
-    if(listMeals!=null){
-        for(meal in listMeals){
-            if(shouldMealBeTakenIntoAccount(statType, meal, eventTable)){
-
-                val listFood =
-                    getFoodsFromMeal(meal, mode, context)
-
-                for(food in listFood){
-                    if(list[food] != null){
-                        val count:Int = list[food]!!
-                        list[food] = count + 1
-                    } else
-                        list[food] = 1
-                }
-            }
-        }
-    }
-
-    return list
-}
-
-fun getOKmealForEachFood(list:List<StatEntry>, listMeals:List<Meal>?):List<StatEntry>{
-
-    fun getNumberFoodForAllMeal(idFood:Long?, listMeals:List<Meal>):Int{
-        return if(listMeals.isNotEmpty()){
-
-            var count = 0
+            val result:HashMap<Food, Int> = hashMapOf()
 
             for(meal in listMeals){
-                if(meal.listMealItems!=null){
-                    for(mealItem in meal.listMealItems!!){
-                        if(mealItem.idFood == idFood)
-                            count++
+                val listFood = getFoodsFromMeal(meal, mode, context)
+
+                for(food in listFood) {
+                    if (result.containsKey(food)) {
+                        val count:Int = result[food]!!.absoluteValue
+                        result[food] = count + 1
+                    } else {
+                        result[food] = 1
                     }
                 }
             }
-            count
-        } else
-            0
-    }
 
-    val result = mutableListOf<StatEntry>()
-
-    if(list.isNotEmpty() && listMeals!=null){
-        for(i in 0 until list.size){
-            val countTotal = getNumberFoodForAllMeal(list[i].idFood, listMeals)
-            result.add(StatEntry(list[i].food, list[i].idFood, list[i].type, countTotal - list[i].countNOK, list[i].countNOK))
+            return result
         }
-    }
 
-    return result.toList()
-}
+        fun getListMealsInTimeOrder(mode:Boolean=false, context: Context):List<Meal>?{
+            val list = getAllMeals(mode, context)?.toMutableList()
+            list?.sortByDescending { it.dateCode }
+            return list
+        }
 
-fun getListInAscendingOrder(list:HashMap<Food, Int>):List<StatEntry>{
+        fun findMealsWhichCausedEvent(event: Event, listMeals:List<Meal>, mode:Boolean=false, context: Context):List<Meal>{
 
-    val result : MutableList<StatEntry> = mutableListOf()
+            fun didMealCauseEvent(meal:Meal, event:Event, eventType: EventType):Boolean{
+                val min =  event.dateCode - eventType.maxTime
+                val max =  event.dateCode - eventType.minTime
+                return meal.dateCode in min .. max
+            }
 
-    if(list.size != 0){
-        for (i in 0 until list.size) {
-            val min = list.minBy { it.value }
-            if(min!=null){
-                result.add(
-                    StatEntry(
-                        min.key.name,
-                        min.key.id,
-                        min.key.idFoodType,
-                        min.value, min.value
-                    )
-                )
-                list.remove(min.key)
+            fun findLastMeal(event: Event, listMeals:List<Meal>):Meal?{
+                for(i in 0 until listMeals.size){
+                    if(listMeals[i].dateCode <= event.dateCode)
+                        return listMeals[i]
+                }
+                return null
+            }
+
+            val result:MutableList<Meal> = mutableListOf()
+            val eType = getEventType(event.idEventType, mode, context) ?: return result
+
+            for(meal in listMeals){
+                if(eType.forLastMeal){ // if last meal must be taken into account
+                    val lastMeal = findLastMeal(event, listMeals)
+                    if(lastMeal!=null)
+                        result.add(lastMeal)
+                    return result
+
+                } else { // if event related to specific period of time
+                    if(didMealCauseEvent(meal, event, eType)){
+                        result.add(meal)
+                    }
+                }
+            }
+            return result
+        }
+
+        // INIT
+        val result:HashMap<Food, Counter> = hashMapOf()
+        val listMeals = getListMealsInTimeOrder(mode, context)
+        val listMealsNOK = mutableListOf<Meal>()
+
+        // START
+        if(listMeals!=null){
+
+            // For each event, get the list of meals impacting event
+            for(event in listEvents) {
+                val list = findMealsWhichCausedEvent(event, listMeals, mode, context)
+                if(list.isNotEmpty()){
+                    for(meal in list){
+                        if(listMealsNOK.find { it.id == meal.id }==null){
+                            listMealsNOK.add(meal)
+                        }
+                    }
+                }
+            }
+
+            // For each meal of the list, get the foods and calculate NOK counter
+            for(meal in listMealsNOK){
+
+                val listFood = getFoodsFromMeal(meal, mode, context)
+
+                for(food in listFood) {
+                    if (result.containsKey(food)) {
+                        val countNOK:Int = result[food]!!.countNOK
+                        result[food]!!.countNOK = countNOK + 1
+                    } else {
+                        result[food] = Counter(0,1)
+                    }
+                }
+            }
+
+            // For each food, calculate OK counter
+            val listFoodsCountTot = getListFoodOccurrenceInAllMeals(listMeals, mode, context)
+
+            for(food in listFoodsCountTot.keys) {
+                if (result.containsKey(food) && listFoodsCountTot.containsKey(food)) {
+                    val countTot:Int = listFoodsCountTot[food]!!
+                    result[food]!!.countOK = countTot - result[food]!!.countNOK
+                }
             }
         }
+
+        return result
     }
 
-    return result.toList()
+    if (statType == StatType.DETAIL_ANALYSIS) {
+
+        // Get the list of events related to eventType
+        val listEvents = getListEventForOneEventType(eventType?.id, mode, context)
+
+        // Get list of foods with their counters
+        if(listEvents!=null)
+            return getListFoodWithCountersRelatedToListEvents(listEvents, mode, context)
+    } else {
+
+        // Get the list of all events
+        val listEvents = getAllEvents(mode, context)
+
+        // Get list of foods with their counters
+        if(listEvents!=null)
+            return getListFoodWithCountersRelatedToListEvents(listEvents, mode, context)
+    }
+
+    return hashMapOf()
 }
 
 /** ----------------------------------------------------------------------------------------------------------
- * --------------------------------------- DATES EVENTS ------------------------------------------------------
+ * -------------------------------------- CHRONOLOGY EVENTS --------------------------------------------------
 ----------------------------------------------------------------------------------------------------------*/
 
-fun getDatesEvents(idEventType: Long?, mode:Boolean = false, context:Context):List<Long>{
-
-    val listEvents = getListEventForOneEventType(idEventType, mode, context)
+fun getChronologyEvents(eventType:EventType?, mode:Boolean = false, context:Context):List<Long>{
 
     val result = mutableListOf<Long>()
+
+    val listEvents = if(eventType!=null){
+        getListEventForOneEventType(eventType.id, mode, context)
+    } else {
+        getAllEvents(mode, context)
+    }
 
     if(listEvents!=null){
         if(listEvents.isNotEmpty()){
@@ -214,37 +245,12 @@ fun getDatesEvents(idEventType: Long?, mode:Boolean = false, context:Context):Li
             }
         }
     }
-
-    return result.toList()
-}
-
-fun getDatesAllEvents(mode:Boolean = false, context:Context):List<Long>{
-
-    val listEvents = getAllEvents(mode, context)
-
-    val result = mutableListOf<Long>()
-
-    if(listEvents!=null){
-        if(listEvents.isNotEmpty()){
-            for(event in listEvents){
-                result.add(event.dateCode)
-            }
-        }
-    }
-
     return result.toList()
 }
 
 /** ----------------------------------------------------------------------------------------------------------
  * ------------------------------------ EVOLUTION CALCUL -----------------------------------------------------
 ----------------------------------------------------------------------------------------------------------*/
-
-enum class Evolution(val status:Int?, val icon:Int, val colorId:Int){
-    NEGATIVE(-1, R.drawable.baseline_thumb_down_white_24, android.R.color.holo_red_dark),
-    NEUTRAL(0, R.drawable.baseline_thumbs_up_down_white_24, android.R.color.holo_blue_dark),
-    POSITIVE(1, R.drawable.baseline_thumb_up_white_24, android.R.color.holo_green_dark),
-    UNDEFINED(null,R.drawable.baseline_help_white_24, android.R.color.darker_gray);
-}
 
 fun getEvolution(listDates:List<Long>, mode:Boolean = false, context:Context):Evolution{
 
@@ -297,10 +303,10 @@ fun getEvolution(listDates:List<Long>, mode:Boolean = false, context:Context):Ev
 
                 val slope = regression.slope
 
-                when {
-                    slope > 0 -> return Evolution.NEGATIVE
-                    slope.equals(0) -> return Evolution.NEUTRAL
-                    else -> return Evolution.POSITIVE
+                return when {
+                    slope > 0 -> Evolution.NEGATIVE
+                    slope.equals(0) -> Evolution.NEUTRAL
+                    else -> Evolution.POSITIVE
                 }
             }
         }
@@ -313,45 +319,35 @@ fun getEvolution(listDates:List<Long>, mode:Boolean = false, context:Context):Ev
  * --------------------------------------- FOODTYPE STAT -----------------------------------------------------
 ------------------------------------------------------------------------------------------------------------*/
 
-class FoodTypeStat(val foodType:FoodType, val percent:Double)
+fun getListFoodTypesStats(statType: StatType, eventType: EventType?, mode:Boolean = false, context:Context):List<FoodTypeStatEntry>{
 
-fun getListFoodTypesCounts(statType: StatType, eventType: EventType, mode:Boolean = false, context:Context):List<FoodTypeStat>{
+    val listFoodCounters = getListFoodsWithCounters(statType, eventType, mode, context)
 
-    val listFoodTypes = mutableListOf<FoodTypeStat>()
+    fun getListFoodTypes(statType: StatType):Map<FoodType, Int>{
 
-    // Get the hashMap list of food from meals causing events and their occurrence
-    val listFoodByOccur = if(statType==StatType.DETAIL_ANALYSIS)
-        getBarChartDataForDetailedAnalysis(eventType, mode, context)
-    else
-        getBarChartDataForGlobalAnalysis(statType, mode, context)
-
-    fun getListFoodTypesStat(statType: StatType):Map<FoodType, Double>{
-
-        fun getCount(statEntry:StatEntry):Double{
-            return if(statType == StatType.DETAIL_ANALYSIS)
-                statEntry.countNOK.toDouble()
-            else if(statType == StatType.GLOBAL_ANALYSIS_NEG)
-                statEntry.countNOK.toDouble()
-            else
-                statEntry.countOK.toDouble()
+        fun getCount(counter:Counter):Int{
+            return when (statType) {
+                StatType.DETAIL_ANALYSIS -> counter.countNOK
+                StatType.GLOBAL_ANALYSIS_NEG -> counter.countNOK
+                else -> counter.countOK
+            }
         }
 
-        val result = mutableMapOf<FoodType, Double>()
+        val result = mutableMapOf<FoodType, Int>()
 
-        if(listFoodByOccur.isNotEmpty()){
+        if(listFoodCounters.isNotEmpty()){
 
-            for(food in listFoodByOccur){
+            for(food in listFoodCounters){
 
-                val foodItem = getFood(food.idFood, mode, context)
-                val foodType = getFoodType(foodItem?.idFoodType, mode, context)
+                val foodType = getFoodType(food.key.idFoodType, mode, context)
 
                 if(result.containsKey(foodType) && foodType!=null){
                     if(result[foodType]!=null)
-                        result[foodType] = getCount(food) + result[foodType]!!
+                        result[foodType] = getCount(food.value) + result[foodType]!!
                     else
-                        result[foodType] = getCount(food)
+                        result[foodType] = getCount(food.value)
                 } else if(foodType!=null) {
-                    result[foodType] = getCount(food)
+                    result[foodType] = getCount(food.value)
                 }
             }
         }
@@ -359,12 +355,19 @@ fun getListFoodTypesCounts(statType: StatType, eventType: EventType, mode:Boolea
         return result.toMap()
     }
 
-    val mapFoodTypes = getListFoodTypesStat(statType)
-    val sumValues = mapFoodTypes.map { it.value }.sum()
+    fun calculateRatioForEachFoodType(listFoodTypes:Map<FoodType, Int>):List<FoodTypeStatEntry>{
 
-    for(foodtype in mapFoodTypes){
-        listFoodTypes.add(FoodTypeStat(foodtype.key, foodtype.value / sumValues))
+        val result = mutableListOf<FoodTypeStatEntry>()
+
+        val sumValues = listFoodTypes.map { it.value }.sum()
+
+        for(foodType in listFoodTypes){
+            if(foodType.value > 0){
+                result.add(FoodTypeStatEntry(foodType.key, foodType.value.toDouble() / sumValues))
+            }
+        }
+        return result.toList()
     }
 
-    return listFoodTypes
+    return calculateRatioForEachFoodType(getListFoodTypes(statType))
 }

@@ -3,6 +3,7 @@ package com.g.laurent.alitic
 import android.content.Context
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
+import com.g.laurent.alitic.Controllers.Activities.StatType
 import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Models.AppDataBase
 import com.g.laurent.alitic.Models.MealItem
@@ -13,7 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.text.DecimalFormat
 
-
+/**   OK    */
 @RunWith(AndroidJUnit4::class)
 class StatTest {
 
@@ -22,44 +23,149 @@ class StatTest {
         AppDataBase.clearDatabase()
     }
 
-
+    /**   OK    */
     @Test
-    fun test_stat_foodtype(){
+    fun test_food_stat() {
 
+        // Initialize database and fill with values
         val context = InstrumentationRegistry.getTargetContext()
-        val listIdMeals = getIds("meal", context)
-        val listIdEvents = getIds("event", context)
-        val df = DecimalFormat("#.###")
+        AppDataBase.clearDatabase()
+        getIds("meal", context)
+        val listIds = getListEvents(context)
+        var list = getFoodStat(StatType.GLOBAL_ANALYSIS_NEG, null, true, context)
 
-        var idEventType = 0L
+        Assert.assertTrue(list.size==6)
 
-        if(listIdEvents!=null){
-            if(listIdEvents[0]!=null){
-                idEventType = listIdEvents[0]!!
-                val eventtype = getEventType(idEventType,true, context)
-                val result = getListFoodTypesCounts(eventtype!!, true, context)
+        for(value in list){
+            when(value.food.name){
+                "Salade" -> { Assert.assertTrue(value.counter.countOK == 1 && value.counter.countNOK==3)}
+                "Abricot" -> { Assert.assertTrue(value.counter.countOK == 1 && value.counter.countNOK==2)}
+                "Banane" -> { Assert.assertTrue(value.counter.countOK == 0 && value.counter.countNOK==3)}
+                "Radis" -> { Assert.assertTrue(value.counter.countOK == 2 && value.counter.countNOK==1)}
+                "Poulet" -> { Assert.assertTrue(value.counter.countOK == 1 && value.counter.countNOK==3)}
+                "Yaourt" -> { Assert.assertTrue(value.counter.countOK == 2 && value.counter.countNOK==1)}
+            }
+        }
 
-                Assert.assertEquals(3, result.size)
+        list = getFoodStat(StatType.GLOBAL_ANALYSIS_POS, null, true, context)
 
-                for(value in result){
-                    when(value.foodType.name){
-                        "Légumes" -> {
-                            Assert.assertEquals("0.5", df.format(value.percent.toFloat()))
-                        }
-                        "Viandes" -> {
-                            Assert.assertEquals("0.167", df.format(value.percent.toFloat()))
-                        }
-                        "Fruits" -> {
-                            Assert.assertEquals("0.333", df.format(value.percent.toFloat()))
-                        }
-                    }
-                }
-            } else
-                Assert.assertEquals(0, 1)
-        } else
-            Assert.assertEquals(0, 1)
+        for(value in list){
+            when(value.food.name){
+                "Salade" -> { Assert.assertTrue(value.counter.countOK == 1 && value.counter.countNOK==3)}
+                "Abricot" -> { Assert.assertTrue(value.counter.countOK == 1 && value.counter.countNOK==2)}
+                "Banane" -> { Assert.assertTrue(value.counter.countOK == 0 && value.counter.countNOK==3)}
+                "Radis" -> { Assert.assertTrue(value.counter.countOK == 2 && value.counter.countNOK==1)}
+                "Poulet" -> { Assert.assertTrue(value.counter.countOK == 1 && value.counter.countNOK==3)}
+                "Yaourt" -> { Assert.assertTrue(value.counter.countOK == 2 && value.counter.countNOK==1)}
+            }
+        }
+
+        var eventType = getEventType(listIds!![0], true, context)
+        list = getFoodStat(StatType.DETAIL_ANALYSIS, eventType, true, context)
+
+        for(value in list){
+            when(value.food.name){
+                "Salade" -> { Assert.assertTrue(value.counter.countOK == 1 && value.counter.countNOK==3)}
+                "Abricot" -> { Assert.assertTrue(value.counter.countOK == 1 && value.counter.countNOK==2)}
+                "Banane" -> { Assert.assertTrue(value.counter.countOK == 0 && value.counter.countNOK==3)}
+                "Radis" -> { Assert.assertTrue(value.counter.countOK == 2 && value.counter.countNOK==1)}
+                "Poulet" -> { Assert.assertTrue(value.counter.countOK == 1 && value.counter.countNOK==3)}
+                "Yaourt" -> { Assert.assertTrue(value.counter.countOK == 2 && value.counter.countNOK==1)}
+            }
+        }
+
+        eventType = getEventType(listIds[1], true, context)
+        list = getFoodStat(StatType.DETAIL_ANALYSIS, eventType, true, context)
+
+        for(value in list){
+            when(value.food.name){
+                "Salade" -> { Assert.assertTrue(value.counter.countOK == 3 && value.counter.countNOK==1)}
+                "Abricot" -> { Assert.assertTrue(value.counter.countOK == 2 && value.counter.countNOK==1)}
+                "Banane" -> { Assert.assertTrue(value.counter.countOK == 2 && value.counter.countNOK==1)}
+                "Radis" -> { Assert.assertTrue(value.counter.countOK == 2 && value.counter.countNOK==1)}
+                "Poulet" -> { Assert.assertTrue(value.counter.countOK == 3 && value.counter.countNOK==1)}
+                "Yaourt" -> { Assert.assertTrue(value.counter.countOK == 2 && value.counter.countNOK==1)}
+            }
+        }
     }
 
+    /**   OK    */
+    @Test
+    fun test_foodtype_stat(){
+
+        val context = InstrumentationRegistry.getTargetContext()
+        getIds("meal", context)
+        val listIdEvents = getListEvents(context)
+        val df = DecimalFormat("#.###")
+
+        // Get food stat for all eventTypes for negative food
+        var result = getListFoodTypesStats(StatType.GLOBAL_ANALYSIS_NEG, null, true, context)
+
+        Assert.assertEquals(4, result.size)
+
+        for(value in result){
+            when(value.foodType.name){
+                "Légumes" -> {
+                    Assert.assertEquals("0.308", df.format(value.ratio))
+                }
+                "Viandes" -> {
+                    Assert.assertEquals("0.231", df.format(value.ratio))
+                }
+                "Fruits" -> {
+                    Assert.assertEquals("0.385", df.format(value.ratio))
+                }
+                "Produits laitiers" -> {
+                    Assert.assertEquals("0.077", df.format(value.ratio))
+                }
+            }
+        }
+
+        // Get food stat for all eventTypes for positive food
+        result = getListFoodTypesStats(StatType.GLOBAL_ANALYSIS_POS, null, true, context)
+
+        Assert.assertEquals(4, result.size)
+
+        for(value in result){
+            when(value.foodType.name){
+                "Légumes" -> {
+                    Assert.assertEquals("0.429", df.format(value.ratio))
+                }
+                "Viandes" -> {
+                    Assert.assertEquals("0.143", df.format(value.ratio))
+                }
+                "Fruits" -> {
+                    Assert.assertEquals("0.143", df.format(value.ratio))
+                }
+                "Produits laitiers" -> {
+                    Assert.assertEquals("0.286", df.format(value.ratio))
+                }
+            }
+        }
+
+        // Get food stat for one eventType
+        val idEventType = listIdEvents!![1]
+        val eventtype = getEventType(idEventType,true, context)
+        result = getListFoodTypesStats(StatType.DETAIL_ANALYSIS, eventtype!!, true, context)
+
+        for(value in result){
+            when(value.foodType.name){
+                "Légumes" -> {
+                    Assert.assertEquals("0.333", df.format(value.ratio))
+                }
+                "Viandes" -> {
+                    Assert.assertEquals("0.167", df.format(value.ratio))
+                }
+                "Fruits" -> {
+                    Assert.assertEquals("0.333", df.format(value.ratio))
+                }
+                "Produits laitiers" -> {
+                    Assert.assertEquals("0.167", df.format(value.ratio))
+                }
+            }
+        }
+    }
+
+    /**   OK    */
     @Test
     fun test_min_max_event_meal(){
 
@@ -86,7 +192,6 @@ class StatTest {
         } else
             assertTrue(false)
 
-
         assertTrue(getMinTime(test1, test3) == test3)
         assertTrue(getMaxTime(test2, test4) == test2)
         assertTrue(getMinTime(null, test3) == test3)
@@ -95,30 +200,38 @@ class StatTest {
         assertTrue(getMaxTime(null, null) == null)
         assertTrue(getMinTime(test1, null) == test1)
         assertTrue(getMaxTime(test2, null) == test2)
-
     }
 
+    /**   OK    */
     @Test
     fun test_evolution(){
 
         val context = InstrumentationRegistry.getTargetContext()
-        val listIdMeals = getIds("meal", context)
+        getIds("meal", context)
         val listIdEvents = getListEvents(context)
 
-        if(listIdEvents!=null){
-            if(listIdEvents[0]!=null){
-                val listDates = getDatesEvents(listIdEvents[0],true,context)
-                val evolution = getEvolution(listDates, true, context)
+        // Get evolution for one eventType
+        var eventType = getEventType(listIdEvents!![0],true,context)
+        var listDates = getChronologyEvents(eventType!!,true,context)
+        var evolution = getEvolution(listDates, true, context)
 
-                assertEquals(5, listDates.size)
-                assertEquals(Evolution.NEGATIVE, evolution)
+        assertEquals(4, listDates.size)
+        assertEquals(Evolution.NEGATIVE, evolution)
 
-            } else
-                assertTrue(false)
-        } else
-            assertTrue(false)
+        eventType = getEventType(listIdEvents!![1],true,context)
+        listDates = getChronologyEvents(eventType!!,true,context)
+        evolution = getEvolution(listDates, true, context)
+
+        assertEquals(2, listDates.size)
+        assertEquals(Evolution.NEGATIVE, evolution)
+
+        // Get evolution for all eventTypes
+        listDates = getChronologyEvents(null,true,context)
+        evolution = getEvolution(listDates, true, context)
+
+        assertEquals(6, listDates.size)
+        assertEquals(Evolution.NEGATIVE, evolution)
     }
-
 
     fun getIds(type:String, context: Context):List<Long?>?{
 
@@ -142,42 +255,42 @@ class StatTest {
                     "Banane",
                     idFoodType1,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood2 = saveNewFood(
                     "Poulet",
                     idFoodType2,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood3 = saveNewFood(
                     "Salade",
                     idFoodType3,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood4 = saveNewFood(
                     "Yaourt",
                     idFoodType4,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood5 = saveNewFood(
                     "Radis",
                     idFoodType3,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood6 = saveNewFood(
                     "Abricot",
                     idFoodType1,
                     null,
-                    true,
+                    true,true,
                     context
                 )
 
@@ -217,53 +330,49 @@ class StatTest {
                     saveNewFoodType("Viandes", null, R.color.colorFoodPicked,true, context)
                 val idFoodType3 =
                     saveNewFoodType("Légumes", null, R.color.colorFoodPicked,true, context)
-                val idFoodType4 = saveNewFoodType(
-                    "Produits laitiers",
-                    null,R.color.colorFoodPicked,
-                    true,
-                    context
-                )
+                val idFoodType4 =
+                    saveNewFoodType("Produits laitiers",null,R.color.colorFoodPicked,true,context)
 
                 val idFood1 = saveNewFood(
                     "Banane",
                     idFoodType1,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood2 = saveNewFood(
                     "Poulet",
                     idFoodType2,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood3 = saveNewFood(
                     "Salade",
                     idFoodType3,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood4 = saveNewFood(
                     "Yaourt",
                     idFoodType4,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood5 = saveNewFood(
                     "Radis",
                     idFoodType3,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood6 = saveNewFood(
                     "Abricot",
                     idFoodType1,
                     null,
-                    true,
+                    true,true,
                     context
                 )
 
@@ -284,12 +393,21 @@ class StatTest {
 
                 val list4 : MutableList<MealItem> = mutableListOf()
                 list4.add(MealItem(null,0,idFood1))
-                list4.add(MealItem(null,0,idFood1))
-                list4.add(MealItem(null,0,idFood1))
                 list4.add(MealItem(null,0,idFood2))
-                list4.add(MealItem(null,0,idFood2))
-                list1.add(MealItem(null,0,idFood3))
+                list4.add(MealItem(null,0,idFood3))
                 list4.add(MealItem(null,0,idFood6))
+
+                val list5 : MutableList<MealItem> = mutableListOf()
+                list5.add(MealItem(null,0,idFood3))
+                list5.add(MealItem(null,0,idFood4))
+                list5.add(MealItem(null,0,idFood5))
+                list5.add(MealItem(null,0,idFood6))
+
+                val list6 : MutableList<MealItem> = mutableListOf()
+                list6.add(MealItem(null,0,idFood2))
+                list6.add(MealItem(null,0,idFood4))
+                list6.add(MealItem(null,0,idFood5))
+
 
                 val idMeal1 = saveNewMeal(
                     list1,
@@ -316,7 +434,21 @@ class StatTest {
                     context
                 )
 
-                return listOf(idMeal1, idMeal2, idMeal3, idMeal4)
+                val idMeal5 = saveNewMeal(
+                    list5,
+                    getDateAsLong(1, 1, 2019, 10, 0),
+                    true,
+                    context
+                )
+
+                val idMeal6 = saveNewMeal(
+                    list6,
+                    getDateAsLong(5, 1, 2019, 10, 0),
+                    true,
+                    context
+                )
+
+                return listOf(idMeal1, idMeal2, idMeal3, idMeal4, idMeal5, idMeal6)
             }
 
             "event" ->{
@@ -326,7 +458,7 @@ class StatTest {
                     null,
                     0,
                     3 * 60 * 60 * 1000,
-                    true,
+                    true, false,
                     context
                 )
                 val id2 = saveNewEventType(
@@ -334,7 +466,7 @@ class StatTest {
                     null,
                     0,
                     6 * 60 * 60 * 1000,
-                    true,
+                    true, true,
                     context
                 )
                 val id3 = saveNewEventType(
@@ -342,7 +474,7 @@ class StatTest {
                     null,
                     0,
                     7 * 60 * 60 * 1000,
-                    true,
+                    true, false,
                     context
                 )
 
@@ -391,7 +523,16 @@ class StatTest {
             null,
             0,
             3 * 60 * 60 * 1000,
-            true,
+            false, true,
+            context
+        )
+
+        val id2 = saveNewEventType(
+            "Ballonnement",
+            null,
+            0,
+            1 * 60 * 60 * 1000,
+            true, true,
             context
         )
 
@@ -420,13 +561,20 @@ class StatTest {
             context = context
         )
         val idEvent5 = saveNewEvent(
-            idEventType = id1,
+            idEventType = id2,
             dateCode = getDateAsLong(14, 1, 2019, 15, 30),
             mode = true,
             context = context
         )
 
-        return listOf(id1)
+        val idEvent6 = saveNewEvent(
+            idEventType = id2,
+            dateCode = getDateAsLong(12, 12, 2018, 19, 30),
+            mode = true,
+            context = context
+        )
+
+        return listOf(id1, id2)
 
     }
 }

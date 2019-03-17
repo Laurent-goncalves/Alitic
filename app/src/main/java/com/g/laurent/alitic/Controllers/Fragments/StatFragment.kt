@@ -22,7 +22,7 @@ class StatFragment : Fragment() {
     lateinit var contextFrag: Context
     lateinit var statType:StatType
     lateinit var listDates:List<Long>
-    private var eventType:EventType = EventType(null,null,null, 0,0)
+    private var eventType:EventType = EventType(null,null,null, 0,0, false)
 
     fun newInstance(idEventType:Long, statType:StatType):StatFragment{
 
@@ -51,14 +51,14 @@ class StatFragment : Fragment() {
 
             if(statType == StatType.DETAIL_ANALYSIS){ // --------------- DETAIL ANALYSIS ------------------
 
-                listDates = getDatesEvents(idEventType, context = contextFrag)
-
                 val e = getEventType(idEventType, context = contextFrag)
                 if(e!=null)
                     eventType = e
 
+                listDates = getChronologyEvents(eventType, context = contextFrag)
+
             } else { // --------------------- GLOBAL ANALYSIS ----------------------------
-                listDates = getDatesAllEvents(context = contextFrag)
+                listDates = getChronologyEvents(null, context = contextFrag)
             }
         }
 
@@ -66,16 +66,7 @@ class StatFragment : Fragment() {
 
             initializeVariables()
 
-            // Configure header panel
-            configureHeaderPanel(view)
-
-            // Configure bar chart
-            configureBarChart(view)
-
-            // Configure chronology
-            configureChronology(view)
-
-            // Configure pie chart
+            // Configure big pie chart
             configurePieChart(view)
         }
 
@@ -87,6 +78,22 @@ class StatFragment : Fragment() {
         if(context!=null)
             contextFrag = context
     }
+
+    /** ----------------------- PIE CHART -------------------------------------------  **/
+    private fun configurePieChart(view:View){
+
+        //val listFoodTypes = getListFoodTypesCounts(statType, eventType, context = contextFrag)
+
+        // Create pie chart
+        //createPieChart(listFoodTypes, view, contextFrag)
+    }
+
+}
+
+const val ID_EVENTTYPE = "id_eventType"
+const val STAT_TYPE = "stat_type"
+
+/*
 
     /** --------------------- HEADER PANEL -------------------------------------------  **/
 
@@ -162,7 +169,5 @@ class StatFragment : Fragment() {
         // Create pie chart
         createPieChart(listFoodTypes, view, contextFrag)
     }
-}
 
-const val ID_EVENTTYPE = "id_eventType"
-const val STAT_TYPE = "stat_type"
+ */

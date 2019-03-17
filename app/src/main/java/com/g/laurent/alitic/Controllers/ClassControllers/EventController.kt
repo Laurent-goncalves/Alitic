@@ -75,10 +75,10 @@ fun deleteAllEvents(mode:Boolean = false, context:Context){
 // ----------------------------------------- EVENTTYPE -----------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------------
 
-fun saveNewEventType(name:String, eventPic:String?, minTime:Long, maxTime:Long, mode:Boolean = false, context:Context):Long?{
+fun saveNewEventType(name:String, eventPic:String?, minTime:Long, maxTime:Long, forLastMeal:Boolean, mode:Boolean = false, context:Context):Long?{
     AppDataBase.TEST_MODE = mode
     val eventTypeDao = AppDataBase.getInstance(context)?.eventTypeDao()
-    return eventTypeDao?.insert(EventType(null, name, eventPic, minTime, maxTime))
+    return eventTypeDao?.insert(EventType(null, name, eventPic, minTime, maxTime, forLastMeal))
 }
 
 fun getEventType(idEventType:Long?, mode:Boolean = false, context:Context): EventType?{

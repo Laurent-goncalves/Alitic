@@ -17,8 +17,8 @@ class ChronoActivity : AppCompatActivity(), OnTimeLineDisplay {
 
         clearDatabase(applicationContext)
 
-        val id1 = saveNewEventType("mal tete", null, 0, 50, false, applicationContext)
-        val id2 = saveNewEventType("mal gorge", null, 0, 50, false, applicationContext)
+        val id1 = saveNewEventType("mal tete", null, 0, 50, false, false, applicationContext)
+        val id2 = saveNewEventType("mal gorge", null, 0, 50, false, false, applicationContext)
 
         saveNewEvent(id1, getDateAsLong(15,2,2019,12,0),false,applicationContext)
         saveNewEvent(id1, getDateAsLong(17,2,2019,12,0),false,applicationContext)

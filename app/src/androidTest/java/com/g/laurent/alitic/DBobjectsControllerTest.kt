@@ -3,6 +3,7 @@ package com.g.laurent.alitic
 import android.content.Context
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
+import com.g.laurent.alitic.Controllers.Activities.StatType
 import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Models.*
 import org.junit.After
@@ -284,23 +285,7 @@ class DBobjectsControllerTest {
     // ------------------------------------ STAT CONTROLLER -----------------------------------------------------
     // ----------------------------------------------------------------------------------------------------------
 
-    @Test
-    fun test_stat() {
 
-        // Initialize database and fill with values
-        val context = InstrumentationRegistry.getTargetContext()
-        AppDataBase.clearDatabase()
-        getIds("meal", context)
-        val listIdEvents = getIds("event", context)
-
-        val eventType = getEventType(listIdEvents!![0], true, context)
-        val list:List<StatEntry> = getListFoodForEventType(eventType!!, true, context)
-
-        Assert.assertEquals(list[0].food,"Banane")
-        Assert.assertEquals(list[1].food,"Poulet")
-        Assert.assertEquals(list[2].food,"Salade")
-        Assert.assertEquals(list[3].food,"Abricot")
-    }
 
     fun getIds(type:String, context: Context):List<Long?>?{
 
@@ -321,42 +306,42 @@ class DBobjectsControllerTest {
                     "Banane",
                     idFoodType1,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood2 = saveNewFood(
                     "Poulet",
                     idFoodType2,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood3 = saveNewFood(
                     "Salade",
                     idFoodType3,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood4 = saveNewFood(
                     "Yaourt",
                     idFoodType4,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood5 = saveNewFood(
                     "Radis",
                     idFoodType3,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood6 = saveNewFood(
                     "Abricot",
                     idFoodType1,
                     null,
-                    true,
+                    true,true,
                     context
                 )
 
@@ -407,42 +392,42 @@ class DBobjectsControllerTest {
                     "Banane",
                     idFoodType1,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood2 = saveNewFood(
                     "Poulet",
                     idFoodType2,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood3 = saveNewFood(
                     "Salade",
                     idFoodType3,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood4 = saveNewFood(
                     "Yaourt",
                     idFoodType4,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood5 = saveNewFood(
                     "Radis",
                     idFoodType3,
                     null,
-                    true,
+                    true,true,
                     context
                 )
                 val idFood6 = saveNewFood(
                     "Abricot",
                     idFoodType1,
                     null,
-                    true,
+                    true,true,
                     context
                 )
 
@@ -505,7 +490,7 @@ class DBobjectsControllerTest {
                     null,
                     0,
                     3 * 60 * 60 * 1000,
-                    true,
+                    false,true,
                     context
                 )
                 val id2 = saveNewEventType(
@@ -513,7 +498,7 @@ class DBobjectsControllerTest {
                     null,
                     0,
                     6 * 60 * 60 * 1000,
-                    true,
+                    false,true,
                     context
                 )
                 val id3 = saveNewEventType(
@@ -521,7 +506,7 @@ class DBobjectsControllerTest {
                     null,
                     0,
                     7 * 60 * 60 * 1000,
-                    true,
+                    false,true,
                     context
                 )
 
