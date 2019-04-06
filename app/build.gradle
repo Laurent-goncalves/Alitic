@@ -23,6 +23,9 @@ android {
             testCoverageEnabled true
         }
     }
+    lintOptions {
+        abortOnError false
+    }
     packagingOptions {
         exclude 'META-INF/proguard/androidx-annotations.pro'
     }

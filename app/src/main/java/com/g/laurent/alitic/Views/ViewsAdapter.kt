@@ -13,17 +13,23 @@ import android.widget.FrameLayout
 import android.annotation.SuppressLint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.content.ContextCompat
+import android.support.v4.view.PagerAdapter
+import android.support.v4.view.PagerAdapter.POSITION_NONE
+import android.support.v4.view.PagerAdapter.POSITION_UNCHANGED
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.Activities.*
 import com.g.laurent.alitic.Controllers.ClassControllers.*
-import com.g.laurent.alitic.Controllers.Fragments.StatFragment
+import com.g.laurent.alitic.Controllers.Fragments.StatDetailFragment
 import com.g.laurent.alitic.Controllers.Fragments.StatGlobalFragment
 import com.g.laurent.alitic.Models.*
 import com.roomorama.caldroid.CaldroidGridAdapter
+
 
 
 /** FOODTYPE ADAPTER**/
@@ -249,13 +255,23 @@ class CalendarAdapter(context: Context, private val onTimeLineDisplay: OnTimeLin
 }
 
 /** STAT ADAPTER**/
-class StatAdapter(mgr: FragmentManager): FragmentStatePagerAdapter(mgr) {
+open class StatAdapter(val mgr: FragmentManager, var eventType: EventType, private val listEventType: ArrayList<String>): FragmentPagerAdapter(mgr) {
 
-    override fun getItem(position: Int): StatGlobalFragment {
+
+    override fun getItemPosition(`object`: Any): Int {
+
+        //mgr.executePendingTransactions()
+
+        if(`object` is StatDetailFragment)
+            return POSITION_NONE
+        return POSITION_UNCHANGED
+    }
+
+    override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> StatGlobalFragment().newInstance(StatType.GLOBAL_ANALYSIS_NEG)
-            1 -> StatGlobalFragment().newInstance(StatType.GLOBAL_ANALYSIS_POS)
-            else -> StatGlobalFragment().newInstance(StatType.GLOBAL_ANALYSIS_NEG)
+            0 -> StatGlobalFragment().newInstance(null, StatType.GLOBAL_ANALYSIS_NEG)
+            1 -> StatGlobalFragment().newInstance(null, StatType.GLOBAL_ANALYSIS_POS)
+            else -> StatDetailFragment().newInstance(eventType, StatType.DETAIL_ANALYSIS, listEventType)
         }
     }
 
@@ -272,10 +288,33 @@ class StatAdapter(mgr: FragmentManager): FragmentStatePagerAdapter(mgr) {
     }
 }
 
+/** DETAIL STAT TITLE ADAPTER**/
+class DetailStatTitleAdapter(val list:List<String>, val context: Context, private val fragment:StatDetailFragment): PagerAdapter() {
 
+    override fun getCount(): Int {
+        return list.size
+    }
 
+    override fun instantiateItem(container: ViewGroup, position: Int): Any {
+        val inflater = LayoutInflater.from(context)
+        val layout = inflater.inflate(R.layout.title_stat_detail, container, false)
+        //setTextInEachTitle(layout, position)
+        //container.addView(layout)
+        return layout
+    }
 
+    override fun destroyItem(container: ViewGroup, position: Int, view: Any) {
+        container.removeView(view as View)
+    }
 
+    override fun isViewFromObject(p0: View, p1: Any): Boolean {
+        return p0 == p1
+    }
+
+    override fun getPageTitle(position: Int): CharSequence? {
+        return list[position]
+    }
+}
 
 /**  CHRONOLOGY STAT **/
 class StatChronoAdapter(val list:List<Long>, val context: Context): RecyclerView.Adapter<StatChronoHolder>() {

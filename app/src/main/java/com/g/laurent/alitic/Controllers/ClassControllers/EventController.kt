@@ -5,6 +5,7 @@ import com.g.laurent.alitic.Models.AppDataBase
 import com.g.laurent.alitic.Models.Event
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.Models.Food
+import com.g.laurent.alitic.R
 import com.g.laurent.alitic.getBegDayDate
 import com.g.laurent.alitic.getEndDayDate
 import com.g.laurent.alitic.getTodayDate
@@ -111,6 +112,29 @@ fun deleteAllEventTypes(mode:Boolean = false, context:Context){
     AppDataBase.TEST_MODE = mode
     val eventTypeDao = AppDataBase.getInstance(context)?.eventTypeDao()
     eventTypeDao?.deleteAll()
+}
+
+fun getListEventTypesForStatDetailFragment(context:Context):List<EventType>{
+
+    val result = mutableListOf<EventType>()
+    val listTotEventTypes = getAllEventTypes(context = context)
+    val listEvents = getAllEvents(context = context)
+
+    if(listTotEventTypes!=null && listEvents!=null){
+        for(event in listEvents){
+
+            val eventType = getEventType(event.idEventType, context = context)
+            val title = eventType?.name
+
+            if(title != null && listTotEventTypes.find { it.id == event.idEventType } != null
+                && result.find { it.name.equals(eventType.name)} == null)
+                result.add(eventType)
+        }
+    }
+
+    result.add(0, EventType(null,context.resources.getString(R.string.all_event_types),null, 0,0,false))
+
+    return result
 }
 
 /*fun getListEventType(search:String, mode:Boolean = false, context:Context):List<EventType>?{

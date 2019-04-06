@@ -6,17 +6,23 @@ import android.support.design.widget.TabLayout
 import android.support.v4.content.ContextCompat
 import com.g.laurent.alitic.Views.StatAdapter
 import android.view.View
+import com.g.laurent.alitic.Controllers.ClassControllers.getListEventTypesForStatDetailFragment
+import com.g.laurent.alitic.Controllers.Fragments.StatDetailFragment
+import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.R
 import kotlinx.android.synthetic.main.activity_stat.*
 
-class StatActivity : AppCompatActivity() {
+class StatActivity : AppCompatActivity(), OnEventTypeChangeListener{
 
+    var idEventType:Long? = null
+    private var listEventTypes:List<EventType> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stat)
 
         clearDatabase(applicationContext)
+        listEventTypes = getListEventTypesForStatDetailFragment(applicationContext)
         configureTabLayout()
     }
 
@@ -24,26 +30,11 @@ class StatActivity : AppCompatActivity() {
 
     private fun configureTabLayout(){
 
-        /*tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                // Change fragment
-                if(tab.tag!=null) {
-                    when (tab.tag) {
-                        R.string.menu_global_negative -> {
-                            launchGlobalAnalysis(StatType.GLOBAL_ANALYSIS_NEG)
-                        }
-                        R.string.menu_global_positive -> {
-                            launchGlobalAnalysis(StatType.GLOBAL_ANALYSIS_POS)
-                        }
-                        R.string.menu_detail -> {
-                            launchDetailedAnalysis()
-                        }
-                    }
-                }
-            }
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
-            override fun onTabReselected(tab: TabLayout.Tab) {}
-        })*/
+        stat_viewpager.visibility = View.VISIBLE
+        stat_viewpager.adapter = StatAdapter(supportFragmentManager, listEventTypes[0], getTitlesFromListEventTypes(listEventTypes))
+
+        tabs.setupWithViewPager(stat_viewpager)
+        tabs.tabMode = TabLayout.MODE_FIXED // Tabs have the same width
 
         val tab0 = tabs.getTabAt(0)
         val tab1 = tabs.getTabAt(1)
@@ -54,57 +45,34 @@ class StatActivity : AppCompatActivity() {
             tab1.icon = ContextCompat.getDrawable(applicationContext, R.drawable.baseline_wb_sunny_white_24)
             tab2.icon = ContextCompat.getDrawable(applicationContext, R.drawable.baseline_zoom)
         }
-
-        stat_viewpager.visibility = View.VISIBLE
-
-
-        tabs.tabMode = TabLayout.MODE_FIXED // Tabs have the same width
-        stat_viewpager.adapter = StatAdapter(supportFragmentManager)
-        tabs.setupWithViewPager(stat_viewpager)
     }
 
-    /** --------------------------------- FRAGMENT -------------------------------------- **/
+    override fun changeEventType(position: Int) {
+        //(stat_viewpager.adapter as StatAdapter).eventType = listEventTypes[position]
 
-    /*private fun launchGlobalAnalysis(statType:StatType){
+        stat_viewpager.adapter = StatAdapter(supportFragmentManager, listEventTypes[position], getTitlesFromListEventTypes(listEventTypes))
 
-        // Show StatFragment
-        val statGlobalFragment = StatGlobalFragment().newInstance(statType)
-        val fragmentManager = supportFragmentManager.beginTransaction()
-        fragmentManager.replace(R.id.fragment_place, statGlobalFragment, TAG_GLOBAL_ANALYSIS_FRAGMENT)
-        fragmentManager.commit()
+        stat_viewpager.currentItem = 2
     }
-
-    private fun launchDetailedAnalysis(){
-
-        // Remove stat fragment (global analysis)
-        val fragmentManager = supportFragmentManager.beginTransaction()
-        val statFragment = supportFragmentManager.findFragmentByTag(TAG_GLOBAL_ANALYSIS_FRAGMENT)
-        if(statFragment!=null)
-            fragmentManager.remove(statFragment)
-        fragmentManager.commit()
-
-        // Configure viewpager
-        val listEventTypes = getAllEventTypes(context = applicationContext)
-        val listStats :MutableList<Long> = mutableListOf()
-
-        if(listEventTypes!=null){
-            for(eventType in listEventTypes){
-
-                val list = getBarChartDataForDetailedAnalysis(eventType, context = applicationContext)
-
-                if(list.isNotEmpty()){
-                    val id = eventType.id
-                    if(id!=null)
-                        listStats.add(id)
-                }
-            }
-            stat_viewpager.visibility = View.VISIBLE
-            stat_viewpager.adapter = StatAdapter(supportFragmentManager)
-        }
-    }*/
 
     private fun displayInformations(){
         // TODO : to implement
+    }
+
+
+    fun getTitlesFromListEventTypes(list:List<EventType>):ArrayList<String>{
+
+        val result = arrayListOf<String>()
+
+        if(list.isNotEmpty()){
+            for(e in list){
+                val title = e.name
+                if(title!=null){
+                    result.add(title)
+                }
+            }
+        }
+        return result
     }
 }
 
@@ -115,6 +83,6 @@ enum class StatType(val idMenuItem:Int, val title:Int){
     INFORMATIONS(R.id.menu_info, R.string.menu_info);
 }
 
-const val TAG_GLOBAL_ANALYSIS_FRAGMENT = "global analysis fragment"
-
-
+interface OnEventTypeChangeListener {
+    fun changeEventType(position:Int)
+}

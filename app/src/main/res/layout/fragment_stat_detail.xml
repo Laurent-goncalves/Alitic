@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context=".Controllers.Fragments.StatDetailFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <!--SELECT TYPE OF EVENT-->
+    <Spinner
+            android:id="@+id/select_event_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <!--EVOLUTION-->
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center">
+
+        <TextView
+                android:id="@+id/text_evolution"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/evolution"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/symbol_evolution"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_toEndOf="@+id/text_evolution"/>
+
+    </RelativeLayout>
+
+    <!--CHRONOLOGY TITLE-->
+    <TextView
+            android:id="@+id/title_chronology"
+            android:background="@drawable/background_title_statfragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/chronology"
+            android:paddingEnd="30dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingStart="10dp"
+            android:layout_marginTop="20dp"/>
+
+    <!--CHRONOLOGY-->
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/chronology"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <!--DETAIL PER FOOD TITLE -->
+    <TextView
+            android:id="@+id/title_detail_per_food"
+            android:background="@drawable/background_title_statfragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_per_food_title"
+            android:paddingEnd="30dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingStart="10dp"
+            android:layout_marginTop="20dp"/>
+
+    <!--DETAIL PER FOOD-->
+    <com.github.mikephil.charting.charts.HorizontalBarChart
+            android:id="@+id/barchart_detail_per_food"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+</LinearLayout>

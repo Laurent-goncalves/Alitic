@@ -153,8 +153,9 @@ fun getListUnusedViewIndex(size:Int):List<Int>{
 
 fun createBarChartTwoColumns(listStats:List<FoodStatEntry>, view: View, context:Context){
 
+    val barChart:HorizontalBarChart = view.findViewById(R.id.barchart_detail_per_food)
+
     // Initialization
-    val barChart: HorizontalBarChart = view.findViewById(R.id.barchart)
     val valueSet = arrayListOf<BarEntry>()
     val listFood = mutableListOf<String>()
     val listColors = mutableListOf<Int>()
