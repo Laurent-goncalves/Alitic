@@ -122,9 +122,16 @@ fun getListFoodsWithCounters(statType:StatType, eventType:EventType?, mode:Boole
         fun findMealsWhichCausedEvent(event: Event, listMeals:List<Meal>, mode:Boolean=false, context: Context):List<Meal>{
 
             fun didMealCauseEvent(meal:Meal, event:Event, eventType: EventType):Boolean{
-                val min =  event.dateCode - eventType.maxTime
-                val max =  event.dateCode - eventType.minTime
-                return meal.dateCode in min .. max
+
+                val emin = eventType.minTime
+                val emax = eventType.maxTime
+
+                if(emin!=null && emax!=null) {
+                    val min = event.dateCode - emax
+                    val max = event.dateCode - emin
+                    return meal.dateCode in min..max
+                }
+                return false
             }
 
             fun findLastMeal(event: Event, listMeals:List<Meal>):Meal?{
@@ -139,7 +146,10 @@ fun getListFoodsWithCounters(statType:StatType, eventType:EventType?, mode:Boole
             val eType = getEventType(event.idEventType, mode, context) ?: return result
 
             for(meal in listMeals){
-                if(eType.forLastMeal){ // if last meal must be taken into account
+
+                val forLastMeal = eType.forLastMeal
+
+                if(forLastMeal != null && forLastMeal){ // if last meal must be taken into account
                     val lastMeal = findLastMeal(event, listMeals)
                     if(lastMeal!=null)
                         result.add(lastMeal)

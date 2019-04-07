@@ -70,9 +70,9 @@ data class Keyword(@PrimaryKey(autoGenerate = true) var id: Long?,
 data class EventType(@PrimaryKey(autoGenerate = true) var id: Long?,
                      @ColumnInfo(name = "name") var name:String?,
                      @ColumnInfo(name = "eventPic") var eventPic:String?,
-                     @ColumnInfo(name = "minTime") var minTime:Long,
-                     @ColumnInfo(name = "maxTime") var maxTime:Long,
-                     @ColumnInfo(name = "forLastMeal") var forLastMeal:Boolean){
+                     @ColumnInfo(name = "minTime") var minTime:Long?,
+                     @ColumnInfo(name = "maxTime") var maxTime:Long?,
+                     @ColumnInfo(name = "forLastMeal") var forLastMeal:Boolean?){
     constructor() : this(null, null, null,0, 0, true)
 }
 
@@ -275,7 +275,7 @@ interface EventTypeDao {
 
 // ----------------------------------- DATABASE --------------------------------------------
 
-@Database(entities = [Meal::class, MealItem::class, Food::class, FoodType::class, Keyword::class, Event::class, EventType::class], version = 13, exportSchema = false)
+@Database(entities = [Meal::class, MealItem::class, Food::class, FoodType::class, Keyword::class, Event::class, EventType::class], version = 14, exportSchema = false)
 abstract class AppDataBase : RoomDatabase() {
 
     abstract fun mealDao(): MealDao

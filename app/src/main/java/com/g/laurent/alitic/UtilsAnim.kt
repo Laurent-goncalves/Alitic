@@ -4,7 +4,10 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Build
 import android.os.Handler
+import android.view.View
+import android.widget.FrameLayout
 import com.g.laurent.alitic.Views.FoodTypeViewHolder
+import com.ianpinto.androidrangeseekbar.rangeseekbar.RangeSeekBar
 
 fun enlargeThumbnail(holder:FoodTypeViewHolder, duration:Long, color: Int, ratio:Float){
 
@@ -58,4 +61,23 @@ fun move(scaleDownX:ObjectAnimator, scaleDownY:ObjectAnimator, moveRightX:Object
 
     scaleDown.start()
     moveRight.start()
+}
+
+fun hideOrRevealRangeSeekBar(rangeSeekBar: FrameLayout, height:Int, hide:Boolean){
+
+    val factor = if(hide) 0 else -1
+
+    if (Build.VERSION.SDK_INT >= 21) { // with animation
+
+        ObjectAnimator.ofFloat(rangeSeekBar, "translationY", factor * height.toFloat()).apply {
+            duration = 1000
+            start()
+        }
+
+    } else { // without animation
+        if(hide)
+            rangeSeekBar.visibility = View.GONE
+        else
+            rangeSeekBar.visibility = View.VISIBLE
+    }
 }

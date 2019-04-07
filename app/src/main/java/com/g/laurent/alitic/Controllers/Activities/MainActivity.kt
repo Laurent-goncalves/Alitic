@@ -18,7 +18,10 @@ import kotlinx.android.synthetic.main.pick_event_layout.*
 import kotlinx.android.synthetic.main.pick_meal_layout.*
 import java.lang.Math.round
 import android.widget.*
+import com.g.laurent.alitic.Controllers.DialogFragments.NewEventTypeDialogFragment
+import com.g.laurent.alitic.Controllers.DialogFragments.NewFoodDialogFragment
 import com.g.laurent.alitic.Models.Food
+import com.g.laurent.alitic.R
 import com.g.laurent.alitic.Views.*
 
 
@@ -39,15 +42,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.g.laurent.alitic.R.layout.activity_main)
+        setContentView(R.layout.activity_main)
         context = applicationContext
         clearDatabase(context)
 
-        imageView = findViewById(com.g.laurent.alitic.R.id.image_background)
-        findViewById<View>(com.g.laurent.alitic.R.id.top_left_corner).setOnClickListener(this)
-        findViewById<View>(com.g.laurent.alitic.R.id.top_right_corner).setOnClickListener(this)
-        findViewById<View>(com.g.laurent.alitic.R.id.bottom_left_corner).setOnClickListener(this)
-        findViewById<View>(com.g.laurent.alitic.R.id.bottom_right_corner).setOnClickListener(this)
+        imageView = findViewById(R.id.image_background)
+        findViewById<View>(R.id.top_left_corner).setOnClickListener(this)
+        findViewById<View>(R.id.top_right_corner).setOnClickListener(this)
+        findViewById<View>(R.id.bottom_left_corner).setOnClickListener(this)
+        findViewById<View>(R.id.bottom_right_corner).setOnClickListener(this)
 
         initCamera()
     }
@@ -87,7 +90,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
 
     private fun initMealPanel(){
 
-        val panel = findViewById<View>(com.g.laurent.alitic.R.id.panel)
+        val panel = findViewById<View>(R.id.panel)
 
         val vto = panel.viewTreeObserver
         vto.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
@@ -162,25 +165,32 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
     override fun onClick(v: View?) {
 
         when (v?.id) {
-            com.g.laurent.alitic.R.id.top_left_corner -> { //       |' |
-                moveCamera(imageView, Loc.CENTER.position, Loc.TOP_LEFT.position,matrix)
+            R.id.top_left_corner -> { //       |' |
+                /*moveCamera(imageView, Loc.CENTER.position, Loc.TOP_LEFT.position,matrix)
                 displayMealPicking()
-                configureButtons(TypeDisplay.MEAL)
+                configureButtons(TypeDisplay.MEAL)*/
+
+                val fm = supportFragmentManager
+                val frag = NewFoodDialogFragment().newInstance()
+                frag.show(fm, null)
             }
 
-            com.g.laurent.alitic.R.id.top_right_corner -> {//       | '|
-                moveCamera(imageView,Loc.CENTER.position, Loc.TOP_RIGHT.position,matrix)
+            R.id.top_right_corner -> {//       | '|
+                /*moveCamera(imageView,Loc.CENTER.position, Loc.TOP_RIGHT.position,matrix)
                 displayEventPicking()
-                configureButtons(TypeDisplay.EVENT)
+                configureButtons(TypeDisplay.EVENT)*/
+                val fm = supportFragmentManager
+                val frag = NewEventTypeDialogFragment().newInstance()
+                frag.show(fm, null)
             }
 
-            com.g.laurent.alitic.R.id.bottom_left_corner -> {//     |, |
+            R.id.bottom_left_corner -> {//     |, |
                 moveCamera(imageView,Loc.CENTER.position, Loc.BOTTOM_LEFT.position,matrix)
                 val intent = Intent(this, ChronoActivity::class.java)
                 startActivity(intent)
             }
 
-            com.g.laurent.alitic.R.id.bottom_right_corner -> {//    | ,|
+            R.id.bottom_right_corner -> {//    | ,|
                 moveCamera(imageView,Loc.CENTER.position, Loc.BOTTOM_RIGHT.position,matrix)
             }
         }
@@ -208,7 +218,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
         when(typeDisplay){
             EVENT -> {
                 // Hide layout for meal picking
-                findViewById<FrameLayout>(com.g.laurent.alitic.R.id.layout_event).visibility = View.GONE
+                findViewById<FrameLayout>(R.id.layout_event).visibility = View.GONE
 
                 // Move camera to the center of image in background
                 Handler().postDelayed({

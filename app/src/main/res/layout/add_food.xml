@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:orientation="vertical">
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/addfood"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+
+    <!--NAME FOOD -->
+    <EditText
+            android:id="@+id/field_name_food"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:hint="@string/name_addfood"
+            android:inputType="text"/>
+
+    <!--SELECT FOODTYPE -->
+    <TextView
+            android:id="@+id/foodtype_select"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/foodtype_addfood"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:layout_marginTop="15dp">
+
+        <Spinner
+                android:id="@+id/field_foodtype"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"/>
+
+        <View
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="0dp"/>
+
+    </LinearLayout>
+
+
+
+    <!--COUNT FOR ANALYSIS ? -->
+    <CheckBox
+            android:id="@+id/count_for_analysis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/take_into_account_addfood"
+            android:layout_marginTop="15dp"/>
+
+    <!-- BUTTON SAVE -->
+    <Button
+            android:id="@+id/button_save_food"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:layout_gravity="end|bottom"
+            android:layout_marginTop="15dp"
+            android:text="@string/save"
+            style="?android:attr/borderlessButtonStyle"
+            android:textColor="@color/colorAccent"
+            android:background="@android:color/white"/>
+
+</LinearLayout>
