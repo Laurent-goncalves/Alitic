@@ -61,5 +61,7 @@
     <string name="error_event_without_name">Donner un nom au ressenti.</string>
 
 
-
+    <!--TOOLBAR TITLES -->
+    <string name="title_meal_choice">Choisir un repas</string>
+    <string name="title_event_choice">Choisir un ressenti</string>
 </resources>

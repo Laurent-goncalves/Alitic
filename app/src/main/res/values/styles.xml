@@ -10,8 +10,11 @@
 
     <style name="AliticTabLayout" parent="Widget.MaterialComponents.TabLayout.Colored">
         <item name="textAllCaps">false</item>
-
-
     </style>
 
+    <!-- Toolbar theme. -->
+    <style name="ToolBarStyle" parent="AppTheme">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="colorControlNormal">@android:color/white</item>
+    </style>
 </resources>

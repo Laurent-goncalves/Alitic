@@ -3,12 +3,17 @@ package com.g.laurent.alitic.Controllers.Activities
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Matrix
+import android.support.v4.app.FragmentManager
+import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.facebook.stetho.Stetho
+import com.g.laurent.alitic.Controllers.DialogFragments.NewEventTypeDialogFragment
+import com.g.laurent.alitic.Controllers.DialogFragments.NewFoodDialogFragment
 import com.g.laurent.alitic.Models.AppDataBase
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.Models.Food
@@ -268,6 +273,52 @@ fun isAlreadySelected(idSelected:Long?,  list:MutableList<Any>?):Boolean{
 fun saveData(typeDisplay: TypeDisplay, listSelected:List<Any>){
 
 
+}
+
+fun configureToolbar(toolbar:Toolbar, fm:FragmentManager, typeDisplay: TypeDisplay?, activity:MainActivity, context: Context){
+
+    val upButton = toolbar.findViewById<ImageButton>(R.id.button_up)
+    val title = toolbar.findViewById<TextView>(R.id.title_toolbar)
+    val settingsIcon = toolbar.findViewById<ImageButton>(R.id.button_settings)
+    val addIcon = toolbar.findViewById<ImageButton>(R.id.button_add)
+
+    when {
+        typeDisplay==null -> { // MAIN PAGE
+            title.text = context.getString(R.string.app_name)
+            settingsIcon.visibility = View.VISIBLE
+            settingsIcon.setOnClickListener{
+                // TODO : configure settings
+            }
+            addIcon.visibility = View.GONE
+            upButton.visibility = View.GONE
+        }
+        typeDisplay.equals(TypeDisplay.EVENT) -> { // PICK EVENT
+            title.text = context.getString(R.string.title_event_choice)
+            settingsIcon.visibility = View.GONE
+            addIcon.visibility = View.VISIBLE
+            addIcon.setOnClickListener{
+                val frag = NewEventTypeDialogFragment().newInstance()
+                frag.show(fm, null)
+            }
+            upButton.visibility = View.VISIBLE
+            upButton.setOnClickListener{
+                activity.goToBackToMainPage(TypeDisplay.EVENT.type)
+            }
+        }
+        typeDisplay.equals(TypeDisplay.MEAL) -> { // PICK MEAL
+            title.text = context.getString(R.string.title_meal_choice)
+            settingsIcon.visibility = View.GONE
+            addIcon.visibility = View.VISIBLE
+            addIcon.setOnClickListener{
+                val frag = NewFoodDialogFragment().newInstance()
+                frag.show(fm, null)
+            }
+            upButton.visibility = View.VISIBLE
+            upButton.setOnClickListener{
+                activity.goToBackToMainPage(TypeDisplay.MEAL.type)
+            }
+        }
+    }
 }
 
 fun clearDatabase(context: Context){

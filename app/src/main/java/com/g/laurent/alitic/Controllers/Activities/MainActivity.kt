@@ -8,6 +8,7 @@ import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
@@ -45,6 +46,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
         setContentView(R.layout.activity_main)
         context = applicationContext
         clearDatabase(context)
+
+        // Configure Toolbar
+        configureToolbar(findViewById(R.id.activity_main_toolbar), supportFragmentManager, null, this, applicationContext)
 
         imageView = findViewById(R.id.image_background)
         findViewById<View>(R.id.top_left_corner).setOnClickListener(this)
@@ -164,24 +168,26 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
 
     override fun onClick(v: View?) {
 
+        val fm = supportFragmentManager
+        val toolbar: Toolbar = findViewById(R.id.activity_main_toolbar)
+        setSupportActionBar(toolbar)
+
         when (v?.id) {
             R.id.top_left_corner -> { //       |' |
-                /*moveCamera(imageView, Loc.CENTER.position, Loc.TOP_LEFT.position,matrix)
+                moveCamera(imageView, Loc.CENTER.position, Loc.TOP_LEFT.position,matrix)
                 displayMealPicking()
-                configureButtons(TypeDisplay.MEAL)*/
-
-                val fm = supportFragmentManager
+                configureButtons(TypeDisplay.MEAL)
+                configureToolbar(toolbar, fm, TypeDisplay.MEAL, this, applicationContext)
+                /*val fm = supportFragmentManager
                 val frag = NewFoodDialogFragment().newInstance()
-                frag.show(fm, null)
+                frag.show(fm, null)*/
             }
 
             R.id.top_right_corner -> {//       | '|
-                /*moveCamera(imageView,Loc.CENTER.position, Loc.TOP_RIGHT.position,matrix)
+                moveCamera(imageView,Loc.CENTER.position, Loc.TOP_RIGHT.position,matrix)
                 displayEventPicking()
-                configureButtons(TypeDisplay.EVENT)*/
-                val fm = supportFragmentManager
-                val frag = NewEventTypeDialogFragment().newInstance()
-                frag.show(fm, null)
+                configureButtons(TypeDisplay.EVENT)
+                configureToolbar(toolbar, fm, TypeDisplay.EVENT, this,applicationContext)
             }
 
             R.id.bottom_left_corner -> {//     |, |
@@ -192,6 +198,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
 
             R.id.bottom_right_corner -> {//    | ,|
                 moveCamera(imageView,Loc.CENTER.position, Loc.BOTTOM_RIGHT.position,matrix)
+                val intent = Intent(this, StatActivity::class.java)
+                startActivity(intent)
             }
         }
     }
@@ -215,6 +223,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
 
     fun goToBackToMainPage(typeDisplay:String){
 
+        val fm = supportFragmentManager
+        val toolbar: Toolbar = findViewById(R.id.activity_main_toolbar)
+        setSupportActionBar(toolbar)
+
         when(typeDisplay){
             EVENT -> {
                 // Hide layout for meal picking
@@ -225,6 +237,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
                     moveCamera(imageView, Loc.TOP_RIGHT.position,Loc.CENTER.position, matrix)
                 },DELAY_HIDE)
 
+                // Configure Toolbar
+                configureToolbar(toolbar, fm, null, this, applicationContext)
             }
             MEAL -> {
                 // Hide layout for meal picking
@@ -234,6 +248,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
                 Handler().postDelayed({
                     moveCamera(imageView, Loc.TOP_LEFT.position,Loc.CENTER.position, matrix)
                 },DELAY_HIDE)
+
+                // Configure Toolbar
+                configureToolbar(toolbar, fm, null, this, applicationContext)
             }
         }
 
