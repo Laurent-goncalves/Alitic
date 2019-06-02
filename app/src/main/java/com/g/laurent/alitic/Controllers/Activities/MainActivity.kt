@@ -9,9 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewTreeObserver
+import android.view.*
 import com.g.laurent.alitic.Controllers.ClassControllers.getAllEventTypes
 import com.g.laurent.alitic.Controllers.ClassControllers.getAllFoodTypes
 import com.g.laurent.alitic.Controllers.ClassControllers.getListFoodByType
@@ -19,11 +17,10 @@ import kotlinx.android.synthetic.main.pick_event_layout.*
 import kotlinx.android.synthetic.main.pick_meal_layout.*
 import java.lang.Math.round
 import android.widget.*
-import com.g.laurent.alitic.Controllers.DialogFragments.NewEventTypeDialogFragment
-import com.g.laurent.alitic.Controllers.DialogFragments.NewFoodDialogFragment
 import com.g.laurent.alitic.Models.Food
-import com.g.laurent.alitic.R
+import com.g.laurent.alitic.Models.FoodType
 import com.g.laurent.alitic.Views.*
+import android.view.inputmethod.InputMethodManager
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionListener, OnItemSelectionListener, OnFoodToDeleteListener {
@@ -37,24 +34,26 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
     private val onMenuSelectionListener = this
     private val onItemSelectionListener = this
     private var listSelected:MutableList<Any> = mutableListOf()
-    private var scale1:Float = 0f
-    private var posY1:Float = 0f
+    //private var scale1:Float = 0f     panel
+    //private var posY1:Float = 0f      panel
     private var sWidth = 0
+    private var typeDisplay:TypeDisplay? = null
+    private var foodTypeSelected: FoodType? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(com.g.laurent.alitic.R.layout.activity_main)
         context = applicationContext
         clearDatabase(context)
 
-        // Configure Toolbar
-        configureToolbar(findViewById(R.id.activity_main_toolbar), supportFragmentManager, null, this, applicationContext)
+        val toolbar: Toolbar = findViewById(com.g.laurent.alitic.R.id.activity_main_toolbar)
+        setSupportActionBar(toolbar)
 
-        imageView = findViewById(R.id.image_background)
-        findViewById<View>(R.id.top_left_corner).setOnClickListener(this)
-        findViewById<View>(R.id.top_right_corner).setOnClickListener(this)
-        findViewById<View>(R.id.bottom_left_corner).setOnClickListener(this)
-        findViewById<View>(R.id.bottom_right_corner).setOnClickListener(this)
+        imageView = findViewById(com.g.laurent.alitic.R.id.image_background)
+        findViewById<View>(com.g.laurent.alitic.R.id.top_left_corner).setOnClickListener(this)
+        findViewById<View>(com.g.laurent.alitic.R.id.top_right_corner).setOnClickListener(this)
+        findViewById<View>(com.g.laurent.alitic.R.id.bottom_left_corner).setOnClickListener(this)
+        findViewById<View>(com.g.laurent.alitic.R.id.bottom_right_corner).setOnClickListener(this)
 
         initCamera()
     }
@@ -92,6 +91,211 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
         })
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(com.g.laurent.alitic.R.menu.menu_toolbar, menu)
+        val toolbar: Toolbar = findViewById(com.g.laurent.alitic.R.id.activity_main_toolbar)
+        configureToolbar(toolbar, typeDisplay, this, context)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onFoodToDelete(nameFood: String) {
+
+        for(any in listSelected){
+            if(any is Food){
+                if(any.name.equals(nameFood)) {
+                    listSelected.remove(any)
+                    gridAdapter.listItemSelected = listSelected
+                    gridAdapter.notifyDataSetChanged()
+                    break
+                }
+            }
+        }
+    }
+
+    override fun onClick(v: View?) {
+
+        when (v?.id) {
+            com.g.laurent.alitic.R.id.top_left_corner -> { //       |' |
+                typeDisplay = TypeDisplay.MEAL
+                moveCamera(imageView, Loc.CENTER.position, Loc.TOP_LEFT.position,matrix)
+                displayMealPicking()
+                configureButtons(TypeDisplay.MEAL)
+                invalidateOptionsMenu()
+                /*val fm = supportFragmentManager
+                val frag = NewFoodDialogFragment().newInstance()
+                frag.show(fm, null)*/
+            }
+
+            com.g.laurent.alitic.R.id.top_right_corner -> {//       | '|
+                typeDisplay = TypeDisplay.EVENT
+                moveCamera(imageView,Loc.CENTER.position, Loc.TOP_RIGHT.position,matrix)
+                displayEventPicking()
+                configureButtons(TypeDisplay.EVENT)
+                invalidateOptionsMenu()
+            }
+
+            com.g.laurent.alitic.R.id.bottom_left_corner -> {//     |, |
+                moveCamera(imageView,Loc.CENTER.position, Loc.BOTTOM_LEFT.position,matrix)
+                val intent = Intent(this, ChronoActivity::class.java)
+                startActivity(intent)
+            }
+
+            com.g.laurent.alitic.R.id.bottom_right_corner -> {//    | ,|
+                moveCamera(imageView,Loc.CENTER.position, Loc.BOTTOM_RIGHT.position,matrix)
+                val intent = Intent(this, StatActivity::class.java)
+                startActivity(intent)
+            }
+        }
+    }
+
+    private fun configureButtons(typeDisplay:TypeDisplay){
+
+        // Associate buttons Cancel and save
+        val buttonCancel: Button = findViewById(typeDisplay.idCancel)
+        val buttonSave:Button = findViewById(typeDisplay.idSave)
+
+        // Set on click listener for each button
+        buttonCancel.setOnClickListener { goToBackToMainPage(typeDisplay.type) }
+
+        buttonSave.setOnClickListener {
+            /**    Show dialog fragment to confirm date for saving  **/
+            val fm = supportFragmentManager
+            val myDialogFragment = SaveDialog().newInstance(typeDisplay, listSelected.toList())
+            myDialogFragment.show(fm, TAG_SCHEDULE_DIALOG)
+        }
+    }
+
+    fun goToBackToMainPage(typeDisplay:String){
+
+        this.typeDisplay = null
+        this.foodTypeSelected = null
+
+        when(typeDisplay){
+            EVENT -> {
+                // Hide layout for meal picking
+                findViewById<FrameLayout>(com.g.laurent.alitic.R.id.layout_event).visibility = View.GONE
+
+                // Move camera to the center of image in background
+                Handler().postDelayed({
+                    moveCamera(imageView, Loc.TOP_RIGHT.position,Loc.CENTER.position, matrix)
+                },DELAY_HIDE)
+
+                // Configure Toolbar
+                invalidateOptionsMenu()
+            }
+            MEAL -> {
+                // Hide layout for meal picking
+                findViewById<FrameLayout>(com.g.laurent.alitic.R.id.layout_meal).visibility = View.GONE
+
+                // Move camera to the center of image in background
+                Handler().postDelayed({
+                    moveCamera(imageView, Loc.TOP_LEFT.position,Loc.CENTER.position, matrix)
+                },DELAY_HIDE)
+
+                // Configure Toolbar
+                invalidateOptionsMenu()
+            }
+        }
+
+        // Re-initialize listSelected
+        listSelected = mutableListOf()
+    }
+
+    /**
+    -------------------------- MEAL PICKING --------------------------------------------------------------------------
+     */
+
+    private fun displayMealPicking(){
+
+        Handler().postDelayed({
+
+            findViewById<FrameLayout>(com.g.laurent.alitic.R.id.layout_meal).visibility = View.VISIBLE
+
+            //initMealPanel()
+
+            val listFoodTypes = getAllFoodTypes(context = context)!!
+
+            val mLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+            food_recycler_view.layoutManager = mLayoutManager
+            menuAdapter = FoodTypeAdapter(listFoodTypes, sWidth / 4, onMenuSelectionListener, context = this)
+            food_recycler_view.adapter = menuAdapter
+
+            val listFoods = getListFoodByType(listFoodTypes[0].id,context = context)
+            gridAdapter = GridAdapter(listFoods!!, listSelected, true, onItemSelectionListener,context = context)
+            gridview_food.adapter = gridAdapter
+
+        }, DELAY_SHOW)
+    }
+
+    fun updateListFoods(listFoods:List<Food>){
+        gridAdapter = GridAdapter(listFoods, listSelected, true, onItemSelectionListener,context = context)
+        gridview_food.adapter = gridAdapter
+    }
+
+    override fun onMenuSelected(selection: Int) {
+
+        val listFoodTypes = getAllFoodTypes(context = context)!!
+        foodTypeSelected = listFoodTypes[selection]
+        val listFoods = getListFoodByType(listFoodTypes[selection].id, false, context)
+        gridAdapter = GridAdapter(listFoods!!, listSelected,true, onItemSelectionListener, false, context)
+        gridview_food.adapter = gridAdapter
+
+        resetMealPickingScreenAfterSearch()
+    }
+
+    fun resetMealPickingScreenAfterSearch(){
+
+        // Reset list foodtype by re-selecting foodTypeSelected
+        val listFoodTypes = getAllFoodTypes(context = context)!!
+        menuAdapter.selection = listFoodTypes.indexOf(foodTypeSelected)
+        menuAdapter.notifyDataSetChanged()
+
+        // Reset list of foods related to foodTypeSelected
+        val idFoodTypeSelected = foodTypeSelected?.id
+        if(idFoodTypeSelected!=null){
+            val listFoods = getListFoodByType(idFoodTypeSelected, false, context)
+            gridAdapter = GridAdapter(listFoods!!, listSelected,true, onItemSelectionListener, false, context)
+            gridview_food.adapter = gridAdapter
+        }
+
+        // Reset toolbar and close android keyboard
+        invalidateOptionsMenu()
+
+        val view = this.currentFocus
+        if (view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
+    override fun onItemSelected(selected: Any) {
+        listSelected = updateListSelected(selected, listSelected)
+    }
+
+    /**
+    -------------------------- EVENT PICKING ----------------------------------------------------------------------------
+     */
+
+    private fun displayEventPicking(){
+
+        findViewById<FrameLayout>(com.g.laurent.alitic.R.id.layout_event).visibility = View.VISIBLE
+        val listEventTypes = getAllEventTypes(context = context)!!
+        gridAdapter = GridAdapter(listEventTypes, listSelected, true, onItemSelectionListener, context = context)
+
+
+        Handler().postDelayed({
+
+            gridview_event.adapter = gridAdapter
+
+        },2000)
+
+    }
+}
+
+
+
+/*
+
     private fun initMealPanel(){
 
         val panel = findViewById<View>(R.id.panel)
@@ -119,230 +323,65 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
         })
 
         // Create onTouchEventListener for panel moving and scalling
-        panel.setOnTouchListener(object : View.OnTouchListener {
-
-            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-
-                when (event?.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        posY1 = event.rawY
-                        scale1 = panel.scaleX
-                    }
-                    MotionEvent.ACTION_MOVE -> {
-                        movePanel(panel, scale1, posY1 - event.rawY)
-                    }
-
-                    MotionEvent.ACTION_UP -> {
-
-                        if( event.rawY < posY1 && panel.scaleX >= Pan.SCALE_PANEL.min) { // UP direction
-                            closePanel(panel)
-                        } else if( event.rawY > posY1 && panel.scaleX >= Pan.SCALE_PANEL.min){ // DOWN direction
-                            openPanel(panel)
-                            Handler().postDelayed({
-                                showMeal()
-                            }, 1000)
-                        }
-                    }
+        panel.setOnTouchListener { v, event ->
+            when (event?.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    posY1 = event.rawY
+                    scale1 = panel.scaleX
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    movePanel(panel, scale1, posY1 - event.rawY)
                 }
 
-                panel.invalidate()
+                MotionEvent.ACTION_UP -> {
 
-                return v?.onTouchEvent(event) ?: true
-            }
-        })
-    }
-
-    override fun onFoodToDelete(nameFood: String) {
-
-        for(any in listSelected){
-            if(any is Food){
-                if(any.name.equals(nameFood)) {
-                    listSelected.remove(any)
-                    gridAdapter.listItemSelected = listSelected
-                    gridAdapter.notifyDataSetChanged()
-                    break
+                    if( event.rawY < posY1 && panel.scaleX >= Pan.SCALE_PANEL.min) { // UP direction
+                        closePanel(panel)
+                    } else if( event.rawY > posY1 && panel.scaleX >= Pan.SCALE_PANEL.min){ // DOWN direction
+                        openPanel(panel)
+                        Handler().postDelayed({
+                            showMeal()
+                        }, 1000)
+                    }
                 }
             }
+
+            panel.invalidate()
+
+            v?.onTouchEvent(event) ?: true
         }
     }
 
-    override fun onClick(v: View?) {
 
-        val fm = supportFragmentManager
-        val toolbar: Toolbar = findViewById(R.id.activity_main_toolbar)
-        setSupportActionBar(toolbar)
 
-        when (v?.id) {
-            R.id.top_left_corner -> { //       |' |
-                moveCamera(imageView, Loc.CENTER.position, Loc.TOP_LEFT.position,matrix)
-                displayMealPicking()
-                configureButtons(TypeDisplay.MEAL)
-                configureToolbar(toolbar, fm, TypeDisplay.MEAL, this, applicationContext)
-                /*val fm = supportFragmentManager
-                val frag = NewFoodDialogFragment().newInstance()
-                frag.show(fm, null)*/
-            }
 
-            R.id.top_right_corner -> {//       | '|
-                moveCamera(imageView,Loc.CENTER.position, Loc.TOP_RIGHT.position,matrix)
-                displayEventPicking()
-                configureButtons(TypeDisplay.EVENT)
-                configureToolbar(toolbar, fm, TypeDisplay.EVENT, this,applicationContext)
-            }
+fun showMeal(){
 
-            R.id.bottom_left_corner -> {//     |, |
-                moveCamera(imageView,Loc.CENTER.position, Loc.BOTTOM_LEFT.position,matrix)
-                val intent = Intent(this, ChronoActivity::class.java)
-                startActivity(intent)
-            }
+    val panel = findViewById<LinearLayout>(R.id.panel_content)
+    panel.visibility = View.VISIBLE
 
-            R.id.bottom_right_corner -> {//    | ,|
-                moveCamera(imageView,Loc.CENTER.position, Loc.BOTTOM_RIGHT.position,matrix)
-                val intent = Intent(this, StatActivity::class.java)
-                startActivity(intent)
-            }
-        }
-    }
+    val panelLayout = panel.findViewById<FoodLayout>(R.id.layout_all_foods)
+    panelLayout.onFoodToDeleteListener = this
 
-    private fun configureButtons(typeDisplay:TypeDisplay){
+    // Show relevant views of panel
+    panel.findViewById<TextView>(R.id.title_meal).visibility = View.VISIBLE
+    panelLayout.visibility = View.VISIBLE
 
-        // Associate buttons Cancel and save
-        val buttonCancel: Button = findViewById(typeDisplay.idCancel)
-        val buttonSave:Button = findViewById(typeDisplay.idSave)
-
-        // Set on click listener for each button
-        buttonCancel.setOnClickListener { goToBackToMainPage(typeDisplay.type) }
-
-        buttonSave.setOnClickListener {
-            /**    Show dialog fragment to confirm date for saving  **/
-            val fm = supportFragmentManager
-            val myDialogFragment = SaveDialog().newInstance(typeDisplay, listSelected.toList())
-            myDialogFragment.show(fm, TAG_SCHEDULE_DIALOG)
-        }
-    }
-
-    fun goToBackToMainPage(typeDisplay:String){
-
-        val fm = supportFragmentManager
-        val toolbar: Toolbar = findViewById(R.id.activity_main_toolbar)
-        setSupportActionBar(toolbar)
-
-        when(typeDisplay){
-            EVENT -> {
-                // Hide layout for meal picking
-                findViewById<FrameLayout>(R.id.layout_event).visibility = View.GONE
-
-                // Move camera to the center of image in background
-                Handler().postDelayed({
-                    moveCamera(imageView, Loc.TOP_RIGHT.position,Loc.CENTER.position, matrix)
-                },DELAY_HIDE)
-
-                // Configure Toolbar
-                configureToolbar(toolbar, fm, null, this, applicationContext)
-            }
-            MEAL -> {
-                // Hide layout for meal picking
-                findViewById<FrameLayout>(com.g.laurent.alitic.R.id.layout_meal).visibility = View.GONE
-
-                // Move camera to the center of image in background
-                Handler().postDelayed({
-                    moveCamera(imageView, Loc.TOP_LEFT.position,Loc.CENTER.position, matrix)
-                },DELAY_HIDE)
-
-                // Configure Toolbar
-                configureToolbar(toolbar, fm, null, this, applicationContext)
-            }
-        }
-
-        // Re-initialize listSelected
-        listSelected = mutableListOf()
-    }
-
-    /**
-    -------------------------- MEAL PICKING --------------------------------------------------------------------------
-     */
-
-    private fun displayMealPicking(){
-
-        Handler().postDelayed({
-
-            findViewById<FrameLayout>(com.g.laurent.alitic.R.id.layout_meal).visibility = View.VISIBLE
-
-            initMealPanel()
-
-            val listFoodTypes = getAllFoodTypes(context = context)!!
-
-            val mLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-            food_recycler_view.layoutManager = mLayoutManager
-            menuAdapter = FoodTypeAdapter(listFoodTypes, food_recycler_view, onMenuSelectionListener, context = this)
-            food_recycler_view.adapter = menuAdapter
-
-            val listFoods = getListFoodByType(listFoodTypes[0].id,context = context)
-            gridAdapter = GridAdapter(listFoods!!, listSelected, true, onItemSelectionListener,context = context)
-            gridview_food.adapter = gridAdapter
-
-        }, DELAY_SHOW)
-    }
-
-    fun showMeal(){
-
-        val panel = findViewById<LinearLayout>(com.g.laurent.alitic.R.id.panel_content)
-        panel.visibility = View.VISIBLE
-
-        val panelLayout = panel.findViewById<FoodLayout>(com.g.laurent.alitic.R.id.layout_all_foods)
-        panelLayout.onFoodToDeleteListener = this
-
-        // Show relevant views of panel
-        panel.findViewById<TextView>(com.g.laurent.alitic.R.id.title_meal).visibility = View.VISIBLE
+    if(listSelected.size > 0){
         panelLayout.visibility = View.VISIBLE
 
-        if(listSelected.size > 0){
-            panelLayout.visibility = View.VISIBLE
+        val listIds = mutableListOf<FoodViewId>()
 
-            val listIds = mutableListOf<FoodViewId>()
-
-            for(i in 0 until listSelected.size) {
-                val id = panelLayout.addFood(listSelected[i] as Food)
-                if(id!=null)
-                    listIds.add(id)
-            }
-
-            panelLayout.organizeViews(listIds)
-
-        } else {
-            panel.findViewById<TextView>(com.g.laurent.alitic.R.id.no_food_in_meal).visibility = View.VISIBLE
+        for(i in 0 until listSelected.size) {
+            val id = panelLayout.addFood(listSelected[i] as Food)
+            if(id!=null)
+                listIds.add(id)
         }
-    }
 
-    override fun onMenuSelected(selection: Int) {
+        panelLayout.organizeViews(listIds)
 
-        val listFoodTypes = getAllFoodTypes(context = context)!!
-
-        val listFoods = getListFoodByType(listFoodTypes[selection].id, false, context)
-        gridAdapter = GridAdapter(listFoods!!, listSelected,true, onItemSelectionListener, false, context)
-        gridview_food.adapter = gridAdapter
-    }
-
-    override fun onItemSelected(selected: Any) {
-        listSelected = updateListSelected(selected, listSelected)
-    }
-
-    /**
-    -------------------------- EVENT PICKING ----------------------------------------------------------------------------
-     */
-
-    private fun displayEventPicking(){
-
-        findViewById<FrameLayout>(com.g.laurent.alitic.R.id.layout_event).visibility = View.VISIBLE
-        val listEventTypes = getAllEventTypes(context = context)!!
-        gridAdapter = GridAdapter(listEventTypes, listSelected, true, onItemSelectionListener, context = context)
-
-
-        Handler().postDelayed({
-
-            gridview_event.adapter = gridAdapter
-
-        },2000)
-
+    } else {
+        panel.findViewById<TextView>(R.id.no_food_in_meal).visibility = View.VISIBLE
     }
 }
+*/

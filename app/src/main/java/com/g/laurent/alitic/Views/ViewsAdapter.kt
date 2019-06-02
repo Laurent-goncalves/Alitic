@@ -21,6 +21,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.PagerAdapter.POSITION_NONE
 import android.support.v4.view.PagerAdapter.POSITION_UNCHANGED
+import android.view.ViewTreeObserver
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.Activities.*
@@ -34,9 +35,9 @@ import com.roomorama.caldroid.CaldroidGridAdapter
 
 /** FOODTYPE ADAPTER**/
 @SuppressLint("RecyclerView")
-class FoodTypeAdapter(val list: List<FoodType>, val recyclerView: RecyclerView, private val OnMenuSelectionListener: OnMenuSelectionListener, val mode:Boolean=false, val context: Context) : RecyclerView.Adapter<FoodTypeViewHolder>() {
+class FoodTypeAdapter(val list: List<FoodType>, val sWidth:Int, private val OnMenuSelectionListener: OnMenuSelectionListener, val mode:Boolean=false, val context: Context) : RecyclerView.Adapter<FoodTypeViewHolder>() {
 
-    private var selection:Int = -1
+    var selection:Int = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodTypeViewHolder {
         val view = View.inflate(parent.context, R.layout.foodtype_viewholder, null)
@@ -44,26 +45,30 @@ class FoodTypeAdapter(val list: List<FoodType>, val recyclerView: RecyclerView, 
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return list.size + 1
     }
 
     override fun onBindViewHolder(holder: FoodTypeViewHolder, position: Int) {
 
         holder.itemView.setOnClickListener {
-            selection = holder.adapterPosition
-            OnMenuSelectionListener.onMenuSelected(selection)
-            notifyDataSetChanged()
+            if(holder.adapterPosition < list.size) {
+                selection = holder.adapterPosition
+                OnMenuSelectionListener.onMenuSelected(selection)
+                notifyDataSetChanged()
+            }
         }
 
-        // Get the width of recyclerView and then configure viewholder
-        val vto = recyclerView.viewTreeObserver
-        vto.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                recyclerView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                if(holder.adapterPosition!=-1)
-                    holder.configureFoodTypeViewHolder(selection, recyclerView.measuredWidth, list[holder.adapterPosition], holder.adapterPosition)
+        val vto = holder.itemView.viewTreeObserver
+        vto.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                holder.itemView.viewTreeObserver.removeOnPreDrawListener(this)
+
+                if(holder.adapterPosition!=-1 && holder.adapterPosition < list.size)
+                    holder.configureFoodTypeViewHolder(selection, sWidth, list[holder.adapterPosition], holder.adapterPosition)
                 else
-                    holder.configureFoodTypeViewHolder(selection, recyclerView.measuredWidth, null,null)
+                    holder.configureFoodTypeViewHolder(selection, sWidth, null,null)
+
+                return true
             }
         })
     }
@@ -156,12 +161,12 @@ class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableLi
 
         // create view
         if (inflater != null && listFood[position]!=null) {
-            view = inflater.inflate(com.g.laurent.alitic.R.layout.gridviewholder, parent, false)
+            view = inflater.inflate(R.layout.gridviewholder, parent, false)
 
-            val imageView = view.findViewById<ImageView>(com.g.laurent.alitic.R.id.image_meal)
-            val textView = view.findViewById<TextView>(com.g.laurent.alitic.R.id.meal_text)
-            val frameLayout = view.findViewById<FrameLayout>(com.g.laurent.alitic.R.id.framelayout_viewholder)
-            val pickIcon = view.findViewById<ImageView>(com.g.laurent.alitic.R.id.check_item)
+            val imageView = view.findViewById<ImageView>(R.id.image_meal)
+            val textView = view.findViewById<TextView>(R.id.meal_text)
+            val frameLayout = view.findViewById<FrameLayout>(R.id.framelayout_viewholder)
+            val pickIcon = view.findViewById<ImageView>(R.id.check_item)
 
             val text = getTextToDisplay()
             val image = getImagePath(listFood[position]!!, mode, context)

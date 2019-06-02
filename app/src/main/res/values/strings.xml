@@ -61,6 +61,14 @@
     <string name="error_event_without_name">Donner un nom au ressenti.</string>
 
 
+    <!--SETTINGS MENU -->
+    <string name="title_settings">Paramètres</string>
+    <string name="name_user">Mon Prénom:</string>
+    <string name="language_select">Langue:</string>
+    <string name="export_data_excel">Exporter les données sous Excel:</string>
+    <string name="reset_data">Reset des données</string>
+    <string name="reset">RAZ</string>
+
     <!--TOOLBAR TITLES -->
     <string name="title_meal_choice">Choisir un repas</string>
     <string name="title_event_choice">Choisir un ressenti</string>

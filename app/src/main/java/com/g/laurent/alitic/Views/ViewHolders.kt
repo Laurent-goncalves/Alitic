@@ -69,6 +69,9 @@ class FoodTypeViewHolder(itemView: View, private val mode:Boolean = false, val c
             val image = getImagePath(foodType, mode, context)
             val imageDraw = getImageDrawPath(foodType, mode, context)
             getImageFromPath(image, imageDraw, imageFood, context)
+
+        } else { // empty foodtype
+            setNotSelected()
         }
 
         // Adapt the layout of the viewholder (if selected or not)

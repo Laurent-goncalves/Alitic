@@ -4,16 +4,16 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Matrix
 import android.support.v4.app.FragmentManager
+import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import com.facebook.stetho.Stetho
-import com.g.laurent.alitic.Controllers.DialogFragments.NewEventTypeDialogFragment
-import com.g.laurent.alitic.Controllers.DialogFragments.NewFoodDialogFragment
+import com.g.laurent.alitic.Controllers.ClassControllers.getListFood
 import com.g.laurent.alitic.Models.AppDataBase
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.Models.Food
@@ -74,8 +74,8 @@ enum class Pan(var min : Float, var max:Float) {
 }
 
 enum class TypeDisplay(val type:String, val idCancel : Int, val idSave : Int, var isNew:Boolean){
-    EVENT("EVENT", com.g.laurent.alitic.R.id.button_cancel_event, com.g.laurent.alitic.R.id.button_save_event, true),
-    MEAL("MEAL", com.g.laurent.alitic.R.id.button_cancel_meal, com.g.laurent.alitic.R.id.button_save_meal, true);
+    EVENT("EVENT", R.id.button_cancel_event,R.id.button_save_event, true),
+    MEAL("MEAL", R.id.button_cancel_meal,R.id.button_save_meal, true);
 }
 
 fun moveCamera(imageView: ImageView, fromPosition:Position?, toPosition:Position, matrix: Matrix){
@@ -275,47 +275,63 @@ fun saveData(typeDisplay: TypeDisplay, listSelected:List<Any>){
 
 }
 
-fun configureToolbar(toolbar:Toolbar, fm:FragmentManager, typeDisplay: TypeDisplay?, activity:MainActivity, context: Context){
+fun configureToolbar(toolbar:Toolbar, typeDisplay: TypeDisplay?, activity:MainActivity, context: Context){
 
-    val upButton = toolbar.findViewById<ImageButton>(R.id.button_up)
-    val title = toolbar.findViewById<TextView>(R.id.title_toolbar)
-    val settingsIcon = toolbar.findViewById<ImageButton>(R.id.button_settings)
-    val addIcon = toolbar.findViewById<ImageButton>(R.id.button_add)
+    val settingsIcon = toolbar.menu.findItem(R.id.action_settings)
+    val searchIcon = toolbar.menu.findItem(R.id.action_search)
 
     when {
         typeDisplay==null -> { // MAIN PAGE
-            title.text = context.getString(R.string.app_name)
-            settingsIcon.visibility = View.VISIBLE
-            settingsIcon.setOnClickListener{
+            toolbar.title = context.getString(R.string.app_name)
+
+            activity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            searchIcon.isVisible = false
+            settingsIcon.isVisible = true
+            settingsIcon.setOnMenuItemClickListener {
                 // TODO : configure settings
+                Toast.makeText(context, "SETTINGS", Toast.LENGTH_LONG).show()
+                true
             }
-            addIcon.visibility = View.GONE
-            upButton.visibility = View.GONE
         }
         typeDisplay.equals(TypeDisplay.EVENT) -> { // PICK EVENT
-            title.text = context.getString(R.string.title_event_choice)
-            settingsIcon.visibility = View.GONE
-            addIcon.visibility = View.VISIBLE
-            addIcon.setOnClickListener{
-                val frag = NewEventTypeDialogFragment().newInstance()
-                frag.show(fm, null)
-            }
-            upButton.visibility = View.VISIBLE
-            upButton.setOnClickListener{
+            toolbar.title = context.getString(com.g.laurent.alitic.R.string.title_event_choice)
+            settingsIcon.isVisible = false
+            searchIcon.isVisible = false
+
+            activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            toolbar.setNavigationOnClickListener {
                 activity.goToBackToMainPage(TypeDisplay.EVENT.type)
             }
         }
+
         typeDisplay.equals(TypeDisplay.MEAL) -> { // PICK MEAL
-            title.text = context.getString(R.string.title_meal_choice)
-            settingsIcon.visibility = View.GONE
-            addIcon.visibility = View.VISIBLE
-            addIcon.setOnClickListener{
-                val frag = NewFoodDialogFragment().newInstance()
-                frag.show(fm, null)
-            }
-            upButton.visibility = View.VISIBLE
-            upButton.setOnClickListener{
+            toolbar.title = context.getString(R.string.title_meal_choice)
+            settingsIcon.isVisible = false
+            searchIcon.isVisible = true
+
+            (searchIcon.actionView as SearchView).setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+                override fun onQueryTextChange(newText: String): Boolean {
+
+                    val listFoods = getListFood(newText, context = context)
+                    if(listFoods!=null)
+                        activity.updateListFoods(listFoods)
+                    return false
+                }
+
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    return false
+                }
+            })
+
+            activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            toolbar.setNavigationOnClickListener {
                 activity.goToBackToMainPage(TypeDisplay.MEAL.type)
+            }
+
+            (searchIcon.actionView as SearchView).setOnCloseListener {
+                activity.resetMealPickingScreenAfterSearch()
+                true
             }
         }
     }

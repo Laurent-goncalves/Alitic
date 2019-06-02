@@ -244,13 +244,13 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     ------------------------------------------------------------------------------------------------------ **/
 
     val reflux = eventTypeDao?.insert(EventType(null, "Reflux", "reflux", 0, 3*60*60*1000, false))
-    val malVentre = eventTypeDao?.insert(EventType(null, "Mal au ventre", "", 0, 3*60*60*1000, false))
-    val malTete = eventTypeDao?.insert(EventType(null, "Mal à la tête", "", 0, 3*60*60*1000, false))
-    val diarrh = eventTypeDao?.insert(EventType(null, "Diarrhée", "", 0, 3*60*60*1000, false))
-    val balon = eventTypeDao?.insert(EventType(null, "Ballonnement", "", 0, 3*60*60*1000, false))
-    val brulure = eventTypeDao?.insert(EventType(null, "Brûlure d'estomac", "", 0, 3*60*60*1000, false))
-    val constip = eventTypeDao?.insert(EventType(null, "Constipation", "", 0, 3*60*60*1000, false))
-    val vomis = eventTypeDao?.insert(EventType(null, "Vomissement", "", 0, 3*60*60*1000, false))
+    val malVentre = eventTypeDao?.insert(EventType(null, "Mal au ventre", "mal_ventre", 0, 3*60*60*1000, false))
+    val malTete = eventTypeDao?.insert(EventType(null, "Mal à la tête", "tete", 0, 3*60*60*1000, false))
+    val diarrh = eventTypeDao?.insert(EventType(null, "Diarrhée", "diarrhee", 0, 3*60*60*1000, false))
+    val balon = eventTypeDao?.insert(EventType(null, "Ballonnement", "ballonnement", 0, 3*60*60*1000, false))
+    val brulure = eventTypeDao?.insert(EventType(null, "Brûlure d'estomac", "brulure_estomac", 0, 3*60*60*1000, false))
+    val constip = eventTypeDao?.insert(EventType(null, "Constipation", "constipation", 0, 3*60*60*1000, false))
+    val vomis = eventTypeDao?.insert(EventType(null, "Vomissement", "vomissement", 0, 3*60*60*1000, false))
 
     /** ------------------------------------------------------------------------------------------------------
     ------------------------------------------ MEAL INSERTION ------------------------------------------------
