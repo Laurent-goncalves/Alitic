@@ -50,9 +50,10 @@ class FoodTypeViewHolder(itemView: View, private val mode:Boolean = false, val c
 
         fun setNotSelected(){
             // WIDTH
-            itemView.layoutParams.width = (width * ratio).toInt()
+            /*itemView.layoutParams.width = (width * ratio).toInt()
             imageFood.layoutParams.width = (width * ratio).toInt()
-            textFood.layoutParams.width = (width * ratio).toInt()
+            textFood.layoutParams.width = (width * ratio).toInt()*/
+            reduceThumbnail(this, 0, colorNotSelected)
 
             // COLOR
             itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorFoodTypeNOTselected))
@@ -86,6 +87,16 @@ class FoodTypeViewHolder(itemView: View, private val mode:Boolean = false, val c
                 setNotSelected()
 
         oldSelect = newSelect
+    }
+
+    fun setEmptyViewAsLastItem(width:Int) {
+        // WIDTH
+        itemView.layoutParams.width = (width * ratio).toInt()
+        imageFood.layoutParams.width = (width * ratio).toInt()
+        textFood.layoutParams.width = (width * ratio).toInt()
+
+        // COLOR TRANSPARENT
+        itemView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
     }
 }
 

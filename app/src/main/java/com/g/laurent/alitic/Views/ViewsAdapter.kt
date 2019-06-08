@@ -63,8 +63,10 @@ class FoodTypeAdapter(val list: List<FoodType>, val sWidth:Int, private val OnMe
             override fun onPreDraw(): Boolean {
                 holder.itemView.viewTreeObserver.removeOnPreDrawListener(this)
 
-                if(holder.adapterPosition!=-1 && holder.adapterPosition < list.size)
+                if(holder.adapterPosition!=-1 && holder.adapterPosition < list.size - 1)
                     holder.configureFoodTypeViewHolder(selection, sWidth, list[holder.adapterPosition], holder.adapterPosition)
+                else if(holder.adapterPosition!=-1 && holder.adapterPosition == list.size) // LAST ITEM OF THE LIST
+                    holder.setEmptyViewAsLastItem(sWidth)
                 else
                     holder.configureFoodTypeViewHolder(selection, sWidth, null,null)
 
@@ -82,7 +84,7 @@ class FoodTypeAdapter(val list: List<FoodType>, val sWidth:Int, private val OnMe
 class TimeLineAdapter(val list: List<Chrono>, val mode:Boolean=false, val context: Context) : RecyclerView.Adapter<TimeLineViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimeLineViewHolder {
-        val view = View.inflate(parent.context, com.g.laurent.alitic.R.layout.timeline_viewholder, null)
+        val view = View.inflate(parent.context, R.layout.timeline_viewholder, null)
         return TimeLineViewHolder(view, viewType, mode, context)
     }
 

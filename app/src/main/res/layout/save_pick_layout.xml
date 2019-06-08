@@ -2,14 +2,13 @@
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
-        android:maxWidth="280dp"
         android:layout_height="match_parent"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
+        android:padding="24dp"
         android:orientation="vertical"
         android:background="@drawable/background_save_dialog">
 
         <TextView
+                android:id="@+id/save_dialog_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/save_meal_title_dialog"
@@ -19,6 +18,7 @@
             android:textSize="20sp"/>
 
         <TextView
+                android:id="@+id/save_dialog_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"

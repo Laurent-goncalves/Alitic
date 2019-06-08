@@ -17,17 +17,16 @@ import android.widget.TextView
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import com.g.laurent.alitic.*
-import com.g.laurent.alitic.Controllers.Activities.EVENT
-import com.g.laurent.alitic.Controllers.Activities.MEAL
-import com.g.laurent.alitic.Controllers.Activities.MainActivity
-import com.g.laurent.alitic.Controllers.Activities.TypeDisplay
+import com.g.laurent.alitic.Controllers.Activities.*
 import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Models.Event
+import com.g.laurent.alitic.Models.EventType
 import kotlinx.android.synthetic.main.time_picker_dialog.*
 
 class SaveDialog : DialogFragment() {
 
-    private lateinit var listItems:List<Any>
+    private lateinit var listMealItems:List<MealItem>
+    private lateinit var listEventType:List<EventType>
     private lateinit var typeDisplay: TypeDisplay
     private lateinit var contextDialog:Context
 
@@ -49,17 +48,35 @@ class SaveDialog : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val v = inflater.inflate(com.g.laurent.alitic.R.layout.save_pick_layout, container, false)
+        val v = inflater.inflate(R.layout.save_pick_layout, container, false)
 
         // Recover list of items and typeDisplay
         val gson = Gson()
-        val jsonList = arguments?.getString(LIST_TO_SAVE, null)
-        val propTypeList = object : TypeToken<List<Any>>() {}.type
-        listItems = gson.fromJson<List<Any>>(jsonList, propTypeList)
-
         val jsonType = arguments?.getString(TYPE_DISPLAY, null)
         val propTypeDisplay = object : TypeToken<TypeDisplay>() {}.type
         typeDisplay = gson.fromJson<TypeDisplay>(jsonType, propTypeDisplay)
+
+        val jsonList = arguments?.getString(LIST_TO_SAVE, null)
+        val propTypeList = if(typeDisplay.equals(TypeDisplay.MEAL))
+            object : TypeToken<List<MealItem>>() {}.type
+        else
+            object : TypeToken<List<EventType>>() {}.type
+
+        if(typeDisplay.equals(TypeDisplay.MEAL)){
+
+            listMealItems = gson.fromJson<List<MealItem>>(jsonList, propTypeList)
+
+            // Configure title and content of dialog
+            v.findViewById<TextView>(R.id.save_dialog_title).text = contextDialog.getString(R.string.save_meal_title_dialog)
+            v.findViewById<TextView>(R.id.save_dialog_content).text = contextDialog.getString(R.string.save_meal_content_dialog)
+        } else {
+
+            listEventType = gson.fromJson<List<EventType>>(jsonList, propTypeList)
+
+            // Configure title and content of dialog
+            v.findViewById<TextView>(R.id.save_dialog_title).text = contextDialog.getString(R.string.save_event_title_dialog)
+            v.findViewById<TextView>(R.id.save_dialog_content).text = contextDialog.getString(R.string.save_event_content_dialog)
+        }
 
         // Configure buttons YES and NO
         configureButtonsClick(v)
@@ -73,9 +90,12 @@ class SaveDialog : DialogFragment() {
         view.findViewById<Button>(R.id.button_yes).setOnClickListener {
 
             // Save the meal or event with today's date
-            if(context!=null)
-                saveData(listItems, typeDisplay, view, getTodayDate(), context = contextDialog)
-            else
+            if(context!=null) {
+                if(typeDisplay.equals(TypeDisplay.MEAL))
+                    saveMeal(listMealItems, view, getTodayDate(), context = contextDialog)
+                else
+                    saveEvent(listEventType, view, getTodayDate(), context = contextDialog)
+            } else
                 Snackbar.make(view, R.string.save_abort_message_dialog, Snackbar.LENGTH_LONG).show()
 
             // Dismiss dialog
@@ -90,7 +110,7 @@ class SaveDialog : DialogFragment() {
 
             // Launch dialog to pick time and date
             val fm = fragmentManager
-            val myDialogFragment = DateTimePickerDialog().newInstance(typeDisplay, listItems)
+            val myDialogFragment = DateTimePickerDialog().newInstance(typeDisplay, listMealItems)
             myDialogFragment.show(fm, "DateTimePickerDialog")
 
             // Dismiss dialog
@@ -110,7 +130,8 @@ class SaveDialog : DialogFragment() {
 
 class DateTimePickerDialog : DialogFragment() {
 
-    private lateinit var listItems:List<Any>
+    private lateinit var listMealItems:List<MealItem>
+    private lateinit var listEventType:List<EventType>
     private lateinit var typeDisplay: TypeDisplay
     private var time:Long = 0
     private var date:Long = 0
@@ -138,16 +159,23 @@ class DateTimePickerDialog : DialogFragment() {
 
         // Recover list of items and typeDisplay
         val gson = Gson()
-        val jsonList = arguments?.getString(LIST_TO_SAVE, null)
-        val propTypeList = object : TypeToken<List<Any>>() {}.type
-        listItems = gson.fromJson<List<Any>>(jsonList, propTypeList)
-
         val jsonType = arguments?.getString(TYPE_DISPLAY, null)
         val propTypeDisplay = object : TypeToken<TypeDisplay>() {}.type
         typeDisplay = gson.fromJson<TypeDisplay>(jsonType, propTypeDisplay)
 
+        val jsonList = arguments?.getString(LIST_TO_SAVE, null)
+        val propTypeList = if(typeDisplay.equals(TypeDisplay.MEAL))
+            object : TypeToken<List<MealItem>>() {}.type
+        else
+            object : TypeToken<List<EventType>>() {}.type
+
+        if(typeDisplay.equals(TypeDisplay.MEAL))
+            listMealItems = gson.fromJson<List<MealItem>>(jsonList, propTypeList)
+        else
+            listEventType = gson.fromJson<List<EventType>>(jsonList, propTypeList)
+
         // Configure button SAVE
-        configureButtonSave(v)
+        configureButtonSave(v, typeDisplay)
 
         // Configure date and time pickers
         configureDateAndTimePickers(v)
@@ -155,14 +183,17 @@ class DateTimePickerDialog : DialogFragment() {
         return v
     }
 
-    private fun configureButtonSave(view:View){
+    private fun configureButtonSave(view:View, typeDisplay:TypeDisplay){
 
         /**    BUTTON SAVE    **/
         view.findViewById<Button>(R.id.button_save).setOnClickListener {
 
             if(date!=0.toLong() && time!=0.toLong()){
 
-                saveData(listItems, typeDisplay, view, getTodayDate(), context = contextDialog)
+                if(typeDisplay.equals(TypeDisplay.MEAL))
+                    saveMeal(listMealItems, view, getTodayDate(), context = contextDialog)
+                else
+                    saveEvent(listEventType, view, getTodayDate(), context = contextDialog)
 
                 // Dismiss dialog
                 dismiss()
@@ -236,37 +267,30 @@ class DateTimePickerDialog : DialogFragment() {
     }
 }
 
-fun saveData(list:List<Any>, typeDisplay: TypeDisplay, view:View, dateToSave:Long, context: Context){
+fun saveMeal(list:List<MealItem>, view:View, dateToSave:Long, context: Context){
 
-    when(typeDisplay.type){
+    // Save new meal in DB
+    saveNewMeal(list, dateToSave, context = context)
 
-        MEAL-> {
+    // Show snackbar "meal successfully saved"
+    val text = context.resources.getString(R.string.save_meal_success_message_dialog)
+    Snackbar.make(view, text, Snackbar.LENGTH_LONG).show()
+}
 
-            if(typeDisplay.isNew) // --- Save new meal in database
-                saveNewMeal(list as List<MealItem>, dateToSave, context = context)
-            else // -------------------- update meal in database
-                updateMeal(list as List<MealItem>, dateToSave, context = context)
+fun saveEvent(list:List<EventType>, view:View, dateToSave:Long, context: Context){
 
-            // Show snackbar "meal successfully saved"
-            val text = context.resources.getString(R.string.save_meal_success_message_dialog)
-            Snackbar.make(view, text, Snackbar.LENGTH_LONG).show()
-        }
-        EVENT -> {
-
-            val listToSave = list as List<Event>
-            val eventToSave = listToSave[0]
-            eventToSave.dateCode = dateToSave
-
-            if(typeDisplay.isNew) // --- Save new event in database
-                saveNewEvent(eventToSave.idEventType, dateToSave, context = context)
-            else // -------------------- update event in database
-                updateEvent(eventToSave, context = context)
-
-            // Show snackbar "meal successfully saved"
-            val text = context.resources.getString(R.string.save_event_success_message_dialog)
-            Snackbar.make(view, text, Snackbar.LENGTH_LONG).show()
+    // Save event(s) in DB
+    if(list.isNotEmpty()){
+        for(eventType in list){
+            val eventToSave = Event(null, eventType.id, dateToSave)
+            saveNewEvent(eventToSave.idEventType, dateToSave, context = context)
         }
     }
+
+    // Show snackbar "meal successfully saved"
+    val text = context.resources.getString(R.string.save_event_success_message_dialog)
+    Snackbar.make(view, text, Snackbar.LENGTH_LONG).show()
+
 }
 
 const val TAG_SCHEDULE_DIALOG = "schedule_dialog_fragment"

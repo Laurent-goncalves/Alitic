@@ -25,11 +25,11 @@ class FoodLayout : ConstraintLayout {
     private val groupVisible = Group(context)
 
     fun removeFood(view: View) {
-        val listIdDel = groupVisible.referencedIds.toMutableList()
-        listIdDel.remove(view.id)
+        //val listIdDel = groupVisible.referencedIds.toMutableList()
+        //listIdDel.remove(view.id)
         onFoodToDeleteListener.onFoodToDelete(view.findViewById<TextView>(R.id.food_name).text.toString())
-        groupVisible.referencedIds = listIdDel.toIntArray()
-        view.visibility=View.GONE
+        //groupVisible.referencedIds = listIdDel.toIntArray()
+        //view.visibility=View.INVISIBLE
     }
 
     fun addFood(food: Food): FoodViewId? {
@@ -48,13 +48,12 @@ class FoodLayout : ConstraintLayout {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater?
         if (inflater != null){
 
-            val view: View = inflater.inflate(com.g.laurent.alitic.R.layout.food_selected_layout, this, false)
+            val view: View = inflater.inflate(R.layout.food_selected_layout, this, false)
             view.id = View.generateViewId()
-            view.findViewById<TextView>(com.g.laurent.alitic.R.id.food_name).text = food.name
-            view.findViewById<ImageView>(com.g.laurent.alitic.R.id.button_delete)
+            view.findViewById<TextView>(R.id.food_name).text = food.name
+            view.findViewById<ImageView>(R.id.button_delete)
                 .setColorFilter(ContextCompat.getColor(context, android.R.color.holo_red_dark),  PorterDuff.Mode.MULTIPLY)
-            view.setOnClickListener { removeFood(view)
-            }
+            view.setOnClickListener { removeFood(view) }
             return view
         }
         return null
@@ -84,13 +83,13 @@ class FoodLayout : ConstraintLayout {
             var startId = list[0].idView
             list.removeAt(0)
 
-            // organize views in the new line
-            if(list.size >= 1){
+                // organize views in the new line
+                if(list.size >= 1){
                 for(i in 0 until list.size){
                     if(sumChar + list[i].nameFood.length + 5 <= 25){
 
                         set.connect(list[i].idView, ConstraintSet.START, startId , ConstraintSet.END)
-
+println("eee   " + list[i].nameFood + "      idView=" + list[i].idView + "     startId=" + startId)
                         if(topId == ConstraintSet.PARENT_ID)
                             set.connect(list[i].idView, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
                         else
@@ -122,7 +121,7 @@ class FoodLayout : ConstraintLayout {
         }
 
         groupVisible.referencedIds = result.toIntArray()
-
+        println("eee  ---------------------------------------------------- ")
         set.applyTo(this)
     }
 }

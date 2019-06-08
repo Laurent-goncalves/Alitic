@@ -1,9 +1,13 @@
 package com.g.laurent.alitic.Controllers.Activities
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Matrix
+import android.os.AsyncTask
 import android.support.v4.app.FragmentManager
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.View
@@ -78,7 +82,7 @@ enum class TypeDisplay(val type:String, val idCancel : Int, val idSave : Int, va
     MEAL("MEAL", R.id.button_cancel_meal,R.id.button_save_meal, true);
 }
 
-fun moveCamera(imageView: ImageView, fromPosition:Position?, toPosition:Position, matrix: Matrix){
+fun moveCamera(imageView: ImageView, fromPosition:Position?, toPosition:Position, matrix: Matrix, activity: MainActivity?){
 
     if(fromPosition==null){
         matrix.reset()
@@ -103,7 +107,38 @@ fun moveCamera(imageView: ImageView, fromPosition:Position?, toPosition:Position
             imageView.imageMatrix = matrix
         }
 
+        var done = false
+
+        valueAnimator.addUpdateListener {
+            val animProgress:Float = valueAnimator.animatedValue as Float
+            if(animProgress > 0.90 && !done) {
+                done = true
+                activity?.displayMealPicking()
+            }
+        }
+
+        /*valueAnimator.addListener(object: AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator?) {
+                super.onAnimationEnd(animation)
+                activity?.displayMealPicking()
+            }
+        })*/
+
+        AsyncTaskAnimation(valueAnimator).execute()
+    }
+}
+
+class AsyncTaskAnimation(private val valueAnimator: ValueAnimator) : AsyncTask<String, String, String>() {
+
+    override fun onPreExecute() {
+        super.onPreExecute()
         valueAnimator.start()
+    }
+
+    override fun doInBackground(vararg p0: String?): String {
+
+
+        return ""
     }
 }
 
@@ -239,7 +274,7 @@ fun updateListSelected(any:Any, list:MutableList<Any>?):MutableList<Any>{
                 for (i in 0 until list.size) {
                     val eventSelected = list[i] as EventType
                     if (any.id == eventSelected.id) {
-                        list.removeAt(i)
+                        listUpdated.removeAt(i)
                         break
                     }
                 }

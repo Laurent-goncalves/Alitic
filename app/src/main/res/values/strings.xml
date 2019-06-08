@@ -2,8 +2,8 @@
     <string name="app_name">Alitic</string>
     <string name="save">SAVE</string>
     <string name="cancel">Cancel</string>
-    <string name="yes">YES</string>
-    <string name="no">NO</string>
+    <string name="yes">OUI</string>
+    <string name="no">NON</string>
 
     <string name="save_meal_title_dialog">Sauvegarder un repas</string>
     <string name="save_meal_content_dialog">Voulez-vous sauvegarder le repas à cette heure-ci ?</string>
@@ -14,6 +14,15 @@
     <string name="save_event_success_message_dialog">Ressenti sauvegardé avec succès</string>
 
     <string name="save_abort_message_dialog">Renseignez une date et une heure svp.</string>
+
+    <string name="error_save_meal">Il n\'y a pas de repas à sauvegarder. Choisir des aliments dans la liste.</string>
+    <string name="error_save_event">Il n\'y a pas de ressenti à sauvegarder. Choisir un ou plusieurs ressentis dans la liste.</string>
+
+    <string name="error_cancel_meal">Etes-vous sûr de quitter la sélection d\'un repas ? Les données renseignées seront perdues.</string>
+    <string name="error_cancel_event">Etes-vous sûr de quitter la sélection d\'un ressenti ? Les données renseignées seront perdues.</string>
+    <string name="error_cancel_meal_title">Quitter</string>
+    <string name="error_cancel_event_title">Quitter</string>
+
 
     <string name="panel_title">Mon repas</string>
     <string name="message_no_food">aucun aliment sélectionné</string>
@@ -34,6 +43,8 @@
     <string name="detail_per_food_title">Detail par aliment</string>
     <string name="all_event_types">Tous types</string>
 
+    <!--CREATE NEW EVENT OR NEW MEAL -->
+
     <string name="name_addeventtype">Entrer un type de ressenti</string>
     <string name="time_occurrence_add_eventtype">Temps d\'apparition du ressenti après repas</string>
     <string name="name_addfood">Entrer un nom</string>
@@ -52,6 +63,7 @@
 
     <string name="save_add_eventtype">Ressenti sauvegardé avec succès</string>
     <string name="save_add_food">Aliment sauvegardé avec succès</string>
+
 
     <string name="error_food_already_in_db">Aliment déjà présent dans le catalogue. Choisir un autre nom.</string>
     <string name="error_food_without_name">Donner un nom à l\'aliment.</string>
