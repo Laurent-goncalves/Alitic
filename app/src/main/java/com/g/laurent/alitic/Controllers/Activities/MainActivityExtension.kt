@@ -149,20 +149,12 @@ fun openPanel(panel: View){
     val valueAnimator = ValueAnimator.ofFloat(start, 1f)
     valueAnimator.interpolator = AccelerateDecelerateInterpolator() // increase the speed first and then decrease
     valueAnimator.duration = DURATION_MOVE_PANEL
+
     valueAnimator.addUpdateListener { animation ->
-
         val progress = animation.animatedValue as Float
-
-        val tempX = Loc.SMALL_PANEL_CENTER.position.px + progress * (Loc.BIG_PANEL_CENTER.position.px - Loc.SMALL_PANEL_CENTER.position.px)
-        val tempY = Loc.SMALL_PANEL_CENTER.position.py + progress * (Loc.BIG_PANEL_CENTER.position.py - Loc.SMALL_PANEL_CENTER.position.py)
-
-        val scale = Pan.SCALE_PANEL.min + progress * (Pan.SCALE_PANEL.max - Pan.SCALE_PANEL.min)
-
-        panel.translationX = tempX
-        panel.translationY = tempY
+        val scale = calculWithLimits(Pan.SCALE_PANEL.min + progress * (Pan.SCALE_PANEL.max - Pan.SCALE_PANEL.min), Pan.SCALE_PANEL.min, Pan.SCALE_PANEL.max)
         panel.scaleX = scale
         panel.scaleY = scale
-
     }
 
     valueAnimator.start()
@@ -194,14 +186,8 @@ fun closePanel(panel: View){
     valueAnimator.addUpdateListener { animation ->
 
         val progress = animation.animatedValue as Float
+        val scale = calculWithLimits(Pan.SCALE_PANEL.max - progress * (Pan.SCALE_PANEL.max - Pan.SCALE_PANEL.min), Pan.SCALE_PANEL.min, Pan.SCALE_PANEL.max)
 
-        val tempX = Loc.BIG_PANEL_CENTER.position.px + progress * (Loc.SMALL_PANEL_CENTER.position.px - Loc.BIG_PANEL_CENTER.position.px)
-        val tempY = Loc.BIG_PANEL_CENTER.position.py + progress * (Loc.SMALL_PANEL_CENTER.position.py - Loc.BIG_PANEL_CENTER.position.py)
-
-        val scale = Pan.SCALE_PANEL.max - progress * (Pan.SCALE_PANEL.max - Pan.SCALE_PANEL.min)
-
-        panel.translationX = tempX
-        panel.translationY = tempY
         panel.scaleX = scale
         panel.scaleY = scale
     }
@@ -221,31 +207,10 @@ fun movePanel(panel: View, scale1:Float, delta:Float){
 
     if(panel.scaleX >= Pan.SCALE_PANEL.min && panel.scaleX <= Pan.SCALE_PANEL.max){
 
-        var tempX = 0f
-        var tempY = 0f
-
         val scale = calculWithLimits(scale1 + (delta / Pan.DELTA_Y.max) * (Pan.SCALE_PANEL.max - Pan.SCALE_PANEL.min), Pan.SCALE_PANEL.min, Pan.SCALE_PANEL.max)
 
-        if(delta<0){ // DOWN direction
-
-            val progress = (scale - Pan.SCALE_PANEL.min)/ (Pan.SCALE_PANEL.max - Pan.SCALE_PANEL.min)
-            tempX = Loc.SMALL_PANEL_CENTER.position.px + progress * (Loc.BIG_PANEL_CENTER.position.px - Loc.SMALL_PANEL_CENTER.position.px)
-            tempY = Loc.SMALL_PANEL_CENTER.position.py + progress * (Loc.BIG_PANEL_CENTER.position.py - Loc.SMALL_PANEL_CENTER.position.py)
-
-        } else if(delta>0){ // UP direction
-
-            val progress = (Pan.SCALE_PANEL.max - scale)/ (Pan.SCALE_PANEL.max - Pan.SCALE_PANEL.min)
-            tempX = Loc.BIG_PANEL_CENTER.position.px + progress * (Loc.SMALL_PANEL_CENTER.position.px - Loc.BIG_PANEL_CENTER.position.px)
-            tempY = Loc.BIG_PANEL_CENTER.position.py + progress * (Loc.SMALL_PANEL_CENTER.position.py - Loc.BIG_PANEL_CENTER.position.py)
-
-        }
-
-        if(delta!=0f){
-            panel.translationX = tempX
-            panel.translationY = tempY
-            panel.scaleX = scale
-            panel.scaleY = scale
-        }
+        panel.scaleX = scale
+        panel.scaleY = scale
     }
 }
 

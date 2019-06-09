@@ -20,9 +20,11 @@
         <TextView
                 android:id="@+id/meal_text"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
+                android:maxHeight="50dp"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                android:lines="2"
                 android:gravity="center_horizontal|center_vertical"/>
 
     </LinearLayout>

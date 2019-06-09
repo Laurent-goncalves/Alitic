@@ -24,12 +24,8 @@ class FoodLayout : ConstraintLayout {
     lateinit var onFoodToDeleteListener:OnFoodToDeleteListener
     private val groupVisible = Group(context)
 
-    fun removeFood(view: View) {
-        //val listIdDel = groupVisible.referencedIds.toMutableList()
-        //listIdDel.remove(view.id)
+    private fun removeFood(view: View) {
         onFoodToDeleteListener.onFoodToDelete(view.findViewById<TextView>(R.id.food_name).text.toString())
-        //groupVisible.referencedIds = listIdDel.toIntArray()
-        //view.visibility=View.INVISIBLE
     }
 
     fun addFood(food: Food): FoodViewId? {
@@ -89,7 +85,7 @@ class FoodLayout : ConstraintLayout {
                     if(sumChar + list[i].nameFood.length + 5 <= 25){
 
                         set.connect(list[i].idView, ConstraintSet.START, startId , ConstraintSet.END)
-println("eee   " + list[i].nameFood + "      idView=" + list[i].idView + "     startId=" + startId)
+
                         if(topId == ConstraintSet.PARENT_ID)
                             set.connect(list[i].idView, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
                         else
@@ -121,7 +117,6 @@ println("eee   " + list[i].nameFood + "      idView=" + list[i].idView + "     s
         }
 
         groupVisible.referencedIds = result.toIntArray()
-        println("eee  ---------------------------------------------------- ")
         set.applyTo(this)
     }
 }

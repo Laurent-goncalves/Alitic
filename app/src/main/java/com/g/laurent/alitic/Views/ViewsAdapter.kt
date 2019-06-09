@@ -206,7 +206,7 @@ class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableLi
     }
 
     override fun getCount(): Int {
-        return listFood.size
+        return listFood.size + 1
     }
 }
 

@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
     private var scale1:Float = 0f
     private var posY1:Float = 0f
     private var sWidth = 0
+    private var sHeight = 0
     private var typeDisplay:TypeDisplay? = null
     private var foodTypeSelected: FoodType? = null
 
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
 
                 val dWidth = imageView.drawable.intrinsicWidth
                 val dHeight = imageView.drawable.intrinsicHeight
-                val sHeight = imageView.measuredHeight
+                sHeight = imageView.measuredHeight
                 sWidth = imageView.measuredWidth
 
                 Loc.setPosition(Loc.CENTER,
@@ -92,10 +93,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
                     Position(0f, -(dHeight - sHeight).toFloat()))
                 Loc.setPosition(Loc.BOTTOM_RIGHT,
                     Position(-(dWidth - sWidth).toFloat(), -(dHeight - sHeight).toFloat()))
-                Loc.setPosition(Loc.SMALL_PANEL_CENTER,
-                    Position((0.7071 * 7 * sWidth / 12).toFloat(), (-0.7071 * 7 * sWidth / 12).toFloat())) // 0.7071 = cos(45°) = sin(45°)
-                Loc.setPosition(Loc.BIG_PANEL_CENTER,
-                    Position((-sWidth/9).toFloat(), ((sHeight-sWidth)/3).toFloat()))
+
+                // Center from small and big meal panel :
+                //       x -> in the middle of the width of foodtype recyclerView
+                //       y -> screen height - (radius of small panel + margin (=a quarter of the radius of the small panel))
+
+                val xCenter = (1f/8f)*sWidth.toFloat()
+                val yCenter = (sHeight - (5f/4f)*(1f/6f)*sWidth)
+
+                Loc.setPosition(Loc.SMALL_PANEL_CENTER, Position(xCenter, yCenter))
+                Loc.setPosition(Loc.BIG_PANEL_CENTER, Position(xCenter, yCenter))
 
                 moveCamera(imageView, null, Loc.CENTER.position, matrix, null)
 
@@ -151,7 +158,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
 
     fun printTime(step:Int){
         val cal = Calendar.getInstance()
-        println("eee step $step:   ${cal.get(Calendar.SECOND)}s ${cal.get(Calendar.MILLISECOND)} ms")
     }
 
     override fun onClick(v: View?) {
@@ -161,7 +167,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
                 typeDisplay = TypeDisplay.MEAL
 
                 printTime(1)
-                moveCamera(imageView, Loc.CENTER.position, Loc.TOP_LEFT.position, matrix, this)
+                displayMealPicking()
+                //moveCamera(imageView, Loc.CENTER.position, Loc.TOP_LEFT.position, matrix, this)
                 configureButtons(TypeDisplay.MEAL)
                 invalidateOptionsMenu()
             }
@@ -285,10 +292,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
      */
 
     fun displayMealPicking(){
-
-            findViewById<FrameLayout>(R.id.layout_meal).visibility = View.VISIBLE
-            initMealPanel()
-            //ViewCompat.setElevation(findViewById<FrameLayout>(R.id.layout_meal), 1f)
+        findViewById<FrameLayout>(R.id.layout_meal).visibility = View.VISIBLE
+        initMealPanel()
     }
 
     fun updateListFoods(listFoods:List<Food>){
@@ -334,6 +339,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
 
     override fun onItemSelected(selected: Any) {
         listSelected = updateListSelected(selected, listSelected)
+
+        // Update counter
+        counter_meal.text = listSelected.size.toString()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -345,6 +353,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
         // init constraint layout with all foods (remove all views)
         panelContent.findViewById<FoodLayout>(R.id.layout_all_foods).removeAllViews()
         panelContent.findViewById<FoodLayout>(R.id.layout_all_foods).visibility = View.GONE
+        counter_meal.text = 0.toString()
 
         // Set panel touch listener to control movement of the panel
         val panelTouchListener = OnTouchListener { v, event ->
@@ -358,12 +367,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
                 }
 
                 MotionEvent.ACTION_UP -> {
-
-                    if( event.rawY < posY1 && panel.scaleX >= Pan.SCALE_PANEL.min) { // UP direction
+                    if( event.rawY > posY1 && panel.scaleX >= Pan.SCALE_PANEL.min) { // UP direction
                         closePanel(panel)
-                        findViewById<LinearLayout>(R.id.panel_content).visibility = View.GONE
-                    } else if( event.rawY > posY1 && panel.scaleX >= Pan.SCALE_PANEL.min){ // DOWN direction
+                        panel_content.visibility = View.GONE
+                        counter_meal.visibility = View.VISIBLE
+                        counter_meal.text = listSelected.size.toString()
+
+                    } else if( event.rawY < posY1 && panel.scaleX >= Pan.SCALE_PANEL.min){ // DOWN direction
                         openPanel(panel)
+                        counter_meal.visibility = View.GONE
                         Handler().postDelayed({
                             showMeal()
                         }, 1000)
@@ -382,17 +394,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
 
                 panel.viewTreeObserver.removeOnPreDrawListener(this)
 
-                Pan.setMinMax(Pan.DIAMETER_PANEL, (2*sWidth/3).toFloat(), (4*sWidth/3).toFloat()) //(diameter small panel, diameter big panel)
+                Pan.setMinMax(Pan.DIAMETER_PANEL, (sWidth / 3f), (7f/4f)*sHeight ) //(diameter small panel, diameter big panel)
                 Pan.setMinMax(Pan.SCALE_PANEL,Pan.DIAMETER_PANEL.min/panel.width,
                     Pan.DIAMETER_PANEL.max/panel.height) // (scale small panel, scale big panel)
 
-                Pan.setMinMax(Pan.DELTA_Y, 0.toFloat(), Loc.SMALL_PANEL_CENTER.position.py - Loc.BIG_PANEL_CENTER.position.py)
+                Pan.setMinMax(Pan.DELTA_Y, 0.toFloat(), Pan.DIAMETER_PANEL.max / (2f))
 
-                // Position panel on the top right with the small size
+                // Position panel on the bottom start with the small size
                 panel.scaleX = Pan.SCALE_PANEL.min
-                panel.scaleY =Pan.SCALE_PANEL.min
-                panel.translationX =Loc.SMALL_PANEL_CENTER.position.px
-                panel.translationY =Loc.SMALL_PANEL_CENTER.position.py
+                panel.scaleY = Pan.SCALE_PANEL.min
+
+                panel.translationX = -(1f/2f)*panel.width //Loc.SMALL_PANEL_CENTER.position.px
+                panel.translationY = (1f/2f)*panel.height //Loc.SMALL_PANEL_CENTER.position.py
 
                 return true
             }
