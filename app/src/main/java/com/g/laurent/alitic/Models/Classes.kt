@@ -42,9 +42,9 @@ data class Food(@PrimaryKey(autoGenerate = true) var id: Long?,
                 @ColumnInfo(name = "idFoodType") var idFoodType:Long?,
                 @ColumnInfo(name = "counter") var counter:Int,
                 @ColumnInfo(name = "foodPic") var foodPic: String?,
-                @ColumnInfo(name = "forAnalysis") var forAnalysis: Boolean?,
-                @Ignore var chosen:Boolean = false){
-    constructor() : this(null, null, null, 0, null, true, false)
+                @ColumnInfo(name = "forAnalysis") var forAnalysis: Boolean = true,
+                @ColumnInfo(name = "takenIntoAcc") var takenIntoAcc:Boolean = true){
+    constructor() : this(null, null, null, 0, null, true, true)
 }
 
 
@@ -72,8 +72,9 @@ data class EventType(@PrimaryKey(autoGenerate = true) var id: Long?,
                      @ColumnInfo(name = "eventPic") var eventPic:String?,
                      @ColumnInfo(name = "minTime") var minTime:Long?,
                      @ColumnInfo(name = "maxTime") var maxTime:Long?,
-                     @ColumnInfo(name = "forLastMeal") var forLastMeal:Boolean?){
-    constructor() : this(null, null, null,0, 0, true)
+                     @ColumnInfo(name = "forLastMeal") var forLastMeal:Boolean?,
+                     @ColumnInfo(name = "takenIntoAcc") var takenIntoAcc:Boolean = true){
+    constructor() : this(null, null, null,0, 0, true, true)
 }
 
 @Entity(tableName = "event", indices = [Index("idEventType")],
@@ -154,7 +155,7 @@ interface FoodDao {
     @Query("SELECT * from food WHERE LOWER(name) LIKE :search")
     fun getListFoodSearch(search: String?): List<Food>
 
-    @Query("SELECT * from food WHERE idFoodType=:idFoodtype")
+    @Query("SELECT * from food WHERE idFoodType=:idFoodtype AND takenIntoAcc = 1")
     fun getFoodByType(idFoodtype: Long?): List<Food>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -254,7 +255,7 @@ interface EventDao {
 @Dao
 interface EventTypeDao {
 
-    @Query("SELECT * from eventType")
+    @Query("SELECT * from eventType WHERE takenIntoAcc = 1")
     fun getAll(): List<EventType>?
 
     @Query("SELECT * from eventType WHERE id=:idEvent")
@@ -275,7 +276,7 @@ interface EventTypeDao {
 
 // ----------------------------------- DATABASE --------------------------------------------
 
-@Database(entities = [Meal::class, MealItem::class, Food::class, FoodType::class, Keyword::class, Event::class, EventType::class], version = 14, exportSchema = false)
+@Database(entities = [Meal::class, MealItem::class, Food::class, FoodType::class, Keyword::class, Event::class, EventType::class], version = 16, exportSchema = false)
 abstract class AppDataBase : RoomDatabase() {
 
     abstract fun mealDao(): MealDao

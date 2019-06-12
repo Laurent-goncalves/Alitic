@@ -2,15 +2,9 @@ package com.g.laurent.alitic.Views
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.view.ViewGroup
 import com.github.vipulasri.timelineview.TimelineView
-import android.view.View
-import android.widget.BaseAdapter
-import android.view.LayoutInflater
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.FrameLayout
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.support.v4.app.Fragment
@@ -21,8 +15,10 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.PagerAdapter.POSITION_NONE
 import android.support.v4.view.PagerAdapter.POSITION_UNCHANGED
-import android.view.ViewTreeObserver
+import android.support.v7.app.AlertDialog
+import android.view.*
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.widget.*
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.Activities.*
 import com.g.laurent.alitic.Controllers.ClassControllers.*
@@ -102,14 +98,15 @@ class TimeLineAdapter(val list: List<Chrono>, val mode:Boolean=false, val contex
 }
 
 /** ADAPTER FOR GRIDVIEW TO DISPLAY PICTURE + NAME **/
-class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableList<Any>?, private val pickmode:Boolean, private val onItemSelectionListener: OnItemSelectionListener?, val mode:Boolean=false, val context: Context): BaseAdapter() { // any is Event or Meal
+class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableList<Any>?, private val pickmode:Boolean, private val onItemSelectionListener: OnItemSelectionListener?, val mode:Boolean=false, private val activity:MainActivity, val context: Context): BaseAdapter() { // any is Event or Meal
+
 
     override fun getItem(position: Int): Any {
         return this
     }
 
     override fun getItemId(position: Int): Long {
-        return 0
+        return position.toLong()
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
@@ -161,9 +158,7 @@ class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableLi
             }
         }
 
-        // create view
-        if (inflater != null && listFood[position]!=null) {
-            view = inflater.inflate(R.layout.gridviewholder, parent, false)
+        fun configureFood(view:View){
 
             val imageView = view.findViewById<ImageView>(R.id.image_meal)
             val textView = view.findViewById<TextView>(R.id.meal_text)
@@ -183,23 +178,109 @@ class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableLi
             // change layout in case of validation for picking
             if(pickmode)
                 setPickItem(frameLayout, pickIcon)
-        }
 
-        // Set onClickListener
-        view?.setOnClickListener {
+            // Set onClickListener
+            view.setOnClickListener {
 
-            // Remove or add item in listSelected from Activity & from this adapter
-            if(listFood[position]!=null) {
+                // Remove or add item in listSelected from Activity & from this adapter
+                if(listFood[position]!=null) {
 
-                // from Activity
-                onItemSelectionListener?.onItemSelected(listFood[position]!!)
+                    // from Activity
+                    onItemSelectionListener?.onItemSelected(listFood[position]!!)
 
-                // from this adapter
-                listItemSelected = updateListSelected(listFood[position]!!, listItemSelected)
+                    // from this adapter
+                    listItemSelected = updateListSelected(listFood[position]!!, listItemSelected)
+                }
+
+                // Update adapter
+                notifyDataSetChanged()
             }
 
-            // Update adapter
-            notifyDataSetChanged()
+            // Configure context menu for deleting food or event type
+            view.setOnLongClickListener{
+
+                when(listFood[position]) {
+                    is EventType -> { // if eventType
+                        val eventType = listFood[position] as EventType
+                        view.tag = eventType.id.toString()
+                    }
+                    is Food -> {
+                        val food = listFood[position] as Food
+                        view.tag = food.id.toString()
+                    }
+                }
+
+                val popupMenu = PopupMenu(activity, view)
+                popupMenu.setOnMenuItemClickListener{
+
+                    val builder = AlertDialog.Builder(activity)
+
+                    // Display a message on alert dialog
+                    when(listFood[position]) {
+                        is EventType -> { // if eventType
+                            builder.setTitle(context.resources.getString(R.string.event_type_delete_title)) // TITLE
+                            builder.setMessage(context.resources.getString(R.string.event_type_delete)) // MESSAGE
+                        }
+                        is Food -> {
+                            builder.setTitle(context.resources.getString(R.string.food_delete_title)) // TITLE
+                            builder.setMessage(context.resources.getString(R.string.food_delete)) // MESSAGE
+                        }
+                    }
+
+                    // Set positive button and its click listener on alert dialog
+                    builder.setPositiveButton(context.resources.getString(R.string.yes)){ dialog, _ ->
+                        dialog.dismiss()
+
+                        val idToDelete = if(listFood[position] is Food){(listFood[position] as Food).id} else {(listFood[position] as EventType).id}
+                        val typeDisplay = if(listFood[position] is Food){TypeDisplay.MEAL} else {TypeDisplay.EVENT}
+
+                        if(idToDelete!=null)
+                            activity.deleteFromDatabase(idToDelete, typeDisplay)
+                    }
+
+                    // Display negative button on alert dialog
+                    builder.setNegativeButton(context.resources.getString(R.string.no)){ dialog, _ ->
+                        dialog.dismiss()
+                    }
+
+                    // Finally, make the alert dialog using builder
+                    val dialog: AlertDialog = builder.create()
+
+                    // Display the alert dialog on app interface
+                    dialog.show()
+                    true
+                }
+                popupMenu.inflate(R.menu.menu_grid)
+                popupMenu.show()
+                true
+            }
+        }
+
+        fun configureAddButton(view:View){
+
+            val textView = view.findViewById<TextView>(R.id.add_text)
+            textView.text = context.resources.getString(R.string.add)
+
+            // Set onClickListener
+            view.setOnClickListener {
+
+                // TODO ajouter aliment ou ressenti
+
+                // Update adapter
+                notifyDataSetChanged()
+            }
+        }
+
+        // create view
+        if (inflater != null) {
+
+            if(position < listFood.size) { // FOOD ITEM
+                view = inflater.inflate(R.layout.gridviewholder, parent, false)
+                configureFood(view)
+            } else { // BUTTON ADD FOOD
+                view = inflater.inflate(R.layout.gridviewholder_add, parent, false)
+                configureAddButton(view)
+            }
         }
 
         return view

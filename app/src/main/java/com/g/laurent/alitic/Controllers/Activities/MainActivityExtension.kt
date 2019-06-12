@@ -17,7 +17,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.facebook.stetho.Stetho
-import com.g.laurent.alitic.Controllers.ClassControllers.getListFood
+import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Models.AppDataBase
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.Models.Food
@@ -32,6 +32,9 @@ const val EVENT = "EVENT"
 const val MEAL = "MEAL"
 const val DELAY_SHOW = 2000.toLong()
 const val DELAY_HIDE = 100.toLong()
+const val DELETE = "DELETE"
+const val UNSELECT = "UNSELECT"
+const val SELECT = "SELECT"
 
 interface OnMenuSelectionListener {
     fun onMenuSelected(selection:Int)
@@ -81,6 +84,9 @@ enum class TypeDisplay(val type:String, val idCancel : Int, val idSave : Int, va
     EVENT("EVENT", R.id.button_cancel_event,R.id.button_save_event, true),
     MEAL("MEAL", R.id.button_cancel_meal,R.id.button_save_meal, true);
 }
+
+
+
 
 fun moveCamera(imageView: ImageView, fromPosition:Position?, toPosition:Position, matrix: Matrix, activity: MainActivity?){
 
@@ -354,3 +360,75 @@ fun clearDatabase(context: Context){
     Stetho.initializeWithDefaults(context)
 }
 
+fun foodTo(typeOp:String, id:Long, listSelected:MutableList<Any>, context: Context?):MutableList<Any>?{
+
+    if(typeOp.equals(SELECT) && context!=null){
+
+        val food = getFood(id, context = context)
+
+        if(food!=null)
+            listSelected.add(food)
+
+    } else if(typeOp.equals(UNSELECT)){
+
+        for(any in listSelected){
+            if(any is Food){
+                val idToDelete = any.id
+
+                if(idToDelete!=null && idToDelete.equals(id)) {
+                    listSelected.remove(any)
+                    break
+                }
+            }
+        }
+    } else if(typeOp.equals(DELETE) && context!=null){
+
+        val food = getFood(id, context = context)
+        if(food!=null){
+            food.takenIntoAcc = false
+            updateFood(food, context = context)
+        }
+
+        // Unselect food
+        foodTo(UNSELECT, id, listSelected, null)
+    }
+
+    return listSelected
+}
+
+fun eventTypeTo(typeOp:String, id:Long, listSelected:MutableList<Any>, context: Context?):MutableList<Any>?{
+
+    if(typeOp.equals(SELECT) && context!=null){
+
+        val eventType = getEventType(id, context = context)
+
+        if(eventType!=null)
+            listSelected.add(eventType)
+
+    } else if(typeOp.equals(UNSELECT)){
+
+        for(any in listSelected){
+            if(any is EventType){
+                val idToDelete = any.id
+
+                if(idToDelete!=null && idToDelete.equals(id)) {
+                    listSelected.remove(any)
+                    break
+                }
+            }
+        }
+
+    } else if(typeOp.equals(DELETE) && context!=null){
+
+        val eventType = getEventType(id, context = context)
+        if(eventType!=null){
+            eventType.takenIntoAcc = false
+            updateEventType(eventType, context = context)
+        }
+
+        // Unselect food
+        eventTypeTo(UNSELECT, id, listSelected, null)
+    }
+
+    return listSelected
+}

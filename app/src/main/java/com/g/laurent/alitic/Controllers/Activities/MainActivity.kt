@@ -1,23 +1,18 @@
 package com.g.laurent.alitic.Controllers.Activities
 
 import android.annotation.SuppressLint
+import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Matrix
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.view.ViewCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.*
-import com.g.laurent.alitic.Controllers.ClassControllers.getAllEventTypes
-import com.g.laurent.alitic.Controllers.ClassControllers.getAllFoodTypes
-import com.g.laurent.alitic.Controllers.ClassControllers.getListFoodByType
 import kotlinx.android.synthetic.main.pick_event_layout.*
 import kotlinx.android.synthetic.main.pick_meal_layout.*
 import java.lang.Math.round
@@ -29,12 +24,11 @@ import android.view.inputmethod.InputMethodManager
 import com.g.laurent.alitic.R
 import android.view.MotionEvent
 import android.view.View.OnTouchListener
-import kotlinx.android.synthetic.main.panel_meal_content.*
+import com.g.laurent.alitic.Controllers.ClassControllers.*
 import java.util.*
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionListener, OnItemSelectionListener, OnFoodToDeleteListener {
-
 
     private var matrix = Matrix()
     private lateinit var context: Context
@@ -111,10 +105,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
                 menuAdapter = FoodTypeAdapter(listFoodType, sWidth / 4, onMenuSelectionListener, context = context)
                 food_recycler_view.adapter = menuAdapter
 
-                val listFoods = getListFoodByType(listFoodType[0].id,context = context)
-                gridAdapter = GridAdapter(listFoods!!, listSelected, true, onItemSelectionListener,context = context)
-                gridview_food.adapter = gridAdapter
-
                 return true
             }
         })
@@ -125,6 +115,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
         val toolbar: Toolbar = findViewById(R.id.activity_main_toolbar)
         configureToolbar(toolbar, typeDisplay, this, context)
         return super.onCreateOptionsMenu(menu)
+    }
+
+    fun deleteFromDatabase(id:Long, typeDisplay: TypeDisplay){
+
+        // Delete from Database
+        if(typeDisplay.equals(TypeDisplay.MEAL)) {
+            foodTo(DELETE, id, listSelected, context)
+            Toast.makeText(context, context.resources.getString(R.string.food_deleted), Toast.LENGTH_LONG).show()
+        } else {
+            eventTypeTo(DELETE, id, listSelected, context)
+            Toast.makeText(context, context.resources.getString(R.string.event_type_deleted), Toast.LENGTH_LONG).show()
+        }
+        // Update gridview
+        configureGridView(typeDisplay)
     }
 
     override fun onFoodToDelete(nameFood: String) {
@@ -156,8 +160,28 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
         panelLayout.organizeViews(listIds)
     }
 
-    fun printTime(step:Int){
-        val cal = Calendar.getInstance()
+    private fun configureGridView(typeDisplay: TypeDisplay?){
+        if(typeDisplay!=null){
+            if(typeDisplay.equals(TypeDisplay.MEAL)) {
+                val listFoods = if(foodTypeSelected!=null){
+                    getListFoodByType(foodTypeSelected?.id,context = context)
+                } else {
+                    getListFoodByType(listFoodType[0].id,context = context)
+                }
+
+                gridAdapter = GridAdapter(listFoods!!, listSelected, true, onItemSelectionListener, activity = this, context = context)
+                gridview_food.adapter = gridAdapter
+
+            } else if(typeDisplay.equals(TypeDisplay.EVENT)) {
+
+                val listEventTypes = getAllEventTypes(context = context)
+
+                if(listEventTypes!=null){
+                    gridAdapter = GridAdapter(listEventTypes, listSelected, true, onItemSelectionListener, activity = this, context = context)
+                    gridview_event.adapter = gridAdapter
+                }
+            }
+        }
     }
 
     override fun onClick(v: View?) {
@@ -166,7 +190,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
             R.id.top_left_corner -> { //       |' |
                 typeDisplay = TypeDisplay.MEAL
 
-                printTime(1)
                 displayMealPicking()
                 //moveCamera(imageView, Loc.CENTER.position, Loc.TOP_LEFT.position, matrix, this)
                 configureButtons(TypeDisplay.MEAL)
@@ -175,7 +198,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
 
             R.id.top_right_corner -> {//       | '|
                 typeDisplay = TypeDisplay.EVENT
-                moveCamera(imageView,Loc.CENTER.position, Loc.TOP_RIGHT.position,matrix, this)
+                //moveCamera(imageView,Loc.CENTER.position, Loc.TOP_RIGHT.position,matrix, this)
                 displayEventPicking()
                 configureButtons(TypeDisplay.EVENT)
                 invalidateOptionsMenu()
@@ -292,12 +315,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
      */
 
     fun displayMealPicking(){
+        configureGridView(TypeDisplay.MEAL)
         findViewById<FrameLayout>(R.id.layout_meal).visibility = View.VISIBLE
         initMealPanel()
     }
 
     fun updateListFoods(listFoods:List<Food>){
-        gridAdapter = GridAdapter(listFoods, listSelected, true, onItemSelectionListener,context = context)
+        gridAdapter = GridAdapter(listFoods, listSelected, true, onItemSelectionListener,false, this, context = context)
         gridview_food.adapter = gridAdapter
     }
 
@@ -305,10 +329,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
 
         val listFoodTypes = getAllFoodTypes(context = context)!!
         foodTypeSelected = listFoodTypes[selection]
-        val listFoods = getListFoodByType(listFoodTypes[selection].id, false, context)
-        gridAdapter = GridAdapter(listFoods!!, listSelected,true, onItemSelectionListener, false, context)
-        gridview_food.adapter = gridAdapter
-
         resetMealPickingScreenAfterSearch()
     }
 
@@ -320,12 +340,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
         menuAdapter.notifyDataSetChanged()
 
         // Reset list of foods related to foodTypeSelected
-        val idFoodTypeSelected = foodTypeSelected?.id
-        if(idFoodTypeSelected!=null){
-            val listFoods = getListFoodByType(idFoodTypeSelected, false, context)
-            gridAdapter = GridAdapter(listFoods!!, listSelected,true, onItemSelectionListener, false, context)
-            gridview_food.adapter = gridAdapter
-        }
+        configureGridView(typeDisplay)
 
         // Reset toolbar and close android keyboard
         invalidateOptionsMenu()
@@ -451,17 +466,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
      */
 
     private fun displayEventPicking(){
-
         findViewById<FrameLayout>(R.id.layout_event).visibility = View.VISIBLE
-        val listEventTypes = getAllEventTypes(context = context)!!
-        gridAdapter = GridAdapter(listEventTypes, listSelected, true, onItemSelectionListener, context = context)
+        configureGridView(TypeDisplay.EVENT)
+    }
 
-
-        Handler().postDelayed({
-
-            gridview_event.adapter = gridAdapter
-
-        },2000)
-
+    fun getActivity():MainActivity{
+        return this
     }
 }

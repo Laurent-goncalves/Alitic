@@ -23,6 +23,15 @@
     <string name="error_cancel_meal_title">Quitter</string>
     <string name="error_cancel_event_title">Quitter</string>
 
+    <string name="menu_delete">Supprimer</string>
+    <string name="food_delete_title">Suppression aliment</string>
+    <string name="event_type_delete_title">Suppression ressenti</string>
+    <string name="food_delete">Etes-vous sûr de supprimer cet aliment ?</string>
+    <string name="food_deleted">Aliment supprimé</string>
+    <string name="event_type_delete">Etes-vous sûr de supprimer ce ressenti ?</string>
+    <string name="event_type_deleted">Ressenti supprimé</string>
+
+    <string name="add">Ajouter</string>
 
     <string name="panel_title">Mon repas</string>
     <string name="message_no_food">aucun aliment sélectionné</string>

@@ -147,5 +147,5 @@ class NewFoodDialogFragment : DialogFragment(), AdapterView.OnItemSelectedListen
         return true
     }
 
-    class NewData(var name:String?, var foodType: FoodType?, var forAnalysis:Boolean?)
+    class NewData(var name:String?, var foodType: FoodType?, var forAnalysis:Boolean)
 }

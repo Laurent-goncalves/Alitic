@@ -30,8 +30,8 @@ class TimeLineViewHolder(itemView: View, viewType: Int, val mode:Boolean = false
 
     fun configureTimeLineViewHolder(chrono: Chrono) {
         hourView.text = chrono.hour
-        val adapter = GridAdapter(chrono.item, null, false,null, mode, context)
-        grid.adapter = adapter
+        // TODO à adapter : val adapter = GridAdapter(chrono.item, null, false,null, mode, context)
+        //grid.adapter = adapter
     }
 }
 
