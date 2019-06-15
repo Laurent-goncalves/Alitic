@@ -77,6 +77,20 @@ fun getTextDate(date:Long):String{
     return dateFormat.format(dateToConvert)
 }
 
+fun getTextDate(date:Long?, context: Context):String{
+
+    return if(date!=null){
+        val dateFormat= SimpleDateFormat("EEE d MMM", Locale.FRENCH)
+        val dateCal = Calendar.getInstance()
+        dateCal.timeInMillis = date
+        val dateToConvert = dateCal.time
+        dateFormat.format(dateToConvert)
+
+    } else {
+        context.resources.getString(R.string.unavailable_date)
+    }
+}
+
 fun getTextTime(hourOfDay: Int, minute: Int): String {
     return if (minute < 10)
         "$hourOfDay:0$minute"

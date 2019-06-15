@@ -1,14 +1,11 @@
 package com.g.laurent.alitic.Controllers.ClassControllers
 
 import android.content.Context
+import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Models.AppDataBase
 import com.g.laurent.alitic.Models.Event
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.Models.Food
-import com.g.laurent.alitic.R
-import com.g.laurent.alitic.getBegDayDate
-import com.g.laurent.alitic.getEndDayDate
-import com.g.laurent.alitic.getTodayDate
 
 // ---------------------------------------------------------------------------------------------------------------
 // ------------------------------------------- EVENT -------------------------------------------------------------
@@ -52,6 +49,12 @@ fun getAllEvents(mode:Boolean = false, context:Context):List<Event>? {
     AppDataBase.TEST_MODE = mode
     val eventDao = AppDataBase.getInstance(context)?.eventDao()
     return eventDao?.getAll()
+}
+
+fun getAllEventData(mode:Boolean = false, context: Context):List<EventData>?{
+    AppDataBase.TEST_MODE = mode
+    val eventDao = AppDataBase.getInstance(context)?.eventDao()
+    return eventDao?.getAllEventDatas()
 }
 
 fun updateEvent(event:Event, mode:Boolean = false, context:Context){

@@ -1,6 +1,7 @@
 package com.g.laurent.alitic.Controllers.ClassControllers
 
 import android.content.Context
+import com.g.laurent.alitic.MealData
 import com.g.laurent.alitic.Models.*
 import com.g.laurent.alitic.getBegDayDate
 import com.g.laurent.alitic.getEndDayDate
@@ -114,6 +115,12 @@ fun getAllMeals(mode:Boolean = false, context: Context):List<Meal>?{
     }
 
     return meals
+}
+
+fun getAllMealData(mode:Boolean = false, context: Context):List<MealData>?{
+    AppDataBase.TEST_MODE = mode
+    val mealDao = AppDataBase.getInstance(context)?.mealDao()
+    return mealDao?.getAllMealDatas()
 }
 
 fun getAllMealItems(mode:Boolean = false, context: Context):List<MealItem>?{

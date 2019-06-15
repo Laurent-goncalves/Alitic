@@ -18,23 +18,20 @@ import kotlinx.android.synthetic.main.pick_event_layout.*
 import kotlinx.android.synthetic.main.pick_meal_layout.*
 import java.lang.Math.round
 import android.widget.*
-import com.g.laurent.alitic.Models.Food
-import com.g.laurent.alitic.Models.FoodType
 import com.g.laurent.alitic.Views.*
 import android.view.inputmethod.InputMethodManager
 import com.g.laurent.alitic.R
 import android.view.MotionEvent
 import android.view.View.OnTouchListener
+import com.facebook.stetho.Stetho
 import com.g.laurent.alitic.Controllers.ClassControllers.*
-import com.g.laurent.alitic.Controllers.DialogFragments.AddEventTypeDialog
-import com.g.laurent.alitic.Controllers.DialogFragments.AddFoodDialog
-import com.g.laurent.alitic.Controllers.DialogFragments.DialogCloseListener
-import com.g.laurent.alitic.Models.EventType
+import com.g.laurent.alitic.Controllers.DialogFragments.*
+import com.g.laurent.alitic.Models.*
 import java.util.*
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionListener, OnItemSelectionListener, OnFoodToDeleteListener,
-    DialogCloseListener {
+    DialogCloseListener, ResetDatabaseListener {
 
 
 
@@ -88,6 +85,46 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
 
     override fun handleDialogClose(typeDisplay: TypeDisplay) {
         configureGridView(typeDisplay)
+    }
+
+    fun showSettingsDialog(){
+        val fm = supportFragmentManager
+        val myDialogFragment = SettingsDialog().newInstance()
+        myDialogFragment.show(fm, null)
+    }
+
+    override fun emptyDatabase() {
+
+        val builder = AlertDialog.Builder(this@MainActivity)
+
+        // Display a message on alert dialog
+
+        builder.setTitle(context.resources.getString(R.string.reset_data)) // TITLE
+        builder.setMessage(context.resources.getString(R.string.confirmation_data_reset)) // MESSAGE
+
+
+        // Set positive button and its click listener on alert dialog
+        builder.setPositiveButton(context.resources.getString(R.string.yes)){ dialog, _ ->
+            dialog.dismiss()
+
+            val db = AppDataBase.getInstance(context)
+            db?.mealItemDao()?.deleteAll()
+            db?.mealDao()?.deleteAll()
+            db?.eventDao()?.deleteAll()
+
+            Toast.makeText(context, context.resources.getString(R.string.data_reset),Toast.LENGTH_LONG).show()
+        }
+
+        // Display negative button on alert dialog
+        builder.setNegativeButton(context.resources.getString(R.string.no)){ dialog, _ ->
+            dialog.dismiss()
+        }
+
+        // Finally, make the alert dialog using builder
+        val dialog: AlertDialog = builder.create()
+
+        // Display the alert dialog on app interface
+        dialog.show()
     }
 
     private fun initCamera(){

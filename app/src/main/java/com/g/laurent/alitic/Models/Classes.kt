@@ -4,6 +4,8 @@ import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.*
 import android.content.Context
 import android.arch.persistence.room.OnConflictStrategy
+import com.g.laurent.alitic.EventData
+import com.g.laurent.alitic.MealData
 import java.util.concurrent.Executors
 
 
@@ -110,6 +112,9 @@ interface MealDao {
 
     @Query("SELECT dateCode from meal WHERE dateCode = (SELECT max(dateCode) FROM meal)")
     fun getLatestMealDate(): Long?
+
+    @Query("SELECT dateCode AS dateLong, foodtype.name AS foodTypeName, food.name AS foodName, food.takenIntoAcc AS foodForAnalysis  from meal INNER JOIN mealItem ON meal.id = mealItem.idMeal INNER JOIN food ON food.id = mealItem.idFood INNER JOIN foodtype ON food.idFoodType = foodtype.id")
+    fun getAllMealDatas():List<MealData>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(meal: Meal):Long
@@ -238,6 +243,9 @@ interface EventDao {
 
     @Query("SELECT dateCode from event WHERE dateCode = (SELECT max(dateCode) FROM event)")
     fun getLatestEventDate(): Long?
+
+    @Query("SELECT dateCode AS dateLong, eventType.name AS eventTypeName from event INNER JOIN eventType ON idEventType = eventType.id")
+    fun getAllEventDatas():List<EventData>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(event: Event):Long

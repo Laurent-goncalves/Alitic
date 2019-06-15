@@ -294,8 +294,7 @@ fun configureToolbar(toolbar:Toolbar, typeDisplay: TypeDisplay?, activity:MainAc
             searchIcon.isVisible = false
             settingsIcon.isVisible = true
             settingsIcon.setOnMenuItemClickListener {
-                // TODO : configure settings
-                Toast.makeText(context, "SETTINGS", Toast.LENGTH_LONG).show()
+                activity.showSettingsDialog()
                 true
             }
         }

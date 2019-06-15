@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Alitic</string>
     <string name="save">SAVE</string>
     <string name="cancel">Cancel</string>
@@ -96,10 +96,29 @@
     <!--SETTINGS MENU -->
     <string name="title_settings">Paramètres</string>
     <string name="name_user">Mon Prénom:</string>
-    <string name="language_select">Langue:</string>
     <string name="export_data_excel">Exporter les données sous Excel:</string>
+    <string name="permission_write">Donner permission pour sauvegarder fichier excel dans Downloads.</string>
+    <string name="permission_denied">Sans permission, les données ne peuvent pas être exportées sous excel.</string>
+    <string name="replace_excel_file_title">Exporter données sous Excel</string>
+    <string name="replace_excel_file_message" tools:ignore="Typos">Un fichier excel avec le même nom existe déjà. Remplacer le fichier existant ?</string>
+    <string name="excel_file_name">Données_Alitic.xls</string>
+
+    <string name="col_date_meal">Date Repas</string>
+    <string name="col_date_meal_long">Date Repas (en ms)</string>
+    <string name="col_foodtype">Type aliment</string>
+    <string name="col_foods">Aliments</string>
+    <string name="col_food_taken_into_acc">Aliment pris en compte pour l\'analyse?</string>
+    <string name="col_date_event">Date Ressenti</string>
+    <string name="col_date_event_long">Date Ressenti (en ms)</string>
+    <string name="col_event_type_name">Nom ressenti</string>
+    <string name="unavailable_date">Date indisponible</string>
+    <string name="file_excel_created">Fichier excel créé!</string>
+    <string name="file_excel_not_created">Fichier excel non créé. Erreur:</string>
     <string name="reset_data">Reset des données</string>
     <string name="reset">RAZ</string>
+    <string name="confirmation_data_reset">Etes-vous sûr de vouloir supprimer tous les ressentis et repas de la base de données? Les données seront définitivement perdues. Avant suppression, vous avez la possibilité d\'exporter les données sous excel dans le menu paramètres. \n \n Les aliments et types de ressenti ajoutés ne seront pas supprimés.</string>
+    <string name="data_reset">Tous les ressentis et repas ont été supprimés de la base de données.</string>
+    <string name="data_saved">Données sauvegardées!</string>
 
     <!--TOOLBAR TITLES -->
     <string name="title_meal_choice">Choisir un repas</string>
