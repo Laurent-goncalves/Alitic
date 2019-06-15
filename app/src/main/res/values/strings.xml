@@ -9,6 +9,10 @@
     <string name="save_meal_content_dialog">Voulez-vous sauvegarder le repas à cette heure-ci ?</string>
     <string name="save_meal_success_message_dialog">Repas sauvegardé avec succès</string>
 
+    <string name="save_food_new">Aliment sauvegardé avec succès</string>
+    <string name="save_food_update">Aliment mis à jour avec succès</string>
+
+
     <string name="save_event_title_dialog">Sauvegarder ressenti</string>
     <string name="save_event_content_dialog">Voulez-vous sauvegarder le ressenti à cette heure-ci ?</string>
     <string name="save_event_success_message_dialog">Ressenti sauvegardé avec succès</string>
@@ -24,6 +28,8 @@
     <string name="error_cancel_event_title">Quitter</string>
 
     <string name="menu_delete">Supprimer</string>
+    <string name="menu_modify">Modifier paramètres</string>
+
     <string name="food_delete_title">Suppression aliment</string>
     <string name="event_type_delete_title">Suppression ressenti</string>
     <string name="food_delete">Etes-vous sûr de supprimer cet aliment ?</string>
@@ -66,21 +72,26 @@
     <string name="select_period_add_eventtype1">Ressenti apparaissant entre </string>
     <string name="select_period_add_eventtype2">h et</string>
     <string name="select_period_add_eventtype3">h après un repas.</string>
-    <string name="select_foodtype_addfood">Selectionner un type d\'aliment</string>
+    <string name="select_foodtype_addfood">Sselect_period_add_eventtypeelectionner un type d\'aliment</string>
+
+    <string name="error_event_type_name_too_long">Le nom du ressenti est trop long (>= 20 char).</string>
 
     <string name="eventtype_default_pic">EventTypeDefaultPic</string>
 
     <string name="save_add_eventtype">Ressenti sauvegardé avec succès</string>
+    <string name="save_update_eventtype">Ressenti mis à jour avec succès</string>
+
     <string name="save_add_food">Aliment sauvegardé avec succès</string>
 
 
     <string name="error_food_already_in_db">Aliment déjà présent dans le catalogue. Choisir un autre nom.</string>
     <string name="error_food_without_name">Donner un nom à l\'aliment.</string>
     <string name="error_food_without_foodtype">Choisir un type d\'aliment dans la liste.</string>
+    <string name="error_food_name_too_long">Le nom de l\'aliment est trop long (>= 20 char).</string>
 
     <string name="error_event_already_in_db">Ressenti déjà présent dans le catalogue. Choisir un autre nom.</string>
     <string name="error_event_without_name">Donner un nom au ressenti.</string>
-
+    <string name="error_event_with_wrong_range">La période sélectionnée (0h, 0h) n\' a pas de sens. Sélectionner un période plus large.</string>
 
     <!--SETTINGS MENU -->
     <string name="title_settings">Paramètres</string>

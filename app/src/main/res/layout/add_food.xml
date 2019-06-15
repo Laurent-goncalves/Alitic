@@ -50,8 +50,6 @@
 
     </LinearLayout>
 
-
-
     <!--COUNT FOR ANALYSIS ? -->
     <CheckBox
             android:id="@+id/count_for_analysis"

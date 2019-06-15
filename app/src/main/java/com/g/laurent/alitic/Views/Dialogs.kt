@@ -12,10 +12,9 @@ import com.g.laurent.alitic.Models.MealItem
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import android.support.design.widget.Snackbar
-import android.widget.Button
-import android.widget.TextView
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.widget.*
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.Activities.*
 import com.g.laurent.alitic.Controllers.ClassControllers.*
@@ -266,6 +265,7 @@ class DateTimePickerDialog : DialogFragment() {
         time_picker.text = text
     }
 }
+
 
 fun saveMeal(list:List<MealItem>, view:View, dateToSave:Long, context: Context){
 

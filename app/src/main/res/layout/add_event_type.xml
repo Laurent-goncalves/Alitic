@@ -63,7 +63,8 @@
     <FrameLayout
             android:id="@+id/layout_range_seek_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
         <com.ianpinto.androidrangeseekbar.rangeseekbar.RangeSeekBar
                 android:id="@+id/range_seek_bar"

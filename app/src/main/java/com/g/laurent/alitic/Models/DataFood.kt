@@ -243,7 +243,7 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     -------------------------------------- EVENT TYPE INSERTION ----------------------------------------------
     ------------------------------------------------------------------------------------------------------ **/
 
-    val reflux = eventTypeDao?.insert(EventType(null, "Reflux", "reflux", 0, 3*60*60*1000, false))
+    val reflux = eventTypeDao?.insert(EventType(null, "Reflux", "reflux", null, null, true))
     val malVentre = eventTypeDao?.insert(EventType(null, "Mal au ventre", "mal_ventre", 0, 3*60*60*1000, false))
     val malTete = eventTypeDao?.insert(EventType(null, "Mal à la tête", "tete", 0, 3*60*60*1000, false))
     val diarrh = eventTypeDao?.insert(EventType(null, "Diarrhée", "diarrhee", 0, 3*60*60*1000, false))

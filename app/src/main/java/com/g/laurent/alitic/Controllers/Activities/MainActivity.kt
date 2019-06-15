@@ -3,6 +3,7 @@ package com.g.laurent.alitic.Controllers.Activities
 import android.annotation.SuppressLint
 import android.app.PendingIntent.getActivity
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Matrix
 import android.os.Bundle
@@ -25,10 +26,17 @@ import com.g.laurent.alitic.R
 import android.view.MotionEvent
 import android.view.View.OnTouchListener
 import com.g.laurent.alitic.Controllers.ClassControllers.*
+import com.g.laurent.alitic.Controllers.DialogFragments.AddEventTypeDialog
+import com.g.laurent.alitic.Controllers.DialogFragments.AddFoodDialog
+import com.g.laurent.alitic.Controllers.DialogFragments.DialogCloseListener
+import com.g.laurent.alitic.Models.EventType
 import java.util.*
 
 
-class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionListener, OnItemSelectionListener, OnFoodToDeleteListener {
+class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionListener, OnItemSelectionListener, OnFoodToDeleteListener,
+    DialogCloseListener {
+
+
 
     private var matrix = Matrix()
     private lateinit var context: Context
@@ -44,7 +52,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
     private var sWidth = 0
     private var sHeight = 0
     private var typeDisplay:TypeDisplay? = null
-    private var foodTypeSelected: FoodType? = null
+    var foodTypeSelected: FoodType? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +72,22 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
         findViewById<View>(R.id.bottom_right_corner).setOnClickListener(this)
 
         initCamera()
+    }
+
+    fun showDialogAddFood(food:Food){
+        val fm = supportFragmentManager
+        val myDialogFragment = AddFoodDialog().newInstance(food)
+        myDialogFragment.show(fm, null)
+    }
+
+    fun showDialogAddEventType(eventType: EventType){
+        val fm = supportFragmentManager
+        val myDialogFragment = AddEventTypeDialog().newInstance(eventType)
+        myDialogFragment.show(fm, null)
+    }
+
+    override fun handleDialogClose(typeDisplay: TypeDisplay) {
+        configureGridView(typeDisplay)
     }
 
     private fun initCamera(){
@@ -102,6 +126,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
 
                 val mLayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
                 food_recycler_view.layoutManager = mLayoutManager
+                foodTypeSelected = listFoodType[0]
                 menuAdapter = FoodTypeAdapter(listFoodType, sWidth / 4, onMenuSelectionListener, context = context)
                 food_recycler_view.adapter = menuAdapter
 

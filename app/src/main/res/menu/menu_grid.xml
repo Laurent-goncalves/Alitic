@@ -6,4 +6,11 @@
             android:title="@string/menu_delete"
             android:orderInCategory="1"
             app:showAsAction="ifRoom"/>
+
+    <item
+            android:id="@+id/menu_modify"
+            android:title="@string/menu_modify"
+            android:orderInCategory="1"
+            app:showAsAction="ifRoom"/>
+
 </menu>

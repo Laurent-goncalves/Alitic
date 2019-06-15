@@ -74,7 +74,7 @@ data class EventType(@PrimaryKey(autoGenerate = true) var id: Long?,
                      @ColumnInfo(name = "maxTime") var maxTime:Long?,
                      @ColumnInfo(name = "forLastMeal") var forLastMeal:Boolean?,
                      @ColumnInfo(name = "takenIntoAcc") var takenIntoAcc:Boolean = true){
-    constructor() : this(null, null, null,0, 0, true, true)
+    constructor() : this(null, null, "ressenti",null, null, true, true)
 }
 
 @Entity(tableName = "event", indices = [Index("idEventType")],

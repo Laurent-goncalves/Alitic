@@ -158,7 +158,7 @@ class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableLi
             }
         }
 
-        fun configureFood(view:View){
+        fun configureItem(view:View){
 
             val imageView = view.findViewById<ImageView>(R.id.image_meal)
             val textView = view.findViewById<TextView>(R.id.meal_text)
@@ -213,41 +213,57 @@ class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableLi
                 val popupMenu = PopupMenu(activity, view)
                 popupMenu.setOnMenuItemClickListener{
 
-                    val builder = AlertDialog.Builder(activity)
+                    if(it.itemId == R.id.menu_delete){
 
-                    // Display a message on alert dialog
-                    when(listFood[position]) {
-                        is EventType -> { // if eventType
-                            builder.setTitle(context.resources.getString(R.string.event_type_delete_title)) // TITLE
-                            builder.setMessage(context.resources.getString(R.string.event_type_delete)) // MESSAGE
+                        val builder = AlertDialog.Builder(activity)
+
+                        // Display a message on alert dialog
+                        when(listFood[position]) {
+                            is EventType -> { // if eventType
+                                builder.setTitle(context.resources.getString(R.string.event_type_delete_title)) // TITLE
+                                builder.setMessage(context.resources.getString(R.string.event_type_delete)) // MESSAGE
+                            }
+                            is Food -> {
+                                builder.setTitle(context.resources.getString(R.string.food_delete_title)) // TITLE
+                                builder.setMessage(context.resources.getString(R.string.food_delete)) // MESSAGE
+                            }
                         }
-                        is Food -> {
-                            builder.setTitle(context.resources.getString(R.string.food_delete_title)) // TITLE
-                            builder.setMessage(context.resources.getString(R.string.food_delete)) // MESSAGE
+
+                        // Set positive button and its click listener on alert dialog
+                        builder.setPositiveButton(context.resources.getString(R.string.yes)){ dialog, _ ->
+                            dialog.dismiss()
+
+                            val idToDelete = if(listFood[position] is Food){(listFood[position] as Food).id} else {(listFood[position] as EventType).id}
+                            val typeDisplay = if(listFood[position] is Food){TypeDisplay.MEAL} else {TypeDisplay.EVENT}
+
+                            if(idToDelete!=null)
+                                activity.deleteFromDatabase(idToDelete, typeDisplay)
+                        }
+
+                        // Display negative button on alert dialog
+                        builder.setNegativeButton(context.resources.getString(R.string.no)){ dialog, _ ->
+                            dialog.dismiss()
+                        }
+
+                        // Finally, make the alert dialog using builder
+                        val dialog: AlertDialog = builder.create()
+
+                        // Display the alert dialog on app interface
+                        dialog.show()
+
+                    } else if(it.itemId == R.id.menu_modify){
+
+                        when(listFood[position]) {
+                            is EventType -> { // if eventType
+                                val eventType = listFood[position] as EventType
+                                activity.showDialogAddEventType(eventType)
+                            }
+                            is Food -> {
+                                val food = listFood[position] as Food
+                                activity.showDialogAddFood(food)
+                            }
                         }
                     }
-
-                    // Set positive button and its click listener on alert dialog
-                    builder.setPositiveButton(context.resources.getString(R.string.yes)){ dialog, _ ->
-                        dialog.dismiss()
-
-                        val idToDelete = if(listFood[position] is Food){(listFood[position] as Food).id} else {(listFood[position] as EventType).id}
-                        val typeDisplay = if(listFood[position] is Food){TypeDisplay.MEAL} else {TypeDisplay.EVENT}
-
-                        if(idToDelete!=null)
-                            activity.deleteFromDatabase(idToDelete, typeDisplay)
-                    }
-
-                    // Display negative button on alert dialog
-                    builder.setNegativeButton(context.resources.getString(R.string.no)){ dialog, _ ->
-                        dialog.dismiss()
-                    }
-
-                    // Finally, make the alert dialog using builder
-                    val dialog: AlertDialog = builder.create()
-
-                    // Display the alert dialog on app interface
-                    dialog.show()
                     true
                 }
                 popupMenu.inflate(R.menu.menu_grid)
@@ -264,10 +280,17 @@ class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableLi
             // Set onClickListener
             view.setOnClickListener {
 
-                // TODO ajouter aliment ou ressenti
+                if(activity.foodTypeSelected!=null){ // IF MEAL PANEL
+                    val food = Food()
+                    food.idFoodType = activity.foodTypeSelected?.id
+                    food.foodPic = activity.foodTypeSelected?.foodTypePic
+                    activity.showDialogAddFood(food)
 
-                // Update adapter
-                notifyDataSetChanged()
+                } else { // IF EVENT TYPE PANEL
+                    val eventType = EventType()
+                    activity.showDialogAddEventType(eventType)
+                }
+
             }
         }
 
@@ -276,8 +299,8 @@ class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableLi
 
             if(position < listFood.size) { // FOOD ITEM
                 view = inflater.inflate(R.layout.gridviewholder, parent, false)
-                configureFood(view)
-            } else { // BUTTON ADD FOOD
+                configureItem(view)
+            } else { // BUTTON ADD ITEM
                 view = inflater.inflate(R.layout.gridviewholder_add, parent, false)
                 configureAddButton(view)
             }

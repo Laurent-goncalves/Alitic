@@ -63,21 +63,3 @@ fun move(scaleDownX:ObjectAnimator, scaleDownY:ObjectAnimator, moveRightX:Object
     moveRight.start()
 }
 
-fun hideOrRevealRangeSeekBar(rangeSeekBar: FrameLayout, height:Int, hide:Boolean){
-
-    val factor = if(hide) 0 else -1
-
-    if (Build.VERSION.SDK_INT >= 21) { // with animation
-
-        ObjectAnimator.ofFloat(rangeSeekBar, "translationY", factor * height.toFloat()).apply {
-            duration = 1000
-            start()
-        }
-
-    } else { // without animation
-        if(hide)
-            rangeSeekBar.visibility = View.GONE
-        else
-            rangeSeekBar.visibility = View.VISIBLE
-    }
-}

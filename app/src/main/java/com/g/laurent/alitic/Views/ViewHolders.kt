@@ -50,9 +50,9 @@ class FoodTypeViewHolder(itemView: View, private val mode:Boolean = false, val c
 
         fun setNotSelected(){
             // WIDTH
-            /*itemView.layoutParams.width = (width * ratio).toInt()
+            itemView.layoutParams.width = (width * ratio).toInt()
             imageFood.layoutParams.width = (width * ratio).toInt()
-            textFood.layoutParams.width = (width * ratio).toInt()*/
+            textFood.layoutParams.width = (width * ratio).toInt()
             reduceThumbnail(this, 0, colorNotSelected)
 
             // COLOR
