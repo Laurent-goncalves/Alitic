@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,10 +8,19 @@
         android:id="@+id/fragment_place"
         tools:context=".Controllers.Activities.StatActivity">
 
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/activity_stat_toolbar"
+            android:minHeight="?android:attr/actionBarSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:theme="@style/ToolBarStyle"/>
+
     <android.support.v4.view.ViewPager
             android:id="@+id/stat_viewpager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_below="@+id/activity_stat_toolbar"/>
 
 
     <android.support.design.widget.TabLayout
@@ -22,7 +31,7 @@
             android:background="@color/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom">
+            android:layout_alignParentBottom="true">
 
         <!--  BUTTON MAP VIEW -->
         <android.support.design.widget.TabItem
@@ -53,4 +62,4 @@
 
     </android.support.design.widget.TabLayout>
 
-</FrameLayout>
+</RelativeLayout>

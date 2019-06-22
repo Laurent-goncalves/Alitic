@@ -6,6 +6,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="spinnerStyle">@style/Widget.App.Spinner</item>
+        <item name="android:spinnerStyle">@style/Widget.App.Spinner</item>
     </style>
 
     <style name="AliticTabLayout" parent="Widget.MaterialComponents.TabLayout.Colored">
@@ -16,5 +19,11 @@
     <style name="ToolBarStyle" parent="AppTheme">
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="colorControlNormal">@android:color/white</item>
+    </style>
+
+    <!-- Custom Spinner dropdown background theme. -->
+    <style name="Widget.App.Spinner" parent="@style/Widget.AppCompat.Spinner">
+        <item name="overlapAnchor">true</item>
+        <item name="android:background">@drawable/spinner_background</item>
     </style>
 </resources>

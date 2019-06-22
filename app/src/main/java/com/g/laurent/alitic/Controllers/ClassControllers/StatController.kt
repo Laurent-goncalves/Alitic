@@ -1,12 +1,17 @@
 package com.g.laurent.alitic.Controllers.ClassControllers
 
 import android.content.Context
+import com.facebook.stetho.inspector.helper.IntegerFormatter
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.Activities.StatType
 import com.g.laurent.alitic.Models.*
 import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
+import com.github.mikephil.charting.formatter.IValueFormatter
+import com.github.mikephil.charting.utils.ViewPortHandler
 import org.apache.commons.math3.stat.regression.SimpleRegression
+import java.text.DecimalFormat
 import java.util.*
 import kotlin.math.absoluteValue
 
@@ -30,6 +35,23 @@ class MyXAxisValueFormatter(private val mValues: Array<String>) : IAxisValueForm
     override fun getFormattedValue(value: Float, axis: AxisBase): String {
         // "value" represents the position of the label on the axis
         return mValues[value.toInt()]
+    }
+}
+
+class MyYAxisValueFormatter : IValueFormatter {
+
+    private val mFormat = DecimalFormat("###,###,##0")
+
+    override fun getFormattedValue(
+        value: Float,
+        entry: Entry?,
+        dataSetIndex: Int,
+        viewPortHandler: ViewPortHandler?
+    ): String {
+        return if(value!=0f)
+            mFormat.format(value)
+        else
+            ""
     }
 }
 

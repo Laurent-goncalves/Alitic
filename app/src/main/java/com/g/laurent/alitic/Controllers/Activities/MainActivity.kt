@@ -1,9 +1,7 @@
 package com.g.laurent.alitic.Controllers.Activities
 
 import android.annotation.SuppressLint
-import android.app.PendingIntent.getActivity
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Matrix
 import android.os.Bundle
@@ -23,11 +21,9 @@ import android.view.inputmethod.InputMethodManager
 import com.g.laurent.alitic.R
 import android.view.MotionEvent
 import android.view.View.OnTouchListener
-import com.facebook.stetho.Stetho
 import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Controllers.DialogFragments.*
 import com.g.laurent.alitic.Models.*
-import java.util.*
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionListener, OnItemSelectionListener, OnFoodToDeleteListener,
@@ -173,7 +169,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_toolbar, menu)
+        menuInflater.inflate(R.menu.menu_toolbar_main, menu)
         val toolbar: Toolbar = findViewById(R.id.activity_main_toolbar)
         configureToolbar(toolbar, typeDisplay, this, context)
         return super.onCreateOptionsMenu(menu)

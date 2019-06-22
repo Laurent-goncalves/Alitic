@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_margin="5dp"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/text_legent_less"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:layout_centerVertical="true"
+        android:text="@string/legend_chrono_less"/>
+
+    <View
+        android:id="@+id/case1"
+        android:background="@color/colorNoEventDay"
+        android:layout_width="@dimen/size_square_chrono_grid_stat"
+        android:layout_height="@dimen/size_square_chrono_grid_stat"
+        android:layout_toEndOf="@+id/text_legent_less"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"/>
+
+    <View
+        android:id="@+id/case2"
+        android:background="@color/colorLevel1"
+        android:layout_width="@dimen/size_square_chrono_grid_stat"
+        android:layout_height="@dimen/size_square_chrono_grid_stat"
+        android:layout_toEndOf="@+id/case1"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="5dp"/>
+
+    <View
+        android:id="@+id/case3"
+        android:background="@color/colorLevel2"
+        android:layout_width="@dimen/size_square_chrono_grid_stat"
+        android:layout_height="@dimen/size_square_chrono_grid_stat"
+        android:layout_toEndOf="@+id/case2"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="5dp"/>
+
+    <View
+        android:id="@+id/case4"
+        android:background="@color/colorLevel3"
+        android:layout_width="@dimen/size_square_chrono_grid_stat"
+        android:layout_height="@dimen/size_square_chrono_grid_stat"
+        android:layout_toEndOf="@+id/case3"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="5dp"/>
+
+    <TextView
+        android:id="@+id/text_legent_plus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:layout_toEndOf="@+id/case4"
+        android:layout_marginStart="10dp"
+        android:layout_centerVertical="true"
+        android:text="@string/legend_chrono_plus"/>
+
+</RelativeLayout>

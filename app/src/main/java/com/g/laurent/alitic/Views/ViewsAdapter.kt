@@ -366,7 +366,7 @@ class CalendarAdapter(context: Context, private val onTimeLineDisplay: OnTimeLin
 }
 
 /** STAT ADAPTER**/
-open class StatAdapter(val mgr: FragmentManager, var eventType: EventType, private val listEventType: ArrayList<String>): FragmentPagerAdapter(mgr) {
+open class StatAdapter(mgr: FragmentManager, val context: Context, var eventType: EventType, private val listEventType: ArrayList<String>): FragmentPagerAdapter(mgr) {
 
 
     override fun getItemPosition(`object`: Any): Int {
@@ -391,10 +391,11 @@ open class StatAdapter(val mgr: FragmentManager, var eventType: EventType, priva
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
+
         return when (position) {
-            0 -> StatType.GLOBAL_ANALYSIS_NEG.name
-            1 -> StatType.GLOBAL_ANALYSIS_POS.name
-            else -> StatType.GLOBAL_ANALYSIS_NEG.name
+            0 -> context.resources.getString(StatType.GLOBAL_ANALYSIS_NEG.titleTab)
+            1 -> context.resources.getString(StatType.GLOBAL_ANALYSIS_POS.titleTab)
+            else -> context.resources.getString(StatType.DETAIL_ANALYSIS.titleTab)
         }
     }
 }
@@ -463,7 +464,7 @@ class GridChronoAdapter(val list:List<DayGrid>, val context: Context): BaseAdapt
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater?
 
         if (inflater != null) {
-            view = inflater.inflate(com.g.laurent.alitic.R.layout.grid_stat_chrono, parent, false)
+            view = inflater.inflate(R.layout.grid_stat_chrono, parent, false)
             view.background = ContextCompat.getDrawable(context, list[position].colorId)
         }
 

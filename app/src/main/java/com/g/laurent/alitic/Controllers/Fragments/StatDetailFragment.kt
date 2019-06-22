@@ -14,6 +14,7 @@ import com.g.laurent.alitic.Views.StatChronoAdapter
 import com.g.laurent.alitic.createBarChartTwoColumns
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.LinearLayout
 import android.widget.Spinner
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.R
@@ -130,8 +131,8 @@ class StatDetailFragment : StatFragment(), AdapterView.OnItemSelectedListener {
         // Creating adapter for spinner
         val dataAdapter = ArrayAdapter(contextFrag, android.R.layout.simple_spinner_item, listTitles)
 
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item)
+        // Drop down layout style
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         // attaching data adapter to spinner
         title.adapter = dataAdapter
@@ -147,6 +148,8 @@ class StatDetailFragment : StatFragment(), AdapterView.OnItemSelectedListener {
         val evolution = getEvolution(listDates, context = contextFrag)
         evolutionView.setImageDrawable(ContextCompat.getDrawable(contextFrag, evolution.icon)) // get icon evolution
         evolutionView.background = ContextCompat.getDrawable(contextFrag, evolution.colorId) // color background
+        val evolutionLayout = view.findViewById<LinearLayout>(R.id.evolution_layout)
+        evolutionLayout.background = ContextCompat.getDrawable(contextFrag, evolution.colorId)
     }
 
     /** CHRONOLOGY **/
@@ -161,11 +164,9 @@ class StatDetailFragment : StatFragment(), AdapterView.OnItemSelectedListener {
     /** HORIZONTAL BAR CHART **/
     private fun configureBarChart(view:View){
 
-        val barChart = view.findViewById<HorizontalBarChart>(R.id.barchart_detail_per_food)
-
         val listStats = getFoodStat(statType, eventType, context = contextFrag)
 
         // Create bar chart 2 columns (for detailed analysis)
-        createBarChartTwoColumns(listStats, barChart, contextFrag)
+        createBarChartTwoColumns(listStats, view, contextFrag)
     }
 }

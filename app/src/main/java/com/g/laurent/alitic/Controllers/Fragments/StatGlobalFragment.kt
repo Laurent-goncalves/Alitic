@@ -44,7 +44,7 @@ class StatGlobalFragment : StatFragment() {
 
     private fun configureStatGlobalFragment(view:View) {
         // Configure title of fragment
-        configureTitleFragment(view)
+        configureTitlesFragment(view)
 
         // Configure the food labels
         configureEachFood(view)
@@ -53,10 +53,14 @@ class StatGlobalFragment : StatFragment() {
         configureBigPieChart(view)
     }
 
-    /** TITLE FRAGMENT **/
-    private fun configureTitleFragment(view:View){
-        val titleView = view.findViewById<TextView>(R.id.title_statfragment)
-        titleView.text = statType.name
+    /** TITLES FRAGMENT **/
+    private fun configureTitlesFragment(view:View){
+
+        val titleFoodView = view.findViewById<TextView>(R.id.foods_list_title)
+        titleFoodView.text = contextFrag.resources.getString(statType.titleFood!!)
+
+        val titlePieChart = view.findViewById<TextView>(R.id.piechart_title)
+        titlePieChart.text = contextFrag.resources.getString(statType.titlePieChart!!)
     }
 
     /** FOOD LABELS **/

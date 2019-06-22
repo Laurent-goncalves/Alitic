@@ -48,15 +48,33 @@
     <string name="text_nb_events">Number of events:</string>
 
     <!-- MENU STATS -->
-    <string name="menu_global_positive">Analyse effets positifs</string>
-    <string name="menu_global_negative">Analyse globale</string>
-    <string name="menu_detail">Analyse détaillée</string>
+    <string name="title_toolbar_stat">Statistiques</string>
+    <string name="menu_global_positive">Effets positifs</string>
+    <string name="menu_global_negative">Effets négatifs</string>
+    <string name="menu_detail">En détails</string>
     <string name="menu_info">Informations</string>
 
     <string name="evolution">Evolution</string>
     <string name="chronology">Chronologie</string>
+
+    <string name="legend_chrono_less">Moins</string>
+    <string name="legend_chrono_plus">Plus</string>
+
+    <string name="legend_food_nok">Nombre de repas causant ressenti</string>
+    <string name="legend_food_ok">Nombre de repas sans ressenti</string>
+
     <string name="detail_per_food_title">Detail par aliment</string>
     <string name="all_event_types">Tous types</string>
+
+    <string name="first_day_week">Lun.</string>
+    <string name="last_day_week">Dim.</string>
+
+    <string name="title_foods_list_positive">Aliments causant le moins de problème</string>
+    <string name="title_piechart_positive">Répartition des types d\'aliments causant le moins de problème</string>
+
+    <string name="title_foods_list_negative">Aliments causant le plus de problème</string>
+    <string name="title_piechart_negative">Répartition des types d\'aliments causant le plus de problème</string>
+
 
     <!--CREATE NEW EVENT OR NEW MEAL -->
 
