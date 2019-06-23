@@ -379,7 +379,7 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
 
     val idEvent18 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(19, 5, 2019, 13, 0),
         context = context)
-    val idEvent19 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(3, 6, 2019, 13, 0),
+   /* val idEvent19 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(3, 6, 2019, 13, 0),
         context = context)
     val idEvent20 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(17, 6, 2019, 13, 0),
         context = context)
@@ -387,12 +387,12 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
         context = context)
     val idEvent22 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(18, 6, 2019, 13, 0),
         context = context)
-    val idEvent23 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(11, 7, 2019, 13, 0),
+    val idEvent23 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(11, 6, 2019, 13, 0),
         context = context)
-    val idEvent24 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(11, 7, 2019, 13, 0),
+    val idEvent24 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(11, 6, 2019, 13, 0),
         context = context)
-    val idEvent25 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(12, 7, 2019, 13, 0),
-        context = context)
+    val idEvent25 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(12, 6, 2019, 13, 0),
+        context = context)*/
 }
 
 

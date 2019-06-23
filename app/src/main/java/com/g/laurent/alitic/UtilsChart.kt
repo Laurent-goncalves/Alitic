@@ -84,7 +84,7 @@ fun configureBigPieChart(listFoodTypes:List<FoodTypeStatEntry>, view: View, cont
     data.dataSet = dataSet
 
     data.setValueFormatter(PercentFormatter())
-    data.setValueTextSize(11f)
+    data.setValueTextSize(14f)
 
     pieChart.setEntryLabelColor(Color.BLACK)
     pieChart.setEntryLabelTextSize(14f)
@@ -117,7 +117,6 @@ fun configureSmallPieChart(statEntry: FoodStatEntry, statType: StatType, view: V
 
     val data = PieData(dataSet)
     data.dataSet = dataSet
-
     pieChart.data = data
     pieChart.legend.isEnabled = false
     pieChart.isRotationEnabled = false
@@ -157,27 +156,28 @@ fun getListUnusedViewIndex(size:Int):List<Int>{
 
 fun createBarChartTwoColumns(listStats:List<FoodStatEntry>, view: View, context:Context){
 
-
-
     val barChart:HorizontalBarChart = view.findViewById(R.id.barchart_detail_per_food)
 
     fun configureLegend(){
         barChart.legend.isEnabled = true
         val legend = barChart.legend
         legend.textSize = 14f
-        val legendEntry1 = LegendEntry("Food nok", Legend.LegendForm.SQUARE, 10f, 2f, null, R.color.colorFoodNOK)
-        val legendEntry2 = LegendEntry("Food OK", Legend.LegendForm.SQUARE, 10f, 2f, null, R.color.colorFoodOK)
+
+        val legendEntry1 = LegendEntry()
+        legendEntry1.label = "Food nok"
+        legendEntry1.formColor = R.color.colorFoodNOK
+
+        val legendEntry2 = LegendEntry()
+        legendEntry2.label = "Food OOOK"
+        legendEntry2.formColor = R.color.colorFoodOK
+
         legend.setCustom(mutableListOf(legendEntry1, legendEntry2))
     }
-
-
-
 
     // Initialization
     val valueSet = arrayListOf<BarEntry>()
     val listFood = mutableListOf<String>()
     val listColors = mutableListOf<Int>()
-    val mEntries = arrayListOf<Float>()
 
     // Create bar entries
     if(listStats.isNotEmpty()){
@@ -193,7 +193,6 @@ fun createBarChartTwoColumns(listStats:List<FoodStatEntry>, view: View, context:
             listColors.add(R.color.colorFoodNOK)
             listColors.add(R.color.colorFoodOK)
             listFood.add(listStats[i].food.name!!)
-            mEntries.add(i.toFloat())
         }
 
         // custom X-axis labels
@@ -202,9 +201,10 @@ fun createBarChartTwoColumns(listStats:List<FoodStatEntry>, view: View, context:
         xAxis.setDrawAxisLine(false)
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.textSize = 14f
-        xAxis.axisMinimum = -0.5f
-        xAxis.axisMaximum = mEntriesCount.toFloat() + 0.5f
+        xAxis.axisMinimum = 0f
+        xAxis.axisMaximum = listFood.size.toFloat() - 1
         xAxis.granularity = 1f
+        barChart.notifyDataSetChanged()
         xAxis.valueFormatter = MyXAxisValueFormatter(listFood.toTypedArray())
 
         // Data
@@ -228,6 +228,7 @@ fun createBarChartTwoColumns(listStats:List<FoodStatEntry>, view: View, context:
         barData.barWidth = 0.9f
         barChart.data = barData
         barChart.setFitBars(true)
+        barChart.notifyDataSetChanged()
         barChart.setDrawValueAboveBar(false)
         configureLegend()
 

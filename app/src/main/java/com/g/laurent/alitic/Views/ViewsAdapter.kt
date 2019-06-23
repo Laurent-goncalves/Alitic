@@ -485,7 +485,7 @@ class GridChronoAdapter(val list:List<DayGrid>, val context: Context): BaseAdapt
 }
 
 enum class DayGrid(val colorId: Int){
-    DONT_EXISTS(android.R.color.transparent),
+    DONT_EXISTS(android.R.color.white),
     NO_EVENT_DAY(R.color.colorNoEventDay),
     EVENT_LEV1(R.color.colorLevel1),
     EVENT_LEV2(R.color.colorLevel2),

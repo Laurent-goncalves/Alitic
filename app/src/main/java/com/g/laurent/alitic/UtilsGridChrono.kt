@@ -41,8 +41,8 @@ fun getLevel(value:Int, max:Int): DayGrid {
         }
         else -> {
             return when(value){
-                in 1..(palier - 1) -> DayGrid.EVENT_LEV1
-                in palier..(2*palier - 1) -> DayGrid.EVENT_LEV2
+                in 1 until palier -> DayGrid.EVENT_LEV1
+                in palier until 2*palier -> DayGrid.EVENT_LEV2
                 in 2*palier..(3*palier) -> DayGrid.EVENT_LEV3
                 else -> DayGrid.EVENT_LEV3
             }
@@ -59,9 +59,24 @@ fun getListDayGridForGridView(listDates:List<Long>, month:Int, year:Int): List<D
 
     val first = getFirstDateGridView(month,year)
     val last = getLastDateGridView(month, year)
+    val today = getTodayDate()
 
     val nbCol = getNumberColumnsGridView(first, last)
     val table = Array(7) { Array(nbCol) { DayGrid.NO_EVENT_DAY} }
+
+    // if current month & year, fill table with days which are not yet passed
+    if(month == getMonth(today) && year == getYear(today)){
+        var day = first
+
+        while (day < last){
+            if(day > today){
+                val row = getRowDate(day)
+                val col = getColumnDate(day, first, nbCol)
+                table[row][col] = DayGrid.DONT_EXISTS
+            }
+            day+=DAY
+        }
+    }
 
     val maxCountEventByDay = getMaxEventByDay(hashDates)
 
@@ -146,7 +161,6 @@ fun getFirstDateGridView(month:Int, year:Int):Long{
         cal.timeInMillis
     }
 }
-
 fun getLastDateGridView(month:Int, year:Int):Long{
 
     val cal = Calendar.getInstance()
@@ -172,9 +186,9 @@ fun getNumberColumnsGridView(first:Long, last:Long):Int{
 fun getNumberOfMonths(list:List<Long>):Int{
 
     val minDate = list.min()
-    val maxDate = list.max()
+    val maxDate = getTodayDate()
 
-    if(minDate!=null && maxDate!=null){
+    if(minDate!=null){
         if(getYear(maxDate) - getYear(minDate)==0){ // SAME YEAR
              return getMonth(maxDate) - getMonth(minDate) + 1
         } else { // DIFFERENT YEARS

@@ -1,6 +1,5 @@
 package com.g.laurent.alitic.Controllers.Fragments
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater

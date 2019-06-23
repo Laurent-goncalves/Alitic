@@ -9,7 +9,6 @@ import android.view.Menu
 import com.g.laurent.alitic.Views.StatAdapter
 import android.view.View
 import com.g.laurent.alitic.Controllers.ClassControllers.getListEventTypesForStatDetailFragment
-import com.g.laurent.alitic.Controllers.Fragments.StatDetailFragment
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.R
 import kotlinx.android.synthetic.main.activity_stat.*
@@ -58,8 +57,6 @@ class StatActivity : AppCompatActivity(), OnEventTypeChangeListener{
             tab1.icon = ContextCompat.getDrawable(applicationContext, R.drawable.baseline_wb_sunny_white_24)
             tab2.icon = ContextCompat.getDrawable(applicationContext, R.drawable.baseline_zoom)
         }
-
-        tab2?.select() // TODO : to delete
     }
 
     override fun changeEventType(position: Int) {
