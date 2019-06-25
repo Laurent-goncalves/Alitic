@@ -1,23 +1,42 @@
 package com.g.laurent.alitic.Controllers.Activities
 
+import android.graphics.Matrix
+import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageView
 import com.g.laurent.alitic.Controllers.ClassControllers.saveNewEvent
 import com.g.laurent.alitic.Controllers.ClassControllers.saveNewEventType
 import com.g.laurent.alitic.Controllers.Fragments.*
 import com.g.laurent.alitic.R
 import com.g.laurent.alitic.getDateAsLong
+import kotlinx.android.synthetic.main.activity_stat.*
 
 
 class ChronoActivity : AppCompatActivity(), OnTimeLineDisplay {
+
+    private var matrix = Matrix()
+    private val chronoFragment = ChronoFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chrono)
 
-        clearDatabase(applicationContext)
+        val imageView = this.findViewById<ImageView>(R.id.image_background)
 
-        val chronoFragment = ChronoFragment()
+        /*matrix.reset()
+        matrix.setTranslate(Loc.BOTTOM_LEFT.position.px, Loc.BOTTOM_LEFT.position.py)
+        imageView.imageMatrix = matrix*/
+        moveCamera(imageView,Loc.CENTER.position, Loc.BOTTOM_LEFT.position,matrix, this, "eee")
+
+        //clearDatabase(applicationContext)
+
+
+
+
+    }
+
+    fun showChronoFragment(){
         val fragmentManager = supportFragmentManager.beginTransaction()
         fragmentManager.replace(R.id.calendar_fragment, chronoFragment)
         fragmentManager.commit()

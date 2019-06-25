@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorTimeLine">#70dbdb</color>
+    <color name="colorTimeLineContent">#DDf6ffe8</color>
     <color name="colorPanelMeal">#CCf2f2f2</color>
     <color name="colorFoodPicked">#5bc855</color>
 

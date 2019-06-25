@@ -2,36 +2,38 @@ package com.g.laurent.alitic.Views
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.*
 import com.g.laurent.alitic.*
+import com.g.laurent.alitic.Controllers.Activities.TypeDisplay
 import com.g.laurent.alitic.Controllers.ClassControllers.Chrono
+import com.g.laurent.alitic.Controllers.ClassControllers.deleteEvent
+import com.g.laurent.alitic.Controllers.ClassControllers.deleteMeal
+import com.g.laurent.alitic.Controllers.Fragments.OnChronoItemDeleted
 import com.g.laurent.alitic.Models.FoodType
-import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.charts.HorizontalBarChart
-import com.github.mikephil.charting.charts.LineChart
 import com.github.vipulasri.timelineview.TimelineView
+
 
 class TimeLineViewHolder(itemView: View, viewType: Int, val mode:Boolean = false, val context: Context) : RecyclerView.ViewHolder(itemView) {
 
     private var mTimelineView: TimelineView = itemView.findViewById(R.id.timeline)
-    private var buttonEdit:ImageButton
     private var hourView : TextView
     private var grid : GridView
 
     init {
         mTimelineView.initLine(viewType)
-        buttonEdit = itemView.findViewById(R.id.edit_button)
-        buttonEdit.setOnClickListener(View.OnClickListener {  }) // TODO button edit to configure
         hourView = itemView.findViewById(R.id.hour)
         grid = itemView.findViewById(R.id.grid)
     }
 
     fun configureTimeLineViewHolder(chrono: Chrono) {
+
+        // Configure GridAdapter
         hourView.text = chrono.hour
-        // TODO à adapter : val adapter = GridAdapter(chrono.item, null, false,null, mode, context)
-        //grid.adapter = adapter
+        val adapter = GridAdapter(chrono.item, null, false,null, mode, null, context)
+        grid.adapter = adapter
     }
 }
 
@@ -113,6 +115,6 @@ class StatChronoHolder(itemView: View, list:List<Long>, month:Int, year:Int): Re
     fun configureGridView(month:Int, year:Int){
 
 
-
+//TODO : to delete
     }
 }

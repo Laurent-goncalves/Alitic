@@ -22,8 +22,7 @@ import android.widget.*
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.Activities.*
 import com.g.laurent.alitic.Controllers.ClassControllers.*
-import com.g.laurent.alitic.Controllers.Fragments.StatDetailFragment
-import com.g.laurent.alitic.Controllers.Fragments.StatGlobalFragment
+import com.g.laurent.alitic.Controllers.Fragments.*
 import com.g.laurent.alitic.Models.*
 import com.roomorama.caldroid.CaldroidGridAdapter
 
@@ -77,7 +76,7 @@ class FoodTypeAdapter(val list: List<FoodType>, val sWidth:Int, private val OnMe
 }
 
 /** TIMELINE ADAPTER**/
-class TimeLineAdapter(val list: List<Chrono>, val mode:Boolean=false, val context: Context) : RecyclerView.Adapter<TimeLineViewHolder>() {
+class TimeLineAdapter(val list: MutableList<Chrono>, val onChronoItemDeleted: OnChronoItemDeleted, val fragment:TimeLineFragment, val mode:Boolean=false, val context: Context) : RecyclerView.Adapter<TimeLineViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimeLineViewHolder {
         val view = View.inflate(parent.context, R.layout.timeline_viewholder, null)
@@ -90,15 +89,87 @@ class TimeLineAdapter(val list: List<Chrono>, val mode:Boolean=false, val contex
 
     override fun onBindViewHolder(holder: TimeLineViewHolder, position: Int) {
         holder.configureTimeLineViewHolder(list[position])
+        configureDeleteAction(list[position], holder)
     }
 
     override fun getItemViewType(position: Int): Int {
         return TimelineView.getTimeLineViewType(position, itemCount)
     }
+
+    private fun configureDeleteAction(chrono: Chrono, holder: TimeLineViewHolder) {
+
+        val onLongClickListener = View.OnLongClickListener {
+
+            val popupMenu = PopupMenu(fragment.context, it, Gravity.CENTER)
+            popupMenu.setOnMenuItemClickListener {
+
+                val context = this.context
+
+                if (it.itemId == R.id.menu_delete && chrono.item.isNotEmpty()) {
+
+                    val builder = AlertDialog.Builder(context)
+
+                    // Display a message on alert dialog
+                    if (chrono.typeDisplay.equals(TypeDisplay.EVENT)) {
+                        builder.setTitle(context.resources.getString(R.string.event_type_delete_title)) // TITLE
+                        builder.setMessage(context.resources.getString(R.string.event_type_delete)) // MESSAGE
+                    } else {
+                        builder.setTitle(context.resources.getString(R.string.meal_delete_title)) // TITLE
+                        builder.setMessage(context.resources.getString(R.string.meal_delete)) // MESSAGE
+                    }
+
+                    // Set positive button and its click listener on alert dialog
+                    builder.setPositiveButton(context.resources.getString(R.string.yes)) { dialog, _ ->
+                        dialog.dismiss()
+
+                        if (chrono.typeDisplay.equals(TypeDisplay.EVENT)) { // Delete event
+                            deleteEvent(chrono.id, context = context)
+                            Toast.makeText(
+                                context,
+                                context.resources.getString(R.string.event_type_deleted),
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else { // Delete meal
+                            deleteMeal(chrono.id, context = context)
+                            Toast.makeText(
+                                context,
+                                context.resources.getString(R.string.meal_deleted),
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+
+                        // Update TimeLineFragment
+                        onChronoItemDeleted.chronoItemDeleted(chrono)
+                    }
+
+                    // Display negative button on alert dialog
+                    builder.setNegativeButton(context.resources.getString(R.string.no)) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+
+                    // Finally, make the alert dialog using builder
+                    val dialog: AlertDialog = builder.create()
+
+                    // Display the alert dialog on app interface
+                    dialog.show()
+                }
+
+                true
+            }
+            popupMenu.inflate(R.menu.menu_chrono)
+            popupMenu.show()
+
+            true
+        }
+
+        holder.itemView.findViewById<ImageView>(R.id.timeline_viewholder).setOnLongClickListener(onLongClickListener)
+    }
+
+
 }
 
 /** ADAPTER FOR GRIDVIEW TO DISPLAY PICTURE + NAME **/
-class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableList<Any>?, private val pickmode:Boolean, private val onItemSelectionListener: OnItemSelectionListener?, val mode:Boolean=false, private val activity:MainActivity, val context: Context): BaseAdapter() { // any is Event or Meal
+class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableList<Any>?, private val pickmode:Boolean, private val onItemSelectionListener: OnItemSelectionListener?, val mode:Boolean=false, private val activity:MainActivity?, val context: Context): BaseAdapter() { // any is Event or Meal
 
 
     override fun getItem(position: Int): Any {
@@ -176,99 +247,103 @@ class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableLi
             getImageFromPath(image, imageDraw, imageView, context)
 
             // change layout in case of validation for picking
-            if(pickmode)
+            if(pickmode){
                 setPickItem(frameLayout, pickIcon)
 
-            // Set onClickListener
-            view.setOnClickListener {
+                // Set onClickListener
+                view.setOnClickListener {
 
-                // Remove or add item in listSelected from Activity & from this adapter
-                if(listFood[position]!=null) {
+                    // Remove or add item in listSelected from Activity & from this adapter
+                    if(listFood[position]!=null) {
 
-                    // from Activity
-                    onItemSelectionListener?.onItemSelected(listFood[position]!!)
+                        // from Activity
+                        onItemSelectionListener?.onItemSelected(listFood[position]!!)
 
-                    // from this adapter
-                    listItemSelected = updateListSelected(listFood[position]!!, listItemSelected)
+                        // from this adapter
+                        listItemSelected = updateListSelected(listFood[position]!!, listItemSelected)
+                    }
+
+                    // Update adapter
+                    notifyDataSetChanged()
                 }
 
-                // Update adapter
-                notifyDataSetChanged()
-            }
+                // Configure context menu for deleting food or event type
+                view.setOnLongClickListener{
 
-            // Configure context menu for deleting food or event type
-            view.setOnLongClickListener{
-
-                when(listFood[position]) {
-                    is EventType -> { // if eventType
-                        val eventType = listFood[position] as EventType
-                        view.tag = eventType.id.toString()
-                    }
-                    is Food -> {
-                        val food = listFood[position] as Food
-                        view.tag = food.id.toString()
-                    }
-                }
-
-                val popupMenu = PopupMenu(activity, view)
-                popupMenu.setOnMenuItemClickListener{
-
-                    if(it.itemId == R.id.menu_delete){
-
-                        val builder = AlertDialog.Builder(activity)
-
-                        // Display a message on alert dialog
-                        when(listFood[position]) {
-                            is EventType -> { // if eventType
-                                builder.setTitle(context.resources.getString(R.string.event_type_delete_title)) // TITLE
-                                builder.setMessage(context.resources.getString(R.string.event_type_delete)) // MESSAGE
-                            }
-                            is Food -> {
-                                builder.setTitle(context.resources.getString(R.string.food_delete_title)) // TITLE
-                                builder.setMessage(context.resources.getString(R.string.food_delete)) // MESSAGE
-                            }
+                    when(listFood[position]) {
+                        is EventType -> { // if eventType
+                            val eventType = listFood[position] as EventType
+                            view.tag = eventType.id.toString()
                         }
-
-                        // Set positive button and its click listener on alert dialog
-                        builder.setPositiveButton(context.resources.getString(R.string.yes)){ dialog, _ ->
-                            dialog.dismiss()
-
-                            val idToDelete = if(listFood[position] is Food){(listFood[position] as Food).id} else {(listFood[position] as EventType).id}
-                            val typeDisplay = if(listFood[position] is Food){TypeDisplay.MEAL} else {TypeDisplay.EVENT}
-
-                            if(idToDelete!=null)
-                                activity.deleteFromDatabase(idToDelete, typeDisplay)
-                        }
-
-                        // Display negative button on alert dialog
-                        builder.setNegativeButton(context.resources.getString(R.string.no)){ dialog, _ ->
-                            dialog.dismiss()
-                        }
-
-                        // Finally, make the alert dialog using builder
-                        val dialog: AlertDialog = builder.create()
-
-                        // Display the alert dialog on app interface
-                        dialog.show()
-
-                    } else if(it.itemId == R.id.menu_modify){
-
-                        when(listFood[position]) {
-                            is EventType -> { // if eventType
-                                val eventType = listFood[position] as EventType
-                                activity.showDialogAddEventType(eventType)
-                            }
-                            is Food -> {
-                                val food = listFood[position] as Food
-                                activity.showDialogAddFood(food)
-                            }
+                        is Food -> {
+                            val food = listFood[position] as Food
+                            view.tag = food.id.toString()
                         }
                     }
+
+                    val popupMenu = PopupMenu(activity, view)
+                    popupMenu.setOnMenuItemClickListener{
+
+                        if(it.itemId == R.id.menu_delete && activity!=null){
+
+                            val builder = AlertDialog.Builder(activity)
+
+                            // Display a message on alert dialog
+                            when(listFood[position]) {
+                                is EventType -> { // if eventType
+                                    builder.setTitle(context.resources.getString(R.string.event_type_delete_title)) // TITLE
+                                    builder.setMessage(context.resources.getString(R.string.event_type_delete)) // MESSAGE
+                                }
+                                is Food -> {
+                                    builder.setTitle(context.resources.getString(R.string.food_delete_title)) // TITLE
+                                    builder.setMessage(context.resources.getString(R.string.food_delete)) // MESSAGE
+                                }
+                            }
+
+                            // Set positive button and its click listener on alert dialog
+                            builder.setPositiveButton(context.resources.getString(R.string.yes)){ dialog, _ ->
+                                dialog.dismiss()
+
+                                val idToDelete = if(listFood[position] is Food){(listFood[position] as Food).id} else {(listFood[position] as EventType).id}
+                                val typeDisplay = if(listFood[position] is Food){TypeDisplay.MEAL} else {TypeDisplay.EVENT}
+
+                                if(idToDelete!=null)
+                                    activity.deleteFromDatabase(idToDelete, typeDisplay)
+                            }
+
+                            // Display negative button on alert dialog
+                            builder.setNegativeButton(context.resources.getString(R.string.no)){ dialog, _ ->
+                                dialog.dismiss()
+                            }
+
+                            // Finally, make the alert dialog using builder
+                            val dialog: AlertDialog = builder.create()
+
+                            // Display the alert dialog on app interface
+                            dialog.show()
+
+                        } else if(it.itemId == R.id.menu_modify){
+
+                            when(listFood[position]) {
+                                is EventType -> { // if eventType
+                                    val eventType = listFood[position] as EventType
+                                    activity?.showDialogAddEventType(eventType)
+                                }
+                                is Food -> {
+                                    val food = listFood[position] as Food
+                                    activity?.showDialogAddFood(food)
+                                }
+                            }
+                        }
+                        true
+                    }
+                    popupMenu.inflate(R.menu.menu_grid)
+                    popupMenu.show()
                     true
                 }
-                popupMenu.inflate(R.menu.menu_grid)
-                popupMenu.show()
-                true
+            } else {
+                view.isEnabled = false
+                view.isSoundEffectsEnabled = false
             }
         }
 
@@ -279,18 +354,18 @@ class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableLi
 
             // Set onClickListener
             view.setOnClickListener {
+                if(activity!=null){
+                    if(activity.foodTypeSelected!=null){ // IF MEAL PANEL
+                        val food = Food()
+                        food.idFoodType = activity.foodTypeSelected?.id
+                        food.foodPic = activity.foodTypeSelected?.foodTypePic
+                        activity.showDialogAddFood(food)
 
-                if(activity.foodTypeSelected!=null){ // IF MEAL PANEL
-                    val food = Food()
-                    food.idFoodType = activity.foodTypeSelected?.id
-                    food.foodPic = activity.foodTypeSelected?.foodTypePic
-                    activity.showDialogAddFood(food)
-
-                } else { // IF EVENT TYPE PANEL
-                    val eventType = EventType()
-                    activity.showDialogAddEventType(eventType)
+                    } else { // IF EVENT TYPE PANEL
+                        val eventType = EventType()
+                        activity.showDialogAddEventType(eventType)
+                    }
                 }
-
             }
         }
 
@@ -310,7 +385,10 @@ class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableLi
     }
 
     override fun getCount(): Int {
-        return listFood.size + 1
+        return if(pickmode)
+            listFood.size + 1
+        else
+            listFood.size
     }
 }
 
@@ -334,29 +412,26 @@ class CalendarAdapter(context: Context, private val onTimeLineDisplay: OnTimeLin
 
                 holder.dayNum?.text = dateTime.day.toString()
 
-                    if (chronoEvents[dateTime] != 0){ // if there is an event this day
+                if (chronoEvents[dateTime] != 0){ // if there is an event this day
                     val text = "(" + chronoEvents[dateTime] + ")"
                     holder.eventNum?.text = text
                     holder.fireIcon?.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(context, android.R.color.holo_red_dark), PorterDuff.Mode.MULTIPLY)
+
+                    // Configure on click listener for displaying timeline
+                    view.setOnClickListener {
+                        onTimeLineDisplay.displayTimeLineFragment(dateTime.day, dateTime.month, dateTime.year)
+                    }
+
                 } else { // if no event this day
                     holder.eventNum?.visibility = View.INVISIBLE
                     holder.fireIcon?.visibility = View.INVISIBLE
                 }
 
-                // Configure on click listener for displaying timeline
-                view.setOnClickListener {
-                    onTimeLineDisplay.displayTimeLineFragment(dateTime.day, dateTime.month, dateTime.year)
-                }
-
             } else {
-                holder.eventNum?.setBackgroundResource(android.R.color.darker_gray)
-                holder.fireIcon?.setBackgroundResource(android.R.color.darker_gray)
-                holder.dayNum?.setBackgroundResource(android.R.color.darker_gray)
                 holder.eventNum?.visibility = View.INVISIBLE
                 holder.fireIcon?.visibility = View.INVISIBLE
                 holder.dayNum?.visibility = View.INVISIBLE
             }
-
 
             return view
         }

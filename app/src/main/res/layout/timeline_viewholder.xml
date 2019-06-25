@@ -4,9 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp">
+    android:layout_height="wrap_content">
 
     <com.github.vipulasri.timelineview.TimelineView
             android:id="@+id/timeline"
@@ -18,39 +16,58 @@
             app:endLineColor="@color/colorTimeLine"
             app:lineStyle="normal"/>
 
-    <RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:padding="5dp"
-            android:layout_marginStart="5dp"
+    <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <TextView
-                android:id="@+id/hour"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"/>
+        <RelativeLayout
+                android:padding="5dp"
+                android:background="@color/colorTimeLineContent"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <GridView
-                android:id="@+id/grid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_below="@+id/edit_button"
-                android:numColumns="4"
-                android:verticalSpacing="3dp"
-                android:horizontalSpacing="3dp"/>
+            <ImageView
+                    android:id="@+id/image_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/baseline_access_time_black_24"/>
 
-        <ImageButton
-                android:id="@+id/edit_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:background="@color/caldroid_transparent"
-                android:src="@drawable/baseline_edit_black_18"/>
+            <TextView
+                    android:id="@+id/hour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_alignParentTop="true"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_toEndOf="@+id/image_time"/>
 
-    </RelativeLayout>
+            <GridView
+                    android:id="@+id/grid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_below="@+id/hour"
+                    android:numColumns="4"
+                    android:verticalSpacing="3dp"
+                    android:horizontalSpacing="3dp"/>
+
+        </RelativeLayout>
+
+        <ImageView
+                android:id="@+id/timeline_viewholder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"/>
+
+    </FrameLayout>
+
+
 
 </LinearLayout>
 

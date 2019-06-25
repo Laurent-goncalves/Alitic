@@ -1,6 +1,7 @@
 package com.g.laurent.alitic.Controllers.ClassControllers
 
 import android.content.Context
+import com.g.laurent.alitic.Controllers.Activities.TypeDisplay
 import com.g.laurent.alitic.Models.Event
 import com.g.laurent.alitic.Models.Meal
 import com.g.laurent.alitic.getDateAsLong
@@ -10,7 +11,7 @@ import com.g.laurent.alitic.getTextTime
 import java.util.*
 
 
-class Chrono(val hour:String, val item:List<Any>)
+class Chrono(val hour:String, val id:Long?, val typeDisplay: TypeDisplay, val item:List<Any>)
 
 fun getChronology(day:Int, month:Int, year:Int, mode:Boolean = false, context: Context):List<Chrono>{
 
@@ -69,12 +70,12 @@ fun organizeEventsByTime(listEvents:List<Event>?, listMeals:List<Meal>?, mode:Bo
 
         when(any){
             is Event -> {
-                result.add(Chrono(getTextTime(getHourAsInt(any.dateCode), getMinutesAsInt(any.dateCode)), listOf(any)))
+                result.add(Chrono(getTextTime(getHourAsInt(any.dateCode), getMinutesAsInt(any.dateCode)), any.id, TypeDisplay.EVENT, listOf(any)))
             }
 
             is Meal -> {
                 val listFoods = getFoodsFromMeal(any, mode, context)
-                result.add(Chrono(getTextTime(getHourAsInt(any.dateCode), getMinutesAsInt(any.dateCode)), listFoods))
+                result.add(Chrono(getTextTime(getHourAsInt(any.dateCode), getMinutesAsInt(any.dateCode)), any.id, TypeDisplay.MEAL, listFoods))
             }
         }
     }

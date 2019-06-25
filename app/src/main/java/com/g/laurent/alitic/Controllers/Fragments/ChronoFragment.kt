@@ -1,13 +1,21 @@
 package com.g.laurent.alitic.Controllers.Fragments
 
 import android.content.Context
+import android.content.res.Resources
+import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.g.laurent.alitic.Controllers.Activities.OnTimeLineDisplay
+import com.g.laurent.alitic.R
 import com.g.laurent.alitic.Views.CalendarAdapter
+import com.g.laurent.alitic.getLastDayMonth
 import com.roomorama.caldroid.CaldroidFragment
+import hirondelle.date4j.DateTime
+import kotlinx.android.synthetic.main.activity_chrono.view.*
 import java.util.*
 
 
@@ -22,6 +30,11 @@ class ChronoFragment : CaldroidFragment() {
         val cal = Calendar.getInstance()
         this.month = cal.get(Calendar.MONTH) + 1
         this.year = cal.get(Calendar.YEAR)
+
+        // Set Caldroid fragment custom theme
+        val args = Bundle()
+        args.putInt(THEME_RESOURCE, com.caldroid.R.style.CaldroidDefaultDark)
+        this.arguments = args
 
         return super.onCreateView(inflater, container, savedInstanceState)
     }

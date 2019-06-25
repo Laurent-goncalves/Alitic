@@ -249,7 +249,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
                 typeDisplay = TypeDisplay.MEAL
 
                 displayMealPicking()
-                //moveCamera(imageView, Loc.CENTER.position, Loc.TOP_LEFT.position, matrix, this)
+                moveCamera(imageView, Loc.CENTER.position, Loc.TOP_LEFT.position, matrix, this)
+
+
                 configureButtons(TypeDisplay.MEAL)
                 invalidateOptionsMenu()
             }
@@ -263,17 +265,29 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnMenuSelectionL
             }
 
             R.id.bottom_left_corner -> {//     |, |
-                moveCamera(imageView,Loc.CENTER.position, Loc.BOTTOM_LEFT.position,matrix, this)
-                val intent = Intent(this, ChronoActivity::class.java)
-                startActivity(intent)
+                //moveCamera(imageView,Loc.CENTER.position, Loc.BOTTOM_LEFT.position,matrix, this)
+                showChronoActivity()
             }
 
             R.id.bottom_right_corner -> {//    | ,|
-                moveCamera(imageView,Loc.CENTER.position, Loc.BOTTOM_RIGHT.position,matrix, this)
+                //moveCamera(imageView,Loc.CENTER.position, Loc.BOTTOM_RIGHT.position,matrix, this)
                 val intent = Intent(this, StatActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivity(intent)
+                overridePendingTransition(0, 0)
             }
         }
+    }
+
+    fun showChronoActivity(){
+        val intent = Intent(this, ChronoActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
+        overridePendingTransition(0, 0)
     }
 
     private fun configureButtons(typeDisplay:TypeDisplay){

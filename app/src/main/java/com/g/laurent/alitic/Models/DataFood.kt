@@ -279,43 +279,43 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     list4.add(MealItem(null,null,bonbon))
     list4.add(MealItem(null,null,volailles))
     list4.add(MealItem(null,null,pain))
-    list1.add(MealItem(null,null,chocolat))
+    list4.add(MealItem(null,null,chocolat))
 
     val list5 : MutableList<MealItem> = mutableListOf()
-    list3.add(MealItem(null,null,haricot))
-    list3.add(MealItem(null,null,lait))
-    list3.add(MealItem(null,null,crustaces))
-    list3.add(MealItem(null,null,peche))
+    list5.add(MealItem(null,null,haricot))
+    list5.add(MealItem(null,null,lait))
+    list5.add(MealItem(null,null,crustaces))
+    list5.add(MealItem(null,null,peche))
 
     val list6 : MutableList<MealItem> = mutableListOf()
-    list3.add(MealItem(null,null,pain))
-    list3.add(MealItem(null,null,olives))
-    list3.add(MealItem(null,null,patisserie))
-    list3.add(MealItem(null,null,endive))
+    list6.add(MealItem(null,null,pain))
+    list6.add(MealItem(null,null,olives))
+    list6.add(MealItem(null,null,patisserie))
+    list6.add(MealItem(null,null,endive))
 
     val list7 : MutableList<MealItem> = mutableListOf()
-    list3.add(MealItem(null,null,viandeRouge))
-    list3.add(MealItem(null,null,chocolat))
-    list3.add(MealItem(null,null,crustaces))
-    list3.add(MealItem(null,null,lait))
+    list7.add(MealItem(null,null,viandeRouge))
+    list7.add(MealItem(null,null,chocolat))
+    list7.add(MealItem(null,null,crustaces))
+    list7.add(MealItem(null,null,lait))
 
     val list8 : MutableList<MealItem> = mutableListOf()
-    list3.add(MealItem(null,null,lait))
-    list3.add(MealItem(null,null,peche))
-    list3.add(MealItem(null,null,pain))
-    list3.add(MealItem(null,null,olives))
+    list8.add(MealItem(null,null,lait))
+    list8.add(MealItem(null,null,peche))
+    list8.add(MealItem(null,null,pain))
+    list8.add(MealItem(null,null,olives))
 
     val list9 : MutableList<MealItem> = mutableListOf()
-    list3.add(MealItem(null,null,haricot))
-    list3.add(MealItem(null,null,bonbon))
-    list3.add(MealItem(null,null,pain))
-    list3.add(MealItem(null,null,crustaces))
+    list9.add(MealItem(null,null,haricot))
+    list9.add(MealItem(null,null,bonbon))
+    list9.add(MealItem(null,null,pain))
+    list9.add(MealItem(null,null,crustaces))
 
     val list10 : MutableList<MealItem> = mutableListOf()
-    list3.add(MealItem(null,null,lait))
-    list3.add(MealItem(null,null,chocolat))
-    list3.add(MealItem(null,null,endive))
-    list3.add(MealItem(null,null,viandeRouge))
+    list10.add(MealItem(null,null,lait))
+    list10.add(MealItem(null,null,chocolat))
+    list10.add(MealItem(null,null,endive))
+    list10.add(MealItem(null,null,viandeRouge))
 
     val idMeal1 = saveNewMeal(list1, getDateAsLong(10, 2, 2019, 12, 0),
         false, context)
@@ -336,6 +336,16 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     val idMeal9 = saveNewMeal(list9,getDateAsLong(16, 2, 2019, 20, 0),
         false,context)
     val idMeal10 = saveNewMeal(list10,getDateAsLong(17, 2, 2019, 12, 0),
+        false,context)
+    val idMeal11 = saveNewMeal(list8,getDateAsLong(11, 6, 2019, 12, 0),
+        false,context)
+    val idMeal12 = saveNewMeal(list3,getDateAsLong(11, 6, 2019, 21, 0),
+        false,context)
+    val idMeal13 = saveNewMeal(list5,getDateAsLong(17, 6, 2019, 12, 0),
+        false,context)
+    val idMeal14 = saveNewMeal(list4,getDateAsLong(18, 6, 2019, 12, 0),
+        false,context)
+    val idMeal15 = saveNewMeal(list7,getDateAsLong(18, 6, 2019, 19, 0),
         false,context)
 
     /** ------------------------------------------------------------------------------------------------------
@@ -379,20 +389,20 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
 
     val idEvent18 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(19, 5, 2019, 13, 0),
         context = context)
-   /* val idEvent19 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(3, 6, 2019, 13, 0),
+    val idEvent19 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(3, 6, 2019, 13, 0),
         context = context)
     val idEvent20 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(17, 6, 2019, 13, 0),
         context = context)
-    val idEvent21 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(17, 6, 2019, 13, 0),
+    val idEvent21 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(17, 6, 2019, 18, 0),
         context = context)
     val idEvent22 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(18, 6, 2019, 13, 0),
         context = context)
     val idEvent23 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(11, 6, 2019, 13, 0),
         context = context)
-    val idEvent24 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(11, 6, 2019, 13, 0),
+    val idEvent24 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(11, 6, 2019, 15, 0),
         context = context)
     val idEvent25 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(12, 6, 2019, 13, 0),
-        context = context)*/
+        context = context)
 }
 
 

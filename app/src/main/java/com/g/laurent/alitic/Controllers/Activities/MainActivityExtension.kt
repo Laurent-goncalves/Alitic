@@ -115,22 +115,68 @@ fun moveCamera(imageView: ImageView, fromPosition:Position?, toPosition:Position
 
         var done = false
 
-        valueAnimator.addUpdateListener {
+        /*valueAnimator.addUpdateListener {
             val animProgress:Float = valueAnimator.animatedValue as Float
             if(animProgress > 0.90 && !done) {
                 done = true
                 activity?.displayMealPicking()
             }
-        }
+        }*/
 
-        /*valueAnimator.addListener(object: AnimatorListenerAdapter() {
+        valueAnimator.addListener(object: AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator?) {
                 super.onAnimationEnd(animation)
-                activity?.displayMealPicking()
+                activity?.showChronoActivity()
             }
-        })*/
+        })
 
         AsyncTaskAnimation(valueAnimator).execute()
+    }
+}
+
+fun moveCamera(imageView: ImageView, fromPosition:Position?, toPosition:Position, matrix: Matrix, activity: ChronoActivity?, rien:String){
+
+    if(fromPosition==null){
+        matrix.reset()
+        matrix.setTranslate(toPosition.px, toPosition.py)
+        imageView.imageMatrix = matrix
+
+    } else {
+
+        val valueAnimator = ValueAnimator.ofFloat(0f, 1f)
+        valueAnimator.interpolator = AccelerateDecelerateInterpolator() // increase the speed first and then decrease
+        valueAnimator.duration = DURATION_MOVE_CAMERA
+        valueAnimator.addUpdateListener { animation ->
+
+            val progress = animation.animatedValue as Float
+
+            val tempX = fromPosition.px + progress * (toPosition.px - fromPosition.px)
+            val tempY = fromPosition.py + progress * (toPosition.py - fromPosition.py)
+
+            matrix.reset()
+            matrix.setTranslate(tempX, tempY)
+
+            imageView.imageMatrix = matrix
+        }
+
+        var done = false
+
+        /*valueAnimator.addUpdateListener {
+            val animProgress:Float = valueAnimator.animatedValue as Float
+            if(animProgress > 0.90 && !done) {
+                done = true
+                activity?.displayMealPicking()
+            }
+        }*/
+
+        valueAnimator.addListener(object: AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator?) {
+                super.onAnimationEnd(animation)
+                activity?.showChronoFragment()
+            }
+        })
+        valueAnimator.start()
+        //AsyncTaskAnimation(valueAnimator).execute()
     }
 }
 

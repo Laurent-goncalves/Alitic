@@ -31,7 +31,10 @@
     <string name="menu_modify">Modifier paramètres</string>
 
     <string name="food_delete_title">Suppression aliment</string>
+    <string name="meal_delete_title">Suppression repas</string>
     <string name="event_type_delete_title">Suppression ressenti</string>
+    <string name="meal_delete">Etes-vous sûr de supprimer ce repas ?</string>
+    <string name="meal_deleted">Repas supprimé</string>
     <string name="food_delete">Etes-vous sûr de supprimer cet aliment ?</string>
     <string name="food_deleted">Aliment supprimé</string>
     <string name="event_type_delete">Etes-vous sûr de supprimer ce ressenti ?</string>
