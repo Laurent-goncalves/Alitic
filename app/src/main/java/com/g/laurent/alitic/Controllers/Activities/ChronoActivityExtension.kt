@@ -3,42 +3,12 @@ package com.g.laurent.alitic.Controllers.Activities
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
-import android.content.Context
 import android.graphics.Matrix
-import android.os.AsyncTask
 import android.support.v7.widget.Toolbar
-import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
-import android.widget.ProgressBar
-import com.g.laurent.alitic.Models.EventType
-import com.g.laurent.alitic.R
-import java.lang.ref.WeakReference
 
-fun getTitlesFromListEventTypes(list:List<EventType>):ArrayList<String>{
-
-    val result = arrayListOf<String>()
-
-    if(list.isNotEmpty()){
-        for(e in list){
-            val title = e.name
-            if(title!=null){
-                result.add(title)
-            }
-        }
-    }
-    return result
-}
-
-fun configureToolbar(toolbar: Toolbar, activity:StatActivity, context: Context){
-
-    val infoIcon = toolbar.menu.findItem(R.id.action_info)
-
-    // Show info when clicking on info icon
-    infoIcon.setOnMenuItemClickListener {
-        activity.displayInformations()
-            true
-    }
+fun configureToolbarWhenChronoFragment(toolbar: Toolbar, title:String, activity:ChronoActivity){
 
     // Set return icon
     activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -47,10 +17,22 @@ fun configureToolbar(toolbar: Toolbar, activity:StatActivity, context: Context){
     }
 
     // Set title of toolbar
-    toolbar.title = context.getString(R.string.title_toolbar_stat)
+    toolbar.title = title
 }
 
-fun movePicture(imageView: ImageView, fromPosition:Position?, toPosition:Position, matrix: Matrix, activity: StatActivity?){
+fun configureToolbarWhenTimeLineFragment(toolbar: Toolbar, day:String, activity:ChronoActivity){
+
+    // Set return icon
+    activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    toolbar.setNavigationOnClickListener {
+        activity.showChronoFragment()
+    }
+
+    // Set title of toolbar (day of the time line)
+    toolbar.title = day
+}
+
+fun movePicture(imageView: ImageView, fromPosition:Position?, toPosition:Position, matrix: Matrix, activity: ChronoActivity?){
 
     if(fromPosition==null){
         matrix.reset()
@@ -81,7 +63,7 @@ fun movePicture(imageView: ImageView, fromPosition:Position?, toPosition:Positio
                 if(toPosition.equals(Loc.CENTER.position)){ // if picture move to center
                     activity?.finishActivity()
                 } else { // if picture move to bottom left corner
-                    activity?.configureStatActivity()
+                    activity?.configureChronoActivity()
                 }
             }
         })

@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -21,7 +21,11 @@
     <!-- Toolbar theme. -->
     <style name="ToolBarStyle" parent="AppTheme">
         <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
         <item name="colorControlNormal">@android:color/white</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
     <!-- Custom Spinner dropdown background theme. -->
@@ -30,11 +34,7 @@
         <item name="android:background">@drawable/spinner_background</item>
     </style>
 
-
-
-
-
-
+    <!-- Style for Caldroid fragment (Calendar). -->
     <style name="CaldroidDefaultDark" parent="CaldroidDefault">
         <item name="styleCaldroidViewLayout">@style/CaldroidDefaultDarkCalendarViewLayout</item>
         <item name="styleCaldroidMonthName">@style/CaldroidDefaultDarkMonthName</item>
@@ -48,7 +48,7 @@
     </style>
 
     <style name="CaldroidDefaultDarkMonthName" parent="CaldroidDefaultMonthName">
-        <item name="android:textColor">@android:color/transparent</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="CaldroidDefaultDarkGridView" parent="CaldroidDefaultGridView">
@@ -65,7 +65,5 @@
     </style>
 
     <style name="CaldroidDefaultDarkSquareCell" parent="CaldroidDefaultDarkCell" />
-
-
 
 </resources>

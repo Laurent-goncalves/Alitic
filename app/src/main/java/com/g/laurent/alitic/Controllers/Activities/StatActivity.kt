@@ -1,50 +1,55 @@
 package com.g.laurent.alitic.Controllers.Activities
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import com.g.laurent.alitic.Views.StatAdapter
 import android.view.View
+import android.widget.FrameLayout
+import android.widget.ProgressBar
 import com.g.laurent.alitic.Controllers.ClassControllers.getListEventTypesForStatDetailFragment
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.R
 import kotlinx.android.synthetic.main.activity_stat.*
+import java.lang.ref.WeakReference
 
-class StatActivity : AppCompatActivity(), OnEventTypeChangeListener{
+
+class StatActivity : BaseActivity(), OnEventTypeChangeListener{
 
     var idEventType:Long? = null
     private var listEventTypes:List<EventType> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stat)
+        super.onCreate(savedInstanceState)
 
-        clearDatabase(applicationContext)
-
-        val toolbar: Toolbar = findViewById(R.id.activity_stat_toolbar)
-        setSupportActionBar(toolbar)
+        // Start progress Bar
+        findViewById<ProgressBar>(R.id.progress_bar).visibility= View.VISIBLE
 
         listEventTypes = getListEventTypesForStatDetailFragment(applicationContext)
-        configureTabLayout()
+
+        movePicture(imageBackground, Loc.CENTER.position, Loc.BOTTOM_RIGHT.position, matrix, this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar_stats, menu)
-        val toolbar: Toolbar = findViewById(R.id.activity_stat_toolbar)
         configureToolbar(toolbar, this, applicationContext)
         return super.onCreateOptionsMenu(menu)
     }
 
     /** ---------------------------------- TABS ---------------------------------------- **/
 
-    private fun configureTabLayout(){
+    fun configureStatActivity(){
 
+        // Stop progress Bar
+        findViewById<ProgressBar>(R.id.progress_bar).visibility= View.GONE
+
+        // Configure StatAdapter
         stat_viewpager.visibility = View.VISIBLE
         stat_viewpager.adapter = StatAdapter(supportFragmentManager, applicationContext, listEventTypes[0], getTitlesFromListEventTypes(listEventTypes))
 
+        // Configure tab layout
         tabs.setupWithViewPager(stat_viewpager)
         tabs.tabMode = TabLayout.MODE_FIXED // Tabs have the same width
 
@@ -60,9 +65,7 @@ class StatActivity : AppCompatActivity(), OnEventTypeChangeListener{
     }
 
     override fun changeEventType(position: Int) {
-
         stat_viewpager.adapter = StatAdapter(supportFragmentManager, applicationContext, listEventTypes[position], getTitlesFromListEventTypes(listEventTypes))
-
         stat_viewpager.currentItem = 2
     }
 
@@ -70,20 +73,13 @@ class StatActivity : AppCompatActivity(), OnEventTypeChangeListener{
         // TODO : to implement
     }
 
+    public override fun goToBackToMainPage(){
+        super.goToBackToMainPage()
 
-    fun getTitlesFromListEventTypes(list:List<EventType>):ArrayList<String>{
-
-        val result = arrayListOf<String>()
-
-        if(list.isNotEmpty()){
-            for(e in list){
-                val title = e.name
-                if(title!=null){
-                    result.add(title)
-                }
-            }
-        }
-        return result
+        // Hide stat_viewpager
+        stat_viewpager.visibility = View.GONE
+        // Move camera to the center of image in background
+        movePicture(imageBackground, Loc.BOTTOM_RIGHT.position,Loc.CENTER.position, matrix, this)
     }
 }
 

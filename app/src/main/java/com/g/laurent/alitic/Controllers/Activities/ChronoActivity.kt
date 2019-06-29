@@ -1,44 +1,55 @@
 package com.g.laurent.alitic.Controllers.Activities
 
-import android.graphics.Matrix
-import android.os.AsyncTask
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageView
-import com.g.laurent.alitic.Controllers.ClassControllers.saveNewEvent
-import com.g.laurent.alitic.Controllers.ClassControllers.saveNewEventType
+import android.view.Menu
+import android.view.View
+import android.widget.ProgressBar
 import com.g.laurent.alitic.Controllers.Fragments.*
 import com.g.laurent.alitic.R
 import com.g.laurent.alitic.getDateAsLong
-import kotlinx.android.synthetic.main.activity_stat.*
+import com.g.laurent.alitic.getTextDate
 
 
-class ChronoActivity : AppCompatActivity(), OnTimeLineDisplay {
+class ChronoActivity : BaseActivity(), OnTimeLineDisplay, OnCalendarLoaded {
 
-    private var matrix = Matrix()
+
     private val chronoFragment = ChronoFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chrono)
+        super.onCreate(savedInstanceState)
 
-        val imageView = this.findViewById<ImageView>(R.id.image_background)
+        // Start progress Bar
+        startProgressBar()
 
-        /*matrix.reset()
-        matrix.setTranslate(Loc.BOTTOM_LEFT.position.px, Loc.BOTTOM_LEFT.position.py)
-        imageView.imageMatrix = matrix*/
-        //moveCamera(imageView,Loc.CENTER.position, Loc.BOTTOM_LEFT.position,matrix, this, "eee")
+        movePicture(imageBackground, Loc.CENTER.position, Loc.BOTTOM_LEFT.position, matrix, this)
+    }
 
-        //clearDatabase(applicationContext)
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_toolbar_chrono, menu)
+        configureToolbarWhenChronoFragment(toolbar, context.resources.getString(R.string.chronology), this)
+        return super.onCreateOptionsMenu(menu)
+    }
 
+    fun configureChronoActivity() {
+        showChronoFragment()
+    }
 
+    fun startProgressBar(){
+        findViewById<ProgressBar>(R.id.progress_bar).visibility = View.VISIBLE
+    }
 
+    override fun calendarLoaded() {
+        stopProgressBar()
+    }
 
+    fun stopProgressBar(){
+        findViewById<ProgressBar>(R.id.progress_bar).visibility = View.GONE
     }
 
     fun showChronoFragment(){
         val fragmentManager = supportFragmentManager.beginTransaction()
-        fragmentManager.replace(R.id.calendar_fragment, chronoFragment)
+        fragmentManager.replace(R.id.fragment_place, chronoFragment)
         fragmentManager.commit()
     }
 
@@ -53,12 +64,24 @@ class ChronoActivity : AppCompatActivity(), OnTimeLineDisplay {
         timeLineFragment.arguments = bundle
 
         val fragmentManager = supportFragmentManager.beginTransaction()
-        fragmentManager.replace(R.id.calendar_fragment, timeLineFragment)
+        fragmentManager.replace(R.id.fragment_place, timeLineFragment)
         fragmentManager.commit()
+
+        configureToolbarWhenTimeLineFragment(toolbar, getTextDate(getDateAsLong(day,month,year,0,0)), this)
     }
 
+    public override fun goToBackToMainPage(){
+        super.goToBackToMainPage()
+
+        // Remove fragments
+        supportFragmentManager.popBackStack()
+
+        // Move camera to the center of image in background
+        movePicture(imageBackground, Loc.BOTTOM_LEFT.position,Loc.CENTER.position, matrix, this)
+    }
 }
 
 interface OnTimeLineDisplay {
     fun displayTimeLineFragment(day:Int, month:Int, year:Int)
 }
+

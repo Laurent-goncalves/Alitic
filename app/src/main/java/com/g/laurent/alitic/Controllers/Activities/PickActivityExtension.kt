@@ -62,13 +62,6 @@ fun configureToolbar(toolbar: Toolbar, typeDisplay: TypeDisplay, activity:PickAc
     }
 }
 
-fun unConfigureToolbar(toolbar: Toolbar, activity:PickActivity, context: Context){
-    val searchIcon = toolbar.menu.findItem(R.id.action_search)
-    searchIcon.isVisible = false
-    toolbar.title = context.getString(R.string.app_name)
-    activity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
-}
-
 fun movePicture(imageView: ImageView, fromPosition:Position?, toPosition:Position, matrix: Matrix, activity: PickActivity?){
 
     if(fromPosition==null){
@@ -94,21 +87,11 @@ fun movePicture(imageView: ImageView, fromPosition:Position?, toPosition:Positio
             imageView.imageMatrix = matrix
         }
 
-        var done = false
-
-        /*valueAnimator.addUpdateListener {
-            val animProgress:Float = valueAnimator.animatedValue as Float
-            if(animProgress > 0.90 && !done) {
-                done = true
-                activity?.displayMealPicking()
-            }
-        }*/
-
         valueAnimator.addListener(object: AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator?) {
                 super.onAnimationEnd(animation)
                 if(toPosition.equals(Loc.CENTER.position)){ // if picture move to center
-                    activity?.finishPickActivity()
+                    activity?.finishActivity()
                 } else { // if picture move to left or right top corner
                     activity?.configurePickActivity()
                 }

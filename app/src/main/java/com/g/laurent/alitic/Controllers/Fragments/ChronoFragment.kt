@@ -19,10 +19,12 @@ import kotlinx.android.synthetic.main.activity_chrono.view.*
 import java.util.*
 
 
-class ChronoFragment : CaldroidFragment() {
+class ChronoFragment : CaldroidFragment(), OnCalendarLoaded {
+
 
     private lateinit var contextFragment:Context
     private lateinit var onTimeLineDisplay:OnTimeLineDisplay
+    private lateinit var onCalendarLoaded:OnCalendarLoaded
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -40,7 +42,11 @@ class ChronoFragment : CaldroidFragment() {
     }
 
     override fun getNewDatesGridAdapter(month: Int, year: Int): CalendarAdapter {
-        return CalendarAdapter(contextFragment, onTimeLineDisplay, month, year, false, getCaldroidData(), HashMap())
+        return CalendarAdapter(contextFragment, onTimeLineDisplay, onCalendarLoaded, month, year, false, getCaldroidData(), HashMap())
+    }
+
+    override fun calendarLoaded() {
+        onCalendarLoaded.calendarLoaded()
     }
 
     override fun onAttach(context: Context?) {
@@ -49,6 +55,12 @@ class ChronoFragment : CaldroidFragment() {
             contextFragment = context
         if(context is OnTimeLineDisplay)
             onTimeLineDisplay = context
+        if(context is OnCalendarLoaded)
+            onCalendarLoaded = context
     }
 
+}
+
+interface OnCalendarLoaded {
+    fun calendarLoaded()
 }

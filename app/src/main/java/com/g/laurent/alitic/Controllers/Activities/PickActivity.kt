@@ -33,11 +33,8 @@ import kotlinx.android.synthetic.main.pick_meal_layout.*
 /**
  * Activity for picking food or eventTypes and save them
  */
-class PickActivity : AppCompatActivity(), OnMenuSelectionListener, OnFoodToDeleteListener, OnItemSelectionListener, DialogCloseListener {
+class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteListener, OnItemSelectionListener, DialogCloseListener {
 
-    private var matrix = Matrix()
-    private lateinit var context: Context
-    private lateinit var imageBackground: ImageView
     private lateinit var menuAdapter: FoodTypeAdapter
     private lateinit var gridAdapter: GridAdapter
     private lateinit var listFoodType: List<FoodType>
@@ -53,13 +50,11 @@ class PickActivity : AppCompatActivity(), OnMenuSelectionListener, OnFoodToDelet
     var foodTypeSelected: FoodType? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pick)
+        super.onCreate(savedInstanceState)
 
         // init variables
         listFoodType = getAllFoodTypes(context = applicationContext)!!
-        imageBackground = findViewById(R.id.image_background)
-        context = applicationContext
 
         // Recover TypeDisplay
         val bundle = intent.extras
@@ -77,10 +72,6 @@ class PickActivity : AppCompatActivity(), OnMenuSelectionListener, OnFoodToDelet
         val prefs = applicationContext.getSharedPreferences(SHAREDPREF, 0)
         sWidth = prefs.getInt(SHARED_PREF_SWIDTH, 0)
         sHeight = prefs.getInt(SHARED_PREF_SHEIGHT, 0)
-
-        // Configure toolbar
-        val toolbar: Toolbar = findViewById(R.id.activity_pick_toolbar)
-        setSupportActionBar(toolbar)
 
         // Start moving camera
         if(typeDisplay.equals(TypeDisplay.MEAL))
@@ -194,7 +185,6 @@ class PickActivity : AppCompatActivity(), OnMenuSelectionListener, OnFoodToDelet
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar_pick, menu)
-        val toolbar: Toolbar = findViewById(R.id.activity_pick_toolbar)
         configureToolbar(toolbar, typeDisplay, this, context)
         return super.onCreateOptionsMenu(menu)
     }
@@ -382,11 +372,9 @@ class PickActivity : AppCompatActivity(), OnMenuSelectionListener, OnFoodToDelet
         configureGridView(typeDisplay)
     }
 
-    fun goToBackToMainPage(){
+    public override fun goToBackToMainPage(){
 
-        // Re-init toolbar
-        val toolbar: Toolbar = findViewById(R.id.activity_pick_toolbar)
-        unConfigureToolbar(toolbar, this, context)
+        super.goToBackToMainPage()
 
         if(typeDisplay.equals(TypeDisplay.EVENT)){
             // Hide layout for event picking
@@ -399,11 +387,6 @@ class PickActivity : AppCompatActivity(), OnMenuSelectionListener, OnFoodToDelet
             // Move camera to the center of image in background
             movePicture(imageBackground, Loc.TOP_LEFT.position,Loc.CENTER.position, matrix, this)
         }
-    }
-
-    fun finishPickActivity() {
-        finish()
-        overridePendingTransition(0, 0)
     }
 
     /**---------------------------------------- DIALOG ADD -------------------------------------

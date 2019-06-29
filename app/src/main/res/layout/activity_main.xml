@@ -54,7 +54,7 @@
             android:layout_alignParentEnd="true"/>
 
     <android.support.v7.widget.Toolbar
-            android:id="@+id/activity_main_toolbar"
+            android:id="@+id/activity_toolbar"
             android:minHeight="?android:attr/actionBarSize"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
             layout="@layout/pick_meal_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/activity_main_toolbar"
+            android:layout_below="@id/activity_toolbar"
             android:visibility="gone"/>
 
     <include
@@ -75,7 +75,7 @@
             layout="@layout/pick_event_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/activity_main_toolbar"
+            android:layout_below="@id/activity_toolbar"
             android:visibility="gone"/>
 
 </RelativeLayout>

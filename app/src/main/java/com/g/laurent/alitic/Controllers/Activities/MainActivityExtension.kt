@@ -6,7 +6,6 @@ import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.ImageView
 import com.facebook.stetho.Stetho
-import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Models.AppDataBase
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.Models.Food
@@ -17,11 +16,14 @@ const val DURATION_MOVE_CAMERA = 3000.toLong()
 const val DURATION_MOVE_PANEL = 2000.toLong()
 const val EVENT = "EVENT"
 const val MEAL = "MEAL"
-const val DELAY_SHOW = 2000.toLong()
-const val DELAY_HIDE = 100.toLong()
 const val DELETE = "DELETE"
 const val UNSELECT = "UNSELECT"
 const val SELECT = "SELECT"
+const val TYPEDISPLAY = "typeDisplay"
+const val SHARED_PREF_SWIDTH = "sWidth"
+const val SHARED_PREF_SHEIGHT = "sHeight"
+const val SHARED_PREF_DWIDTH = "dWidth"
+const val SHARED_PREF_DHEIGHT = "dHeight"
 
 interface OnMenuSelectionListener {
     fun onMenuSelected(selection:Int)
@@ -70,12 +72,6 @@ enum class Pan(var min : Float, var max:Float) {
 enum class TypeDisplay(val type:String, val idCancel : Int, val idSave : Int, var isNew:Boolean){
     EVENT("EVENT", R.id.button_cancel_event,R.id.button_save_event, true),
     MEAL("MEAL", R.id.button_cancel_meal,R.id.button_save_meal, true);
-}
-
-fun goToCenter(imageView: ImageView, toPosition:Position, matrix: Matrix){
-    matrix.reset()
-    matrix.setTranslate(toPosition.px, toPosition.py)
-    imageView.imageMatrix = matrix
 }
 
 fun calculWithLimits(value:Float, min:Float, max:Float):Float{
@@ -185,4 +181,3 @@ fun clearDatabase(context: Context){
 
     Stetho.initializeWithDefaults(context)
 }
-

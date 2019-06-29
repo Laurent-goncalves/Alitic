@@ -393,7 +393,7 @@ class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableLi
 }
 
 /** CALENDAR ADAPTER**/
-class CalendarAdapter(context: Context, private val onTimeLineDisplay: OnTimeLineDisplay, month: Int, year: Int, val mode:Boolean = false, caldroidData: Map<String, Any>, extraData: Map<String, Any>) : CaldroidGridAdapter(context, month, year, caldroidData, extraData) {
+class CalendarAdapter(context: Context, private val onTimeLineDisplay: OnTimeLineDisplay, private val onCalendarLoaded:OnCalendarLoaded, month: Int, year: Int, val mode:Boolean = false, caldroidData: Map<String, Any>, extraData: Map<String, Any>) : CaldroidGridAdapter(context, month, year, caldroidData, extraData) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
 
@@ -433,9 +433,11 @@ class CalendarAdapter(context: Context, private val onTimeLineDisplay: OnTimeLin
                 holder.dayNum?.visibility = View.INVISIBLE
             }
 
+            onCalendarLoaded.calendarLoaded()
             return view
         }
 
+        onCalendarLoaded.calendarLoaded()
         return null
     }
 }
