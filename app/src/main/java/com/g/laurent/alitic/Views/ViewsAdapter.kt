@@ -169,7 +169,7 @@ class TimeLineAdapter(val list: MutableList<Chrono>, val onChronoItemDeleted: On
 }
 
 /** ADAPTER FOR GRIDVIEW TO DISPLAY PICTURE + NAME **/
-class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableList<Any>?, private val pickmode:Boolean, private val onItemSelectionListener: OnItemSelectionListener?, val mode:Boolean=false, private val activity:MainActivity?, val context: Context): BaseAdapter() { // any is Event or Meal
+class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableList<Any>?, private val pickmode:Boolean, private val onItemSelectionListener: OnItemSelectionListener?, val mode:Boolean=false, private val activity:PickActivity?, val context: Context): BaseAdapter() { // any is Event or Meal
 
 
     override fun getItem(position: Int): Any {
@@ -307,8 +307,8 @@ class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableLi
                                 val idToDelete = if(listFood[position] is Food){(listFood[position] as Food).id} else {(listFood[position] as EventType).id}
                                 val typeDisplay = if(listFood[position] is Food){TypeDisplay.MEAL} else {TypeDisplay.EVENT}
 
-                                if(idToDelete!=null)
-                                    activity.deleteFromDatabase(idToDelete, typeDisplay)
+                                /*if(idToDelete!=null)
+                                    activity.deleteFromDatabase(idToDelete, typeDisplay)*/
                             }
 
                             // Display negative button on alert dialog
@@ -327,11 +327,11 @@ class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableLi
                             when(listFood[position]) {
                                 is EventType -> { // if eventType
                                     val eventType = listFood[position] as EventType
-                                    activity?.showDialogAddEventType(eventType)
+                                    //activity?.showDialogAddEventType(eventType)
                                 }
                                 is Food -> {
                                     val food = listFood[position] as Food
-                                    activity?.showDialogAddFood(food)
+                                    //activity?.showDialogAddFood(food)
                                 }
                             }
                         }

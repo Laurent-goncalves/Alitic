@@ -101,7 +101,7 @@ class SaveDialog : DialogFragment() {
             dismiss()
 
             // Go back to Main Page
-            (activity as MainActivity).goToBackToMainPage(typeDisplay.type)
+            (activity as PickActivity).goToBackToMainPage()
         }
 
         /**    BUTTON NO    **/
@@ -116,7 +116,7 @@ class SaveDialog : DialogFragment() {
             dismiss()
 
             // Go back to Main Page
-            (activity as MainActivity).goToBackToMainPage(typeDisplay.type)
+            (activity as PickActivity).goToBackToMainPage()
         }
     }
 
@@ -198,7 +198,7 @@ class DateTimePickerDialog : DialogFragment() {
                 dismiss()
 
                 // Go back to Main Page
-                (activity as MainActivity).goToBackToMainPage(typeDisplay.type)
+                (activity as PickActivity).goToBackToMainPage()
 
             } else
                 Snackbar.make(view, R.string.save_abort_message_dialog, Snackbar.LENGTH_LONG).show()

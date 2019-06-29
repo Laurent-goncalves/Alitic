@@ -27,7 +27,7 @@ class ChronoActivity : AppCompatActivity(), OnTimeLineDisplay {
         /*matrix.reset()
         matrix.setTranslate(Loc.BOTTOM_LEFT.position.px, Loc.BOTTOM_LEFT.position.py)
         imageView.imageMatrix = matrix*/
-        moveCamera(imageView,Loc.CENTER.position, Loc.BOTTOM_LEFT.position,matrix, this, "eee")
+        //moveCamera(imageView,Loc.CENTER.position, Loc.BOTTOM_LEFT.position,matrix, this, "eee")
 
         //clearDatabase(applicationContext)
 
