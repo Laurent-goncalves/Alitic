@@ -24,8 +24,11 @@ import com.g.laurent.alitic.Controllers.Activities.*
 import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Controllers.Fragments.*
 import com.g.laurent.alitic.Models.*
+import com.roomorama.caldroid.CaldroidFragment
 import com.roomorama.caldroid.CaldroidGridAdapter
-
+import java.sql.Date
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 /** FOODTYPE ADAPTER**/
@@ -393,7 +396,7 @@ class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableLi
 }
 
 /** CALENDAR ADAPTER**/
-class CalendarAdapter(context: Context, private val onTimeLineDisplay: OnTimeLineDisplay, private val onCalendarLoaded:OnCalendarLoaded, month: Int, year: Int, val mode:Boolean = false, caldroidData: Map<String, Any>, extraData: Map<String, Any>) : CaldroidGridAdapter(context, month, year, caldroidData, extraData) {
+class CalendarAdapter(private val frag:ChronoFragment, context: Context, private val onTimeLineDisplay: OnTimeLineDisplay, month: Int, year: Int, val mode:Boolean = false, caldroidData: Map<String, Any>, extraData: Map<String, Any>) : CaldroidGridAdapter(context, month, year, caldroidData, extraData) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
 
@@ -403,41 +406,39 @@ class CalendarAdapter(context: Context, private val onTimeLineDisplay: OnTimeLin
 
             val view = inflater.inflate(R.layout.calendar_item, parent, false)
             val holder = ChronoViewHolder(view)
-
-            val chronoEvents = getChronoEvents(month, year, mode, context)
             val dateTime = this.datetimeList[position]
+
 
             // Change content of textview and imageview
             if (dateTime.month == month) {
 
+                val hasEvent = frag.chronoEvents.contains(getDateTimeFromLong(dateTime.getMilliseconds(TimeZone.getDefault())))
+                val hasMeal = frag.chronoMeals.contains(getDateTimeFromLong(dateTime.getMilliseconds(TimeZone.getDefault())))
+
+                // Set day number
                 holder.dayNum?.text = dateTime.day.toString()
 
-                if (chronoEvents[dateTime] != 0){ // if there is an event this day
-                    val text = "(" + chronoEvents[dateTime] + ")"
-                    holder.eventNum?.text = text
-                    holder.fireIcon?.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(context, android.R.color.holo_red_dark), PorterDuff.Mode.MULTIPLY)
+                // Set image background
+                if (hasMeal && hasEvent) {
+                    //frag.setBackgroundDrawableForDate(eventAndMeal, date)
+                    holder.imageBackground?.setImageResource(R.drawable.background_event_and_meal)
+                } else if (hasMeal) {
+                    //frag.setBackgroundDrawableForDate(mealOnly, date)
+                    holder.imageBackground?.setImageResource(R.drawable.background_meal_only)
+                } else if (hasEvent){
+                    //frag.setBackgroundDrawableForDate(eventOnly, date)
+                    holder.imageBackground?.setImageResource(R.drawable.background_event_only)
+                }
 
-                    // Configure on click listener for displaying timeline
+                // Configure on click listener for displaying timeline
+                if (hasEvent || hasMeal) {
                     view.setOnClickListener {
                         onTimeLineDisplay.displayTimeLineFragment(dateTime.day, dateTime.month, dateTime.year)
                     }
-
-                } else { // if no event this day
-                    holder.eventNum?.visibility = View.INVISIBLE
-                    holder.fireIcon?.visibility = View.INVISIBLE
                 }
-
-            } else {
-                holder.eventNum?.visibility = View.INVISIBLE
-                holder.fireIcon?.visibility = View.INVISIBLE
-                holder.dayNum?.visibility = View.INVISIBLE
             }
-
-            onCalendarLoaded.calendarLoaded()
             return view
         }
-
-        onCalendarLoaded.calendarLoaded()
         return null
     }
 }

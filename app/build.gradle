@@ -43,6 +43,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.2'
     // Library for custom calendarView
     implementation 'com.roomorama:caldroid:3.0.1'
+
     // Library for creating timeline
     implementation 'com.github.vipulasri:timelineview:1.1.0'
     // Library Room for SQLite communication

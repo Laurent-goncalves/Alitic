@@ -4,6 +4,7 @@
     <string name="cancel">Cancel</string>
     <string name="yes">OUI</string>
     <string name="no">NON</string>
+    <string name="ok">OK</string>
 
     <string name="save_meal_title_dialog">Sauvegarder un repas</string>
     <string name="save_meal_content_dialog">Voulez-vous sauvegarder le repas à cette heure-ci ?</string>
@@ -54,7 +55,6 @@
     <string name="time">Time</string>
 
     <integer name="duration_anim">500</integer>
-    <string name="text_nb_events">Number of events:</string>
 
     <!-- MENU STATS -->
     <string name="title_toolbar_stat">Statistiques</string>
@@ -68,9 +68,6 @@
 
     <string name="legend_chrono_less">Moins</string>
     <string name="legend_chrono_plus">Plus</string>
-
-    <string name="legend_food_nok">Nombre de repas causant ressenti</string>
-    <string name="legend_food_ok">Nombre de repas sans ressenti</string>
 
     <string name="detail_per_food_title">Detail par aliment</string>
     <string name="all_event_types">Tous types</string>
@@ -99,16 +96,11 @@
     <string name="select_period_add_eventtype1">Ressenti apparaissant entre</string>
     <string name="select_period_add_eventtype2">h et</string>
     <string name="select_period_add_eventtype3">h après un repas.</string>
-    <string name="select_foodtype_addfood">Sselect_period_add_eventtypeelectionner un type d\'aliment</string>
 
     <string name="error_event_type_name_too_long">Le nom du ressenti est trop long (>= 20 char).</string>
 
-    <string name="eventtype_default_pic">EventTypeDefaultPic</string>
-
     <string name="save_add_eventtype">Ressenti sauvegardé avec succès</string>
     <string name="save_update_eventtype">Ressenti mis à jour avec succès</string>
-
-    <string name="save_add_food">Aliment sauvegardé avec succès</string>
 
 
     <string name="error_food_already_in_db">Aliment déjà présent dans le catalogue. Choisir un autre nom.</string>
@@ -158,4 +150,12 @@
     <!--TOOLBAR TITLES -->
     <string name="title_meal_choice">Choisir un repas</string>
     <string name="title_event_choice">Choisir un ressenti</string>
+
+    <!--LEGEND CALENDAR -->
+    <string name="title_legend">LEGENDE</string>
+    <string name="text_meal_and_event">Au moins un repas et un ressenti ce jour-là</string>
+    <string name="text_meal_only">Au moins un repas ce jour-là. Pas de ressenti enregistré.</string>
+    <string name="text_event_only">Au moins un ressenti ce jour-là. Pas de repas enregistré.</string>
+    <string name="click_allowance">INFO : vous pouvez cliquer sur un point de couleur pour avoir accès à plus de détails sur la chronologie.</string>
+
 </resources>

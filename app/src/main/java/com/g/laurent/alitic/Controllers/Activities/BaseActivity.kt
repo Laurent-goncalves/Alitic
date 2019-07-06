@@ -3,12 +3,10 @@ package com.g.laurent.alitic.Controllers.Activities
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Matrix
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.view.View
 import android.view.ViewTreeObserver
-import android.widget.FrameLayout
 import android.widget.ImageView
 import com.g.laurent.alitic.Controllers.DialogFragments.SHAREDPREF
 import com.g.laurent.alitic.R
@@ -117,7 +115,7 @@ open class BaseActivity : AppCompatActivity() {
 
     protected open fun goToBackToMainPage(){
         toolbar.title = context.getString(R.string.app_name)
-        this.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        this.actionBar?.setDisplayHomeAsUpEnabled(false)
     }
 
     fun finishActivity() {

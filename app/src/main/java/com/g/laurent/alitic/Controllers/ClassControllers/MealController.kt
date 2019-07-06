@@ -1,10 +1,10 @@
 package com.g.laurent.alitic.Controllers.ClassControllers
 
 import android.content.Context
-import com.g.laurent.alitic.MealData
+import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Models.*
-import com.g.laurent.alitic.getBegDayDate
-import com.g.laurent.alitic.getEndDayDate
+import hirondelle.date4j.DateTime
+import java.sql.Date
 import kotlin.math.max
 
 fun saveNewMeal(mealItems:List<MealItem>, dateCode:Long, mode:Boolean = false, context: Context):Long?{
@@ -99,6 +99,42 @@ fun getLatestMeal(mode:Boolean = false, context: Context):Long?{
     val mealDao = AppDataBase.getInstance(context)?.mealDao()
     return mealDao?.getLatestMealDate()
 }
+
+fun getChonoMeals(mode:Boolean=false, context: Context):List<DateTime>{
+
+    val chronoMeals = mutableListOf<DateTime>()
+
+    val meals = getAllMeals(mode, context)
+
+    if(meals!=null && meals.isNotEmpty()){
+
+        for(meal in meals){
+            val dateTime = getDateTimeFromLong(meal.dateCode)
+            if(!chronoMeals.contains(dateTime))
+                chronoMeals.add(dateTime)
+        }
+    }
+
+    return chronoMeals
+}
+
+fun updateChonoMeals(chronoMeals:MutableList<DateTime>, date:Long, mode:Boolean=false, context: Context):List<DateTime>{
+
+    val meals = getAllMealsFromDate(date, mode, context)
+
+    val dateTime = getDateTimeFromLong(date)
+
+    if(meals!=null && meals.isNotEmpty()){
+        if(!chronoMeals.contains(dateTime))
+            chronoMeals.add(dateTime)
+    } else {
+        if(chronoMeals.contains(dateTime))
+            chronoMeals.remove(dateTime)
+    }
+
+    return chronoMeals.toList()
+}
+
 
 fun getAllMeals(mode:Boolean = false, context: Context):List<Meal>?{
 

@@ -6,6 +6,7 @@ import com.g.laurent.alitic.Models.AppDataBase
 import com.g.laurent.alitic.Models.Event
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.Models.Food
+import hirondelle.date4j.DateTime
 
 // ---------------------------------------------------------------------------------------------------------------
 // ------------------------------------------- EVENT -------------------------------------------------------------
@@ -138,6 +139,41 @@ fun getListEventTypesForStatDetailFragment(context:Context):List<EventType>{
     result.add(0, EventType(null,context.resources.getString(R.string.all_event_types),null, 0,0,false))
 
     return result
+}
+
+fun getChronoEvents(mode:Boolean=false, context: Context):List<DateTime>{
+
+    val chronoEvents = mutableListOf<DateTime>()
+
+    val events = getAllEvents(mode, context)
+
+    if(events!=null && events.isNotEmpty()){
+
+        for(event in events){
+            val dateTime = getDateTimeFromLong(event.dateCode)
+            if(!chronoEvents.contains(dateTime))
+                chronoEvents.add(dateTime)
+        }
+    }
+
+    return chronoEvents
+}
+
+fun updateChronoEvents(chronoEvents:MutableList<DateTime>, date:Long, mode:Boolean=false, context: Context):List<DateTime>{
+
+    val events = getEventsFromDate(date, mode, context)
+
+    val dateTime = getDateTimeFromLong(date)
+
+    if(events!=null && events.isNotEmpty()){
+        if(!chronoEvents.contains(dateTime))
+            chronoEvents.add(dateTime)
+    } else {
+        if(chronoEvents.contains(dateTime))
+            chronoEvents.remove(dateTime)
+    }
+
+    return chronoEvents.toList()
 }
 
 /*fun getListEventType(search:String, mode:Boolean = false, context:Context):List<EventType>?{

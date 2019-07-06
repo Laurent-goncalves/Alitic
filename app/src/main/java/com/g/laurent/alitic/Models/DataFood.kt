@@ -403,6 +403,11 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
         context = context)
     val idEvent25 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(12, 6, 2019, 13, 0),
         context = context)
+
+    val idEvent26 = saveNewEvent(idEventType = malVentre,dateCode = getDateAsLong(10, 7, 2019, 16, 0),
+        context = context)
+    val idEvent27 = saveNewEvent(idEventType = reflux,dateCode = getDateAsLong(11, 7, 2019, 13, 0),
+        context = context)
 }
 
 

@@ -104,8 +104,7 @@ class FoodTypeViewHolder(itemView: View, private val mode:Boolean = false, val c
 
 class ChronoViewHolder(itemView: View?){
     var dayNum: TextView? = itemView?.findViewById(R.id.day_number)
-    var fireIcon: ImageView? = itemView?.findViewById(R.id.fire_icon)
-    var eventNum: TextView? = itemView?.findViewById(R.id.number_events)
+    var imageBackground: ImageView? = itemView?.findViewById(R.id.image_background)
 }
 
 class StatChronoHolder(itemView: View, list:List<Long>, month:Int, year:Int): RecyclerView.ViewHolder(itemView){

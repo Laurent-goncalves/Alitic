@@ -3,22 +3,16 @@ package com.g.laurent.alitic.Controllers.Fragments
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
-import android.widget.Toast
-import com.g.laurent.alitic.Controllers.Activities.TypeDisplay
 import com.g.laurent.alitic.Controllers.ClassControllers.Chrono
-import com.g.laurent.alitic.Controllers.ClassControllers.deleteEvent
-import com.g.laurent.alitic.Controllers.ClassControllers.deleteMeal
 import com.g.laurent.alitic.Controllers.ClassControllers.getChronology
 import com.g.laurent.alitic.R
 import com.g.laurent.alitic.Views.TimeLineAdapter
-import kotlinx.android.synthetic.main.fragment_time_line.*
+
 
 class TimeLineFragment : Fragment(), OnChronoItemDeleted {
 

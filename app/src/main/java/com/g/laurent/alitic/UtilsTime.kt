@@ -4,6 +4,7 @@ import android.content.Context
 import com.g.laurent.alitic.Controllers.ClassControllers.getEventsFromDate
 import hirondelle.date4j.DateTime
 import java.text.SimpleDateFormat
+import java.time.Year
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.math.max
@@ -129,26 +130,16 @@ fun getTimeAsLong(hour:Int, min:Int):Long {
     return ((min + hour * 60) * 60 * 1000).toLong()
 }
 
-fun getDateTimeFromLong(day:Int, month:Int, year:Int):DateTime{
+fun getDateTime(day:Int, month:Int, year:Int):DateTime{
     return DateTime(year, month, day, 0,0,0,0)
 }
 
-fun getChronoEvents(month:Int, year:Int, mode:Boolean=false, context: Context):HashMap<DateTime, Int> {
+fun getDateTimeFromLong(date:Long):DateTime{
 
-    val chronology : HashMap<DateTime, Int> = hashMapOf()
+    val calendar = Calendar.getInstance()
+    calendar.timeInMillis = date
 
-    for (i in 1 .. getLastDayMonth(month, year)) {
-
-        val events = getEventsFromDate(getDateAsLong(i, month, year, 0,0), mode, context)?.size
-
-        if(events==null){
-            chronology[getDateTimeFromLong(i, month, year)] = 0
-        } else {
-            chronology[getDateTimeFromLong(i, month, year)] = events
-        }
-    }
-
-    return chronology
+    return DateTime(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH), 0,0,0,0)
 }
 
 fun getFirstDayMonth(dateCode:Long):Long{

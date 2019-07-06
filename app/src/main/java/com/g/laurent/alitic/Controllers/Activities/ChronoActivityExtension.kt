@@ -7,8 +7,17 @@ import android.graphics.Matrix
 import android.support.v7.widget.Toolbar
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
+import com.g.laurent.alitic.R
+
 
 fun configureToolbarWhenChronoFragment(toolbar: Toolbar, title:String, activity:ChronoActivity){
+
+    // Show icon info
+    val infoIcon = toolbar.menu.findItem(R.id.action_info)
+    infoIcon.setOnMenuItemClickListener {
+        activity.showInfo()
+        true
+    }
 
     // Set return icon
     activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -22,10 +31,14 @@ fun configureToolbarWhenChronoFragment(toolbar: Toolbar, title:String, activity:
 
 fun configureToolbarWhenTimeLineFragment(toolbar: Toolbar, day:String, activity:ChronoActivity){
 
+    // Hide icon info
+    toolbar.menu.findItem(R.id.action_info).isVisible = false
+
     // Set return icon
     activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
     toolbar.setNavigationOnClickListener {
         activity.showChronoFragment()
+        toolbar.title = activity.resources.getString(R.string.chronology)
     }
 
     // Set title of toolbar (day of the time line)

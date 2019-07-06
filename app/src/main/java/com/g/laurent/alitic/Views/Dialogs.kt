@@ -266,6 +266,33 @@ class DateTimePickerDialog : DialogFragment() {
     }
 }
 
+class LegendCalendarDialog : DialogFragment() {
+
+    private lateinit var contextDialog:Context
+
+    fun newInstance(): LegendCalendarDialog {
+        return LegendCalendarDialog()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        val view = inflater.inflate(R.layout.legend_calendar, container, false)
+
+        // Configure button OK
+        view.findViewById<Button>(R.id.button_ok).setOnClickListener {
+            this.dismiss()
+        }
+
+        return view
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if(context!=null)
+            contextDialog = context
+    }
+}
+
 
 fun saveMeal(list:List<MealItem>, view:View, dateToSave:Long, context: Context){
 

@@ -1,21 +1,18 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">@android:color/white</item>
 
         <item name="android:windowDisablePreview">true</item>
         <item name="android:windowIsTranslucent">true</item>
 
         <item name="spinnerStyle">@style/Widget.App.Spinner</item>
         <item name="android:spinnerStyle">@style/Widget.App.Spinner</item>
-    </style>
-
-    <style name="AliticTabLayout" parent="Widget.MaterialComponents.TabLayout.Colored">
-        <item name="textAllCaps">false</item>
     </style>
 
     <!-- Toolbar theme. -->
@@ -44,11 +41,11 @@
     </style>
 
     <style name="CaldroidDefaultDarkCalendarViewLayout">
-        <item name="android:background">@android:color/transparent</item>
+        <item name="android:background">@color/colorPanelMeal</item>
     </style>
 
     <style name="CaldroidDefaultDarkMonthName" parent="CaldroidDefaultMonthName">
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="CaldroidDefaultDarkGridView" parent="CaldroidDefaultGridView">
@@ -56,7 +53,7 @@
     </style>
 
     <style name="CaldroidDefaultDarkCell" parent="CaldroidDefaultCell">
-        <item name="android:textColor">@android:color/transparent</item>
+        <item name="android:textColor">@android:color/black</item>
         <item name="android:background">@drawable/cell_bg_dark</item>
     </style>
 
