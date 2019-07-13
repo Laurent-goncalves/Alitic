@@ -72,9 +72,6 @@ class StatActivity : BaseActivity(), OnEventTypeChangeListener{
         val fm = supportFragmentManager
         val statInfoDialog = StatInfoDialog().newInstance()
         statInfoDialog.show(fm, "statInfoDialog")
-
-
-
     }
 
     public override fun goToBackToMainPage(){

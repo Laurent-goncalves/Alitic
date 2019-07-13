@@ -9,6 +9,8 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import com.g.laurent.alitic.R
 
+const val TIMELINE_FRAGMENT = "Timeline_fragment"
+const val CHRONO_FRAGMENT = "Chrono_fragment"
 
 fun configureToolbarWhenChronoFragment(toolbar: Toolbar, title:String, activity:ChronoActivity){
 

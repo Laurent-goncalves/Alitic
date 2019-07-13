@@ -51,7 +51,7 @@ class ChronoActivity : BaseActivity(), OnTimeLineDisplay, OnCalendarLoaded {
         chronoFragment.updateData(dateSelected)
 
         val fragmentManager = supportFragmentManager.beginTransaction()
-        fragmentManager.replace(R.id.fragment_place, chronoFragment)
+        fragmentManager.replace(R.id.fragment_place, chronoFragment, CHRONO_FRAGMENT)
         fragmentManager.commit()
 
         // Configure Toolbar
@@ -72,7 +72,7 @@ class ChronoActivity : BaseActivity(), OnTimeLineDisplay, OnCalendarLoaded {
         timeLineFragment.arguments = bundle
 
         val fragmentManager = supportFragmentManager.beginTransaction()
-        fragmentManager.replace(R.id.fragment_place, timeLineFragment)
+        fragmentManager.replace(R.id.fragment_place, timeLineFragment, TIMELINE_FRAGMENT)
         fragmentManager.commit()
 
         configureToolbarWhenTimeLineFragment(toolbar, getTextDate(getDateAsLong(day,month,year,0,0)), this)
@@ -88,6 +88,22 @@ class ChronoActivity : BaseActivity(), OnTimeLineDisplay, OnCalendarLoaded {
 
         // Move camera to the center of image in background
         movePicture(imageBackground, Loc.BOTTOM_LEFT.position,Loc.CENTER.position, matrix, this)
+    }
+
+    override fun onBackPressed() {
+
+        val chronoFrag = supportFragmentManager.findFragmentByTag(CHRONO_FRAGMENT)
+        val timeLineFrag = supportFragmentManager.findFragmentByTag(TIMELINE_FRAGMENT)
+
+        if(chronoFrag!=null){
+            if((chronoFrag as ChronoFragment).isVisible){
+                goToBackToMainPage()
+            }
+        } else if(timeLineFrag!=null){
+            if((timeLineFrag as TimeLineFragment).isVisible){
+                showChronoFragment()
+            }
+        }
     }
 }
 

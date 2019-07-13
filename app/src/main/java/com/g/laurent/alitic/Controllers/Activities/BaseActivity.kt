@@ -118,6 +118,10 @@ open class BaseActivity : AppCompatActivity() {
         this.actionBar?.setDisplayHomeAsUpEnabled(false)
     }
 
+    override fun onBackPressed() {
+        goToBackToMainPage()
+    }
+
     fun finishActivity() {
         finish()
         overridePendingTransition(0, 0)

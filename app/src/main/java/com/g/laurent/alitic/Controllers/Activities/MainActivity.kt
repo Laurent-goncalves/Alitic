@@ -150,6 +150,8 @@ class MainActivity : BaseActivity(), View.OnClickListener, ResetDatabaseListener
         startActivity(intent)
         overridePendingTransition(0, 0)
     }
+
+    override fun onBackPressed() {}
 }
 
 const val POPULATE_DATABASE = "POPULATE_DATABASE"

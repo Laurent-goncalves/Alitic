@@ -127,6 +127,36 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
         }
     }
 
+    private fun getConfirmationToLeavePickActivity(typeDisplay:TypeDisplay){
+        val builder = AlertDialog.Builder(this@PickActivity)
+
+        // Display a message on alert dialog
+        if(typeDisplay.equals(TypeDisplay.MEAL)){
+            builder.setTitle(context.resources.getString(R.string.error_cancel_meal_title)) // TITLE
+            builder.setMessage(context.resources.getString(R.string.error_cancel_meal)) // MESSAGE
+        } else{
+            builder.setTitle(context.resources.getString(R.string.error_cancel_event_title)) // TITLE
+            builder.setMessage(context.resources.getString(R.string.error_cancel_event)) // MESSAGE
+        }
+
+        // Set positive button and its click listener on alert dialog
+        builder.setPositiveButton(context.resources.getString(R.string.yes)){ dialog, _ ->
+            dialog.dismiss()
+            goToBackToMainPage()
+        }
+
+        // Display negative button on alert dialog
+        builder.setNegativeButton(context.resources.getString(R.string.no)){ dialog, _ ->
+            dialog.dismiss()
+        }
+
+        // Finally, make the alert dialog using builder
+        val dialog: AlertDialog = builder.create()
+
+        // Display the alert dialog on app interface
+        dialog.show()
+    }
+
     private fun configureButtonsSaveCancel(typeDisplay:TypeDisplay){
 
         // Associate buttons Cancel and save
@@ -135,34 +165,7 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
 
         // Set on click listener for each button
         buttonCancel.setOnClickListener {
-
-            val builder = AlertDialog.Builder(this@PickActivity)
-
-            // Display a message on alert dialog
-            if(typeDisplay.equals(TypeDisplay.MEAL)){
-                builder.setTitle(context.resources.getString(R.string.error_cancel_meal_title)) // TITLE
-                builder.setMessage(context.resources.getString(R.string.error_cancel_meal)) // MESSAGE
-            } else{
-                builder.setTitle(context.resources.getString(R.string.error_cancel_event_title)) // TITLE
-                builder.setMessage(context.resources.getString(R.string.error_cancel_event)) // MESSAGE
-            }
-
-            // Set positive button and its click listener on alert dialog
-            builder.setPositiveButton(context.resources.getString(R.string.yes)){ dialog, _ ->
-                dialog.dismiss()
-                goToBackToMainPage()
-            }
-
-            // Display negative button on alert dialog
-            builder.setNegativeButton(context.resources.getString(R.string.no)){ dialog, _ ->
-                dialog.dismiss()
-            }
-
-            // Finally, make the alert dialog using builder
-            val dialog: AlertDialog = builder.create()
-
-            // Display the alert dialog on app interface
-            dialog.show()
+            getConfirmationToLeavePickActivity(typeDisplay)
         }
 
         buttonSave.setOnClickListener {
@@ -407,5 +410,9 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
 
     override fun handleDialogClose(typeDisplay: TypeDisplay) {
         configureGridView(typeDisplay)
+    }
+
+    override fun onBackPressed() {
+        getConfirmationToLeavePickActivity(typeDisplay)
     }
 }
