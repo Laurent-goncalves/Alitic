@@ -3,6 +3,7 @@ package com.g.laurent.alitic.Controllers.Activities
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.content.ContextCompat
+import android.util.DisplayMetrics
 import android.view.Menu
 import com.g.laurent.alitic.Views.StatAdapter
 import android.view.View
@@ -11,6 +12,8 @@ import android.widget.ProgressBar
 import com.g.laurent.alitic.Controllers.ClassControllers.getListEventTypesForStatDetailFragment
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.R
+import com.g.laurent.alitic.Views.LegendCalendarDialog
+import com.g.laurent.alitic.Views.StatInfoDialog
 import kotlinx.android.synthetic.main.activity_stat.*
 import java.lang.ref.WeakReference
 
@@ -70,7 +73,12 @@ class StatActivity : BaseActivity(), OnEventTypeChangeListener{
     }
 
     fun displayInformations(){
-        // TODO : to implement
+        val fm = supportFragmentManager
+        val statInfoDialog = StatInfoDialog().newInstance()
+        statInfoDialog.show(fm, "statInfoDialog")
+
+
+
     }
 
     public override fun goToBackToMainPage(){

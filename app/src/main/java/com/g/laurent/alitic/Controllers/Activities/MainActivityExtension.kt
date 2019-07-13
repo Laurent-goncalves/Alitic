@@ -1,11 +1,8 @@
 package com.g.laurent.alitic.Controllers.Activities
 
 import android.content.Context
-import android.graphics.Matrix
 import android.support.v7.widget.Toolbar
 import android.view.View
-import android.widget.ImageView
-import com.facebook.stetho.Stetho
 import com.g.laurent.alitic.Models.AppDataBase
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.Models.Food
@@ -69,9 +66,9 @@ enum class Pan(var min : Float, var max:Float) {
     }
 }
 
-enum class TypeDisplay(val type:String, val idCancel : Int, val idSave : Int, var isNew:Boolean){
-    EVENT("EVENT", R.id.button_cancel_event,R.id.button_save_event, true),
-    MEAL("MEAL", R.id.button_cancel_meal,R.id.button_save_meal, true);
+enum class TypeDisplay(val type:String, val idCancel : Int, val idSave : Int){
+    EVENT("EVENT", R.id.button_cancel_event,R.id.button_save_event),
+    MEAL("MEAL", R.id.button_cancel_meal,R.id.button_save_meal);
 }
 
 fun calculWithLimits(value:Float, min:Float, max:Float):Float{
@@ -165,8 +162,9 @@ fun configureToolbar(toolbar:Toolbar, activity:MainActivity, context: Context){
     }
 }
 
-fun clearDatabase(context: Context){
+fun populateDatabase(context: Context){
 
+    // Clear database
     val db = AppDataBase.getInstance(context)
     db?.mealItemDao()?.deleteAll()
     db?.mealDao()?.deleteAll()
@@ -176,8 +174,6 @@ fun clearDatabase(context: Context){
     db?.eventDao()?.deleteAll()
     db?.eventTypeDao()?.deleteAll()
 
-
+    // Fill with data
     insertData(db?.foodTypeDao(), db?.foodDao(), db?.keywordDao(), db?.eventTypeDao(), context)
-
-    Stetho.initializeWithDefaults(context)
 }

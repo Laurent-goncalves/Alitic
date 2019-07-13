@@ -18,7 +18,6 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.R
-import com.github.mikephil.charting.charts.HorizontalBarChart
 import de.hdodenhof.circleimageview.CircleImageView
 
 

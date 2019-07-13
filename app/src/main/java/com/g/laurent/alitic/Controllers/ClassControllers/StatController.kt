@@ -123,11 +123,13 @@ fun getListFoodsWithCounters(statType:StatType, eventType:EventType?, mode:Boole
                 val listFood = getFoodsFromMeal(meal, mode, context)
 
                 for(food in listFood) {
-                    if (result.containsKey(food)) {
-                        val count:Int = result[food]!!.absoluteValue
-                        result[food] = count + 1
-                    } else {
-                        result[food] = 1
+                    if(food.forAnalysis){
+                        if (result.containsKey(food)) {
+                            val count:Int = result[food]!!.absoluteValue
+                            result[food] = count + 1
+                        } else {
+                            result[food] = 1
+                        }
                     }
                 }
             }
@@ -212,11 +214,13 @@ fun getListFoodsWithCounters(statType:StatType, eventType:EventType?, mode:Boole
                 val listFood = getFoodsFromMeal(meal, mode, context)
 
                 for(food in listFood) {
-                    if (result.containsKey(food)) {
-                        val countNOK:Int = result[food]!!.countNOK
-                        result[food]!!.countNOK = countNOK + 1
-                    } else {
-                        result[food] = Counter(0,1)
+                    if(food.forAnalysis){
+                        if (result.containsKey(food)) {
+                            val countNOK:Int = result[food]!!.countNOK
+                            result[food]!!.countNOK = countNOK + 1
+                        } else {
+                            result[food] = Counter(0,1)
+                        }
                     }
                 }
             }
@@ -358,12 +362,12 @@ fun getListFoodTypesStats(statType: StatType, eventType: EventType?, mode:Boolea
     fun getListFoodTypes(statType: StatType):Map<FoodType, Int>{
 
         fun getCount(counter:Counter):Int{
-            return when (statType) {
-                StatType.DETAIL_ANALYSIS -> counter.countNOK
-                StatType.GLOBAL_ANALYSIS_NEG -> counter.countNOK
-                else -> counter.countOK
-            }
+        return when (statType) {
+            StatType.DETAIL_ANALYSIS -> counter.countNOK
+            StatType.GLOBAL_ANALYSIS_NEG -> counter.countNOK
+            else -> counter.countOK
         }
+    }
 
         val result = mutableMapOf<FoodType, Int>()
 

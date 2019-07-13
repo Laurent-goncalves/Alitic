@@ -7,6 +7,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
@@ -310,8 +311,8 @@ class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableLi
                                 val idToDelete = if(listFood[position] is Food){(listFood[position] as Food).id} else {(listFood[position] as EventType).id}
                                 val typeDisplay = if(listFood[position] is Food){TypeDisplay.MEAL} else {TypeDisplay.EVENT}
 
-                                /*if(idToDelete!=null)
-                                    activity.deleteFromDatabase(idToDelete, typeDisplay)*/
+                                if(idToDelete!=null)
+                                    activity.deleteFromDatabase(idToDelete, typeDisplay)
                             }
 
                             // Display negative button on alert dialog
@@ -330,11 +331,11 @@ class GridAdapter(private val listFood: List<*>, var listItemSelected: MutableLi
                             when(listFood[position]) {
                                 is EventType -> { // if eventType
                                     val eventType = listFood[position] as EventType
-                                    //activity?.showDialogAddEventType(eventType)
+                                    activity?.showDialogAddEventType(eventType)
                                 }
                                 is Food -> {
                                     val food = listFood[position] as Food
-                                    //activity?.showDialogAddFood(food)
+                                    activity?.showDialogAddFood(food)
                                 }
                             }
                         }
@@ -506,6 +507,53 @@ class DetailStatTitleAdapter(val list:List<String>, val context: Context, privat
     }
 }
 
+/** STAT INFO ADAPTER**/
+class StatInfoAdapter (mgr: FragmentManager): FragmentPagerAdapter(mgr){
+
+    override fun getItem(page: Int): Fragment {
+        return StatInfoFragment().newInstance(page)
+    }
+
+    override fun getCount(): Int {
+        return 6
+    }
+
+    class StatInfoFragment : Fragment() {
+
+        fun newInstance(page:Int):StatInfoFragment{
+
+            val frag = StatInfoFragment()
+            val args = Bundle()
+            args.putInt(PAGE, page)
+            frag.arguments = args
+
+            return frag
+        }
+
+        override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+        ): View {
+
+            val args = arguments
+
+            return if(args!=null){
+
+                when(args.getInt(PAGE, 0)){
+                    0-> inflater.inflate(R.layout.stat_info_panel1, container, false)
+                    1-> inflater.inflate(R.layout.stat_info_panel2, container, false)
+                    2-> inflater.inflate(R.layout.stat_info_panel3, container, false)
+                    3-> inflater.inflate(R.layout.stat_info_panel4, container, false)
+                    4-> inflater.inflate(R.layout.stat_info_panel5, container, false)
+                    else -> inflater.inflate(R.layout.stat_info_panel6, container, false)
+                }
+            } else
+                inflater.inflate(R.layout.stat_info_panel1, container, false)
+        }
+    }
+}
+
 /**  CHRONOLOGY STAT **/
 class StatChronoAdapter(val list:List<Long>, val context: Context): RecyclerView.Adapter<StatChronoHolder>() {
 
@@ -569,3 +617,5 @@ enum class DayGrid(val colorId: Int){
     EVENT_LEV2(R.color.colorLevel2),
     EVENT_LEV3(R.color.colorLevel3);
 }
+
+const val PAGE = "PAGE"

@@ -20,7 +20,18 @@ class MainActivity : BaseActivity(), View.OnClickListener, ResetDatabaseListener
     }
 
     private fun configureMainActivity(){
-        clearDatabase(context) // TODO : to delete after finalization
+
+        // Check if database has already been populated
+        val prefs = applicationContext.getSharedPreferences(SHAREDPREF, 0)
+        //prefs.edit().putBoolean(POPULATE_DATABASE, false).apply()
+        val isDatabasePopulated = prefs.getBoolean(POPULATE_DATABASE, false)
+
+        if(!isDatabasePopulated){
+            populateDatabase(context)
+            prefs.edit().putBoolean(POPULATE_DATABASE, true).apply()
+        }
+
+        // Configure the 5 areas to click
         configure4Buttons()
     }
 
@@ -38,21 +49,21 @@ class MainActivity : BaseActivity(), View.OnClickListener, ResetDatabaseListener
     override fun onClick(v: View?) {
 
         when (v?.id) {
-            R.id.top_left_corner -> { //       |' |
+            R.id.top_left_corner -> { /** MEAL PICKING */
                 showPickActivity(TypeDisplay.MEAL)
                 invalidateOptionsMenu()
             }
 
-            R.id.top_right_corner -> {//       | '|
+            R.id.top_right_corner -> {/** EVENT PICKING */
                 showPickActivity(TypeDisplay.EVENT)
                 invalidateOptionsMenu()
             }
 
-            R.id.bottom_left_corner -> {//     |, |
+            R.id.bottom_left_corner -> {/** CHRONOLOGY */
                 showChronoActivity()
             }
 
-            R.id.bottom_right_corner -> {//    | ,|
+            R.id.bottom_right_corner -> {/** STATISTICS */
                 showStatActivity()
             }
         }
@@ -140,3 +151,5 @@ class MainActivity : BaseActivity(), View.OnClickListener, ResetDatabaseListener
         overridePendingTransition(0, 0)
     }
 }
+
+const val POPULATE_DATABASE = "POPULATE_DATABASE"

@@ -14,6 +14,9 @@ import com.google.gson.reflect.TypeToken
 import android.support.design.widget.Snackbar
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.support.design.widget.TabLayout
+import android.support.v4.view.PagerAdapter
+import android.support.v4.view.ViewPager
 import android.widget.*
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.Activities.*
@@ -111,9 +114,6 @@ class SaveDialog : DialogFragment() {
             val fm = fragmentManager
             val myDialogFragment = DateTimePickerDialog().newInstance(typeDisplay, listMealItems)
             myDialogFragment.show(fm, "DateTimePickerDialog")
-
-            // Dismiss dialog
-            dismiss()
 
             // Go back to Main Page
             (activity as PickActivity).goToBackToMainPage()
@@ -284,6 +284,48 @@ class LegendCalendarDialog : DialogFragment() {
         }
 
         return view
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if(context!=null)
+            contextDialog = context
+    }
+}
+
+class StatInfoDialog : DialogFragment() {
+
+    private lateinit var contextDialog:Context
+
+    fun newInstance(): StatInfoDialog {
+        return StatInfoDialog()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        val view = inflater.inflate(R.layout.stat_info_layout, container, false)
+
+        view.findViewById<ImageButton>(R.id.close_button).setOnClickListener {
+            dismiss()
+        }
+
+        val pager = (view as ViewGroup).getChildAt(0) as ViewPager
+
+        val adapter = StatInfoAdapter(childFragmentManager)
+        pager.adapter = adapter
+
+        val tabLayout = view.getChildAt(2) as TabLayout
+        tabLayout.setupWithViewPager(pager, true)
+
+        return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val metrics = resources.displayMetrics
+        val width = metrics.widthPixels
+        val height = metrics.heightPixels
+        dialog?.window?.setLayout((6 * width)/7, (4 * height)/5)
     }
 
     override fun onAttach(context: Context?) {
