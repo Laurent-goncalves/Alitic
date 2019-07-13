@@ -3,19 +3,15 @@ package com.g.laurent.alitic.Controllers.Activities
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.content.ContextCompat
-import android.util.DisplayMetrics
 import android.view.Menu
 import com.g.laurent.alitic.Views.StatAdapter
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.ProgressBar
 import com.g.laurent.alitic.Controllers.ClassControllers.getListEventTypesForStatDetailFragment
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.R
-import com.g.laurent.alitic.Views.LegendCalendarDialog
 import com.g.laurent.alitic.Views.StatInfoDialog
 import kotlinx.android.synthetic.main.activity_stat.*
-import java.lang.ref.WeakReference
 
 
 class StatActivity : BaseActivity(), OnEventTypeChangeListener{
@@ -91,11 +87,10 @@ class StatActivity : BaseActivity(), OnEventTypeChangeListener{
     }
 }
 
-enum class StatType(val idMenuItem:Int, val titleTab:Int, val titleFood:Int?, val titlePieChart:Int?){
-    GLOBAL_ANALYSIS_POS(R.id.menu_global_positive, R.string.menu_global_positive, R.string.title_foods_list_positive,R.string.title_piechart_positive),
-    GLOBAL_ANALYSIS_NEG(R.id.menu_global_negative, R.string.menu_global_negative, R.string.title_foods_list_negative,R.string.title_piechart_negative),
-    DETAIL_ANALYSIS(R.id.menu_detail, R.string.menu_detail, null,null),
-    INFORMATIONS(R.id.menu_info, R.string.menu_info, null,null);
+enum class StatType(val titleTab:Int, val titleFood:Int?, val titlePieChart:Int?){
+    GLOBAL_ANALYSIS_POS(R.string.menu_global_positive, R.string.title_foods_list_positive,R.string.title_piechart_positive),
+    GLOBAL_ANALYSIS_NEG(R.string.menu_global_negative, R.string.title_foods_list_negative,R.string.title_piechart_negative),
+    DETAIL_ANALYSIS(R.string.menu_detail, null,null);
 }
 
 interface OnEventTypeChangeListener {

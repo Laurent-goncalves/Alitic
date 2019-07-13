@@ -118,9 +118,10 @@ fun configureSmallPieChart(statEntry: FoodStatEntry, statType: StatType, view: V
     val data = PieData(dataSet)
     data.dataSet = dataSet
     pieChart.data = data
-    pieChart.offsetLeftAndRight(-10)
-    pieChart.offsetTopAndBottom(-10)
     pieChart.setDrawEntryLabels(false)
+    pieChart.isClickable = false
+    pieChart.focusable = View.NOT_FOCUSABLE
+    pieChart.setTouchEnabled(false)
     pieChart.legend.isEnabled = false
     pieChart.isRotationEnabled = false
     pieChart.description.isEnabled = false

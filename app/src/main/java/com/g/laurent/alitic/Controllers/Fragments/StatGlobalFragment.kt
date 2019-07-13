@@ -1,16 +1,20 @@
 package com.g.laurent.alitic.Controllers.Fragments
 
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.Activities.StatType
+import com.g.laurent.alitic.Controllers.Activities.TypeDisplay
 import com.g.laurent.alitic.Controllers.ClassControllers.*
+import com.g.laurent.alitic.Models.EventType
+import com.g.laurent.alitic.Models.Food
+import com.github.mikephil.charting.charts.PieChart
 import com.mikhaellopez.circularimageview.CircularImageView
+import kotlinx.android.synthetic.*
 
 
 class StatGlobalFragment : StatFragment() {
@@ -94,6 +98,9 @@ class StatGlobalFragment : StatFragment() {
 
                 // Set piechart around found picture
                 configureSmallPieChart(item, statType, framelayout, contextFrag)
+
+                // Configure pop up menu
+                configurePopUpMenuFood(item, framelayout, view)
             }
 
             for(i in getListUnusedViewIndex(listFood.size)){
@@ -105,6 +112,58 @@ class StatGlobalFragment : StatFragment() {
                 }
                 foodLayout.findViewById<View>(id).visibility = View.GONE
             }
+        }
+    }
+
+    private fun configurePopUpMenuFood(statEntry: FoodStatEntry, frameLayout:View, view:View){
+        frameLayout.findViewById<CircularImageView>(R.id.food_image).setOnLongClickListener{
+            val popupMenu = PopupMenu(activity, frameLayout)
+            popupMenu.setOnMenuItemClickListener{
+
+                if(it.itemId == R.id.menu_not_for_analysis){
+
+                    val builder = AlertDialog.Builder(contextFrag)
+
+                    // Display a message on alert dialog
+                    builder.setTitle(contextFrag.resources.getString(R.string.menu_not_for_analysis_title)) // TITLE
+
+                    val contentMessage = contextFrag.resources.getString(R.string.menu_not_for_analysis_content1) +
+                            statEntry.food.name + contextFrag.resources.getString(R.string.menu_not_for_analysis_content2)
+                    builder.setMessage(contentMessage) // MESSAGE
+
+                    // Set positive button and its click listener on alert dialog
+                    builder.setPositiveButton(contextFrag.resources.getString(R.string.yes)){ dialog, _ ->
+                        dialog.dismiss()
+
+                        // Ignore food
+                        ignoreFood(statEntry.food.id, context = contextFrag)
+
+                        // Update layout analysis
+                        configureEachFood(view)
+                        configureBigPieChart(view)
+
+                        // Show message to user
+                        val messageToUser = contextFrag.resources.getString(R.string.menu_not_for_analysis_confirm)
+                        Toast.makeText(contextFrag, messageToUser, Toast.LENGTH_LONG).show()
+                    }
+
+                    // Display negative button on alert dialog
+                    builder.setNegativeButton(contextFrag.resources.getString(R.string.no)){ dialog, _ ->
+                        dialog.dismiss()
+                    }
+
+                    // Finally, make the alert dialog using builder
+                    val dialog: AlertDialog = builder.create()
+
+                    // Display the alert dialog on app interface
+                    dialog.show()
+                }
+
+                true
+            }
+            popupMenu.inflate(R.menu.menu_stats)
+            popupMenu.show()
+            true
         }
     }
 

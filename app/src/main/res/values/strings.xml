@@ -63,6 +63,12 @@
     <string name="menu_detail">En détails</string>
     <string name="menu_info">Informations</string>
 
+    <string name="menu_not_for_analysis">Ne plus prendre en compte</string>
+    <string name="menu_not_for_analysis_title">Ignorer aliment</string>
+    <string name="menu_not_for_analysis_content1">Etes-vous sûr de vouloir ignorer cet aliment (</string>
+    <string name="menu_not_for_analysis_content2">)de l\'analyse ?</string>
+    <string name="menu_not_for_analysis_confirm">Cet aliment n\'est plus pris en compte.</string>
+
     <string name="evolution">Evolution</string>
     <string name="chronology">Chronologie</string>
 

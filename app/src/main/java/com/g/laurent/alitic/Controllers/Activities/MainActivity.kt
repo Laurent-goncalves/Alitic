@@ -23,7 +23,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, ResetDatabaseListener
 
         // Check if database has already been populated
         val prefs = applicationContext.getSharedPreferences(SHAREDPREF, 0)
-        //prefs.edit().putBoolean(POPULATE_DATABASE, false).apply()
+        prefs.edit().putBoolean(POPULATE_DATABASE, false).apply()
         val isDatabasePopulated = prefs.getBoolean(POPULATE_DATABASE, false)
 
         if(!isDatabasePopulated){

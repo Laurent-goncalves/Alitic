@@ -60,6 +60,16 @@ fun getListFood(word:String, mode:Boolean = false, context:Context):List<Food>?{
         return null
 }
 
+fun ignoreFood(idFood: Long?, mode:Boolean = false, context: Context){
+    AppDataBase.TEST_MODE = mode
+    val foodDao = AppDataBase.getInstance(context)?.foodDao()
+    val food = foodDao?.getFood(idFood)
+    if(food!=null){
+        food.forAnalysis = false
+        updateFood(food, mode, context)
+    }
+}
+
 fun updateFood(food:Food, mode:Boolean = false, context: Context){
     AppDataBase.TEST_MODE = mode
     val foodDao = AppDataBase.getInstance(context)?.foodDao()

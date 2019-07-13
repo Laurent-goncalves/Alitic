@@ -20,6 +20,7 @@
                 android:layout_gravity="center"/>
 
         <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/white_circle"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_gravity="center"
