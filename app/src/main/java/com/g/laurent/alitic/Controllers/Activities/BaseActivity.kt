@@ -1,17 +1,23 @@
 package com.g.laurent.alitic.Controllers.Activities
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Matrix
 import android.os.Bundle
+import android.support.design.widget.NavigationView
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.ViewTreeObserver
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import com.g.laurent.alitic.Controllers.DialogFragments.SHAREDPREF
 import com.g.laurent.alitic.R
+import kotlin.math.roundToInt
 
-open class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
 
     protected var matrix = Matrix()
     protected lateinit var context: Context
@@ -23,12 +29,20 @@ open class BaseActivity : AppCompatActivity() {
         context = applicationContext
         imageBackground = findViewById(R.id.image_background)
 
-        configureToolbar()
+        // Configure Toolbar
+        toolbar = findViewById(R.id.activity_toolbar)
+        toolbar.setTitleTextColor(Color.WHITE)
+        setSupportActionBar(toolbar)
 
         if(checkScreenDimensions()){
             goToCenter(imageBackground, Loc.CENTER.position, matrix)
         }
     }
+
+    /** -------------------------------- IMAGE BACKGROUND UTILS -------------------------------------------
+     *  ---------------------------------------------------------------------------------------------------
+     *  ---------------------------------------------------------------------------------------------------
+     */
 
     private fun checkScreenDimensions():Boolean{
 
@@ -76,6 +90,64 @@ open class BaseActivity : AppCompatActivity() {
         })
     }
 
+    fun movePicture(imageView: ImageView, fromPosition:Position?, toPosition:Position, matrix: Matrix){
+
+        fun animatePictureOpacity(){
+
+            val valueAnimator = ValueAnimator.ofFloat(0.5f, 1f) // 1f = transparent ; 0.5f = semi-transparent
+            valueAnimator.interpolator = AccelerateDecelerateInterpolator() // increase the speed first and then decrease
+            valueAnimator.duration = DURATION_MOVE_CAMERA
+            valueAnimator.addUpdateListener { animation ->
+
+                val progress = animation.animatedValue as Float
+
+                if(toPosition.equals(Loc.CENTER.position)){
+                    imageView.alpha = progress // increase value of alpha
+                } else {
+                    imageView.alpha = 1.5f - progress // decrease value of alpha
+                }
+            }
+
+            valueAnimator.start()
+        }
+
+        fun animatePictureMovement(){
+
+            val valueAnimator = ValueAnimator.ofFloat(0f, 1f)
+            valueAnimator.interpolator = AccelerateDecelerateInterpolator() // increase the speed first and then decrease
+            valueAnimator.duration = DURATION_MOVE_CAMERA
+            valueAnimator.addUpdateListener { animation ->
+
+                val progress = animation.animatedValue as Float
+
+                val tempX = fromPosition!!.px + progress * (toPosition.px - fromPosition.px)
+                val tempY = fromPosition.py + progress * (toPosition.py - fromPosition.py)
+
+                matrix.reset()
+                matrix.setTranslate(tempX, tempY)
+
+                imageView.imageMatrix = matrix
+            }
+
+            valueAnimator.addListener(object: AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    super.onAnimationEnd(animation)
+                    doWhenAnimationIsFinished(toPosition)
+                }
+            })
+            valueAnimator.start()
+        }
+
+        if(fromPosition==null){
+            goToCenter(imageView, toPosition, matrix)
+        } else {
+            animatePictureOpacity()
+            animatePictureMovement()
+        }
+    }
+
+    abstract fun doWhenAnimationIsFinished(toPosition:Position)
+
     fun goToCenter(imageView: ImageView, toPosition:Position, matrix: Matrix){
         matrix.reset()
         matrix.setTranslate(toPosition.px, toPosition.py)
@@ -85,7 +157,7 @@ open class BaseActivity : AppCompatActivity() {
     private fun configureLocEnum(dWidth:Int, dHeight:Int, sWidth:Int, sHeight:Int){
 
         Loc.setPosition(Loc.CENTER,
-            Position(Math.round((dWidth - sWidth) * -0.5f).toFloat(), Math.round((dHeight - sHeight) * -0.5f).toFloat()))
+            Position(((dWidth - sWidth) * -0.5f).roundToInt().toFloat(), ((dHeight - sHeight) * -0.5f).roundToInt().toFloat()))
         Loc.setPosition(Loc.TOP_RIGHT,
             Position(-(dWidth - sWidth).toFloat(), 0f))
         Loc.setPosition(Loc.TOP_LEFT,
@@ -106,12 +178,44 @@ open class BaseActivity : AppCompatActivity() {
         Loc.setPosition(Loc.BIG_PANEL_CENTER, Position(xCenter, yCenter))
     }
 
-    private fun configureToolbar(){
-        toolbar = findViewById(R.id.activity_toolbar)
-        toolbar.setTitleTextColor(Color.WHITE)
+    /** -------------------------------- TOOLBAR CONFIGURATION --------------------------------------------
+     *  ---------------------------------------------------------------------------------------------------
+     *  ---------------------------------------------------------------------------------------------------
+     */
 
-        setSupportActionBar(toolbar)
+    abstract fun onClickBackButtonToolbar()
+
+    abstract fun onMenuItemClick()
+
+    fun configureToolbar(toolbar: Toolbar, title:String, homeButtonNeeded:Boolean, infoIconNeeded:Boolean){
+
+        // Set title of toolbar
+        toolbar.title = title
+
+        // Show info when clicking on info icon
+        if(infoIconNeeded){
+            val infoIcon = toolbar.menu.findItem(R.id.action_info)
+            infoIcon.setOnMenuItemClickListener {
+                onMenuItemClick()
+                true
+            }
+        } else {
+            toolbar.menu.findItem(R.id.action_info)?.isVisible = false
+        }
+
+        // Set home button icon
+        supportActionBar?.setDisplayHomeAsUpEnabled(homeButtonNeeded)
+        if(homeButtonNeeded){
+            toolbar.setNavigationOnClickListener {
+                onClickBackButtonToolbar()
+            }
+        }
     }
+
+    /** -------------------------------------- NAVIGATION -------------------------------------------------
+     *  ---------------------------------------------------------------------------------------------------
+     *  ---------------------------------------------------------------------------------------------------
+     */
 
     protected open fun goToBackToMainPage(){
         toolbar.title = context.getString(R.string.app_name)

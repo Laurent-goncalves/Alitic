@@ -7,18 +7,19 @@ import hirondelle.date4j.DateTime
 import java.sql.Date
 import kotlin.math.max
 
-fun saveNewMeal(mealItems:List<MealItem>, dateCode:Long, mode:Boolean = false, context: Context):Long?{
+fun saveNewMeal(foodList:List<Long?>, dateCode:Long, mode:Boolean = false, context: Context):Long?{
 
     AppDataBase.TEST_MODE = mode
     val mealItemDao = AppDataBase.getInstance(context)?.mealItemDao()
     val mealDao = AppDataBase.getInstance(context)?.mealDao()
 
     // INSERT a new meal and get the id of the meal inserted
-    val idMeal = mealDao?.insert(Meal(null, dateCode, mealItems))
+    val idMeal = mealDao?.insert(Meal(null, dateCode, listOf()))
 
     // INSERT each mealItem
-    for(item in mealItems){
-        mealItemDao?.insert(MealItem(null,idMeal,item.idFood))
+    for(item in foodList){
+        if(item!=null)
+            mealItemDao?.insert(MealItem(null, idMeal, item))
     }
 
     // RETURN idMeal

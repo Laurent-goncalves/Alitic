@@ -1,43 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/linear_layout_panel"
-        android:maxWidth="800dp"
-        android:maxHeight="800dp"
         android:gravity="center"
         android:clickable="true"
         android:focusable="true"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
     <!-- TITLE MON REPAS-->
-    <TextView
+    <com.g.laurent.alitic.Views.MealTextView
             android:id="@+id/title_meal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:fontName="Satisfy-Regular"
+            android:textSize="28sp"
             android:text="@string/panel_title"
             android:visibility="gone"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center"/>
 
     <!-- MESSAGE "aucun aliment sélectionné" -->
-    <TextView
+    <com.g.laurent.alitic.Views.MealTextView
             android:id="@+id/no_food_in_meal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:fontName="Satisfy-Regular"
+            android:textSize="20sp"
             android:text="@string/message_no_food"
             android:layout_marginTop="20dp"
             android:visibility="gone"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center"/>
 
     <!-- View with all foods selected -->
     <com.g.laurent.alitic.Views.FoodLayout
             android:id="@+id/layout_all_foods"
-            android:maxWidth="500dp"
-            android:maxHeight="500dp"
             android:layout_marginTop="20dp"
             android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
 </LinearLayout>

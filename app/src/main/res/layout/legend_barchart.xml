@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+    <View
+            android:id="@+id/color_food_nok"
+            android:background="@color/colorFoodNOK"
+            android:layout_width="@dimen/width_legend_barchart"
+            android:layout_height="@dimen/height_legend_barchart"
+            android:layout_centerVertical="true"/>
+
+    <TextView
+            android:id="@+id/text_legent_food_nok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/color_food_nok"
+            android:text="@string/food_nok"
+            android:layout_marginStart="10dp"/>
+
+    <View
+            android:id="@+id/color_food_ok"
+            android:background="@color/colorFoodOK"
+            android:layout_width="@dimen/width_legend_barchart"
+            android:layout_height="@dimen/height_legend_barchart"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/text_legent_food_ok"/>
+
+    <TextView
+            android:id="@+id/text_legent_food_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:text="@string/food_ok"
+            android:layout_marginStart="10dp"/>
+
+
+</RelativeLayout>

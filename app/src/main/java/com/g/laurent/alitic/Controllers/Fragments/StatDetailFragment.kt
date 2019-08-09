@@ -1,21 +1,21 @@
 package com.g.laurent.alitic.Controllers.Fragments
 
-
+import android.graphics.ColorFilter
+import android.graphics.PorterDuff
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.*
 import com.g.laurent.alitic.Controllers.Activities.StatType
 import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Views.StatChronoAdapter
 import com.g.laurent.alitic.createBarChartTwoColumns
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.LinearLayout
-import android.widget.Spinner
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.R
 import de.hdodenhof.circleimageview.CircleImageView
@@ -27,16 +27,11 @@ class StatDetailFragment : StatFragment(), AdapterView.OnItemSelectedListener {
     private lateinit var listDates:List<Long>
     private lateinit var listTitles:ArrayList<String>
 
-    fun newInstance(eventType:EventType, statType:StatType, listTitles:ArrayList<String>):StatDetailFragment{
+    fun newInstance(listTitles:ArrayList<String>):StatDetailFragment{
 
         val frag = StatDetailFragment()
         val args = Bundle()
-        val idEventType = eventType.id
 
-        args.putString(STAT_TYPE, statType.name)
-
-        if(idEventType!=null)
-            args.putLong(ID_EVENTTYPE, idEventType)
         args.putStringArrayList(LIST_EVENT_TYPES, listTitles)
         frag.arguments = args
 
@@ -61,8 +56,9 @@ class StatDetailFragment : StatFragment(), AdapterView.OnItemSelectedListener {
     override fun initializeVariables(args:Bundle) {
         super.initializeVariables(args)
 
-        val idEventType = args.getLong(ID_EVENTTYPE)
-        getEventTypeAndChronologyFromId(idEventType)
+        statType = StatType.DETAIL_ANALYSIS
+
+        getEventTypeAndChronologyFromId(null)
 
         val list = args.getStringArrayList(LIST_EVENT_TYPES)
         if(list!=null)
@@ -70,7 +66,8 @@ class StatDetailFragment : StatFragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun getEventTypeAndChronologyFromId(id:Long?){
-        eventType = getEventType(id, context = contextFrag) ?: EventType(null, null, null, 0,0,false)
+
+        eventType = getEventType(id, context = contextFrag) ?: EventType()
 
         listDates = if(eventType.id!=null)
             getChronologyEvents(eventType, context = contextFrag)
@@ -136,8 +133,13 @@ class StatDetailFragment : StatFragment(), AdapterView.OnItemSelectedListener {
         // attaching data adapter to spinner
         title.adapter = dataAdapter
     }
+
+    var init : Boolean = false
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        updateFragment(position)
+        if(init) {
+            updateFragment(position)
+        } else
+            init = true
     }
     override fun onNothingSelected(parent: AdapterView<*>?) {}
 
@@ -149,6 +151,9 @@ class StatDetailFragment : StatFragment(), AdapterView.OnItemSelectedListener {
         evolutionView.background = ContextCompat.getDrawable(contextFrag, evolution.colorId) // color background
         val evolutionLayout = view.findViewById<LinearLayout>(R.id.evolution_layout)
         evolutionLayout.background = ContextCompat.getDrawable(contextFrag, evolution.colorId)
+        view.findViewById<Spinner>(R.id.select_event_type).background = contextFrag.resources.getDrawable(evolution.background, null)
+        val arrowSpinner = view.findViewById<ImageView>(R.id.arrow_spinner)
+        DrawableCompat.setTint(arrowSpinner.drawable, ContextCompat.getColor(contextFrag, evolution.colorId))
     }
 
     /** CHRONOLOGY **/

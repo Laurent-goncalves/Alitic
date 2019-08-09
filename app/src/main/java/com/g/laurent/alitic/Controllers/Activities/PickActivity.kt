@@ -1,14 +1,13 @@
 package com.g.laurent.alitic.Controllers.Activities
 
 import android.content.Context
-import android.graphics.Matrix
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MotionEvent
 import android.view.View
@@ -17,6 +16,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.g.laurent.alitic.Controllers.ClassControllers.getAllEventTypes
 import com.g.laurent.alitic.Controllers.ClassControllers.getAllFoodTypes
+import com.g.laurent.alitic.Controllers.ClassControllers.getListFood
 import com.g.laurent.alitic.Controllers.ClassControllers.getListFoodByType
 import com.g.laurent.alitic.Controllers.DialogFragments.AddEventTypeDialog
 import com.g.laurent.alitic.Controllers.DialogFragments.AddFoodDialog
@@ -46,7 +46,6 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
     private var posY1:Float = 0f
     private var sWidth:Int = 0
     private var sHeight:Int = 0
-
     var foodTypeSelected: FoodType? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,9 +74,9 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
 
         // Start moving camera
         if(typeDisplay.equals(TypeDisplay.MEAL))
-            movePicture(imageBackground,Loc.CENTER.position, Loc.TOP_LEFT.position,matrix, this)
+            movePicture(imageBackground,Loc.CENTER.position, Loc.TOP_LEFT.position,matrix)
         else
-            movePicture(imageBackground,Loc.CENTER.position, Loc.TOP_RIGHT.position,matrix, this)
+            movePicture(imageBackground,Loc.CENTER.position, Loc.TOP_RIGHT.position,matrix)
     }
 
     fun configurePickActivity() {
@@ -188,9 +187,58 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar_pick, menu)
-        configureToolbar(toolbar, typeDisplay, this, context)
+
+        val searchIcon = toolbar.menu.findItem(R.id.action_search)
+
+        when {
+            typeDisplay.equals(TypeDisplay.EVENT) -> { // PICK EVENT
+                searchIcon.isVisible = false
+                configureToolbar(toolbar,
+                    title = context.getString(R.string.title_event_choice),
+                    homeButtonNeeded = true,
+                    infoIconNeeded = false
+                )
+            }
+
+            typeDisplay.equals(TypeDisplay.MEAL) -> { // PICK MEAL
+                configureToolbar(toolbar,
+                    title = context.getString(R.string.title_meal_choice),
+                    homeButtonNeeded = true,
+                    infoIconNeeded = false
+                )
+
+                searchIcon.isVisible = true
+
+                (searchIcon.actionView as SearchView).setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+                    override fun onQueryTextChange(newText: String): Boolean {
+
+                        val listFoods = getListFood(newText, context = context)
+                        if(listFoods!=null)
+                            updateListFoodsAfterQueryChange(listFoods)
+                        return false
+                    }
+
+                    override fun onQueryTextSubmit(query: String): Boolean {
+                        return false
+                    }
+                })
+
+                (searchIcon.actionView as SearchView).setOnCloseListener {
+                    resetMealPickingScreenAfterSearch()
+                    true
+                }
+
+            }
+        }
         return super.onCreateOptionsMenu(menu)
     }
+
+    override fun onClickBackButtonToolbar() {
+        goToBackToMainPage()
+    }
+
+    override fun onMenuItemClick() {}
 
     override fun onMenuSelected(selection: Int) {
         val listFoodTypes = getAllFoodTypes(context = context)!!
@@ -345,19 +393,23 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
             }
         }
 
-        // organize views from constraint layout
         val panelLayout = findViewById<LinearLayout>(R.id.panel_content)
             .findViewById<FoodLayout>(R.id.layout_all_foods)
+
+        // If no more food selected, show message "no food selected"
+        if(listSelected.isEmpty()){
+            findViewById<LinearLayout>(R.id.panel_content)
+                .findViewById<MealTextView>(R.id.no_food_in_meal).visibility = View.VISIBLE
+        }
+
+        // organize views from constraint layout
         panelLayout.removeAllViews()
-
         val listIds = mutableListOf<FoodViewId>()
-
         for(i in 0 until listSelected.size) {
             val id = panelLayout.addFood(listSelected[i] as Food)
             if(id!=null)
                 listIds.add(id)
         }
-
         panelLayout.organizeViews(listIds)
     }
 
@@ -375,6 +427,14 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
         configureGridView(typeDisplay)
     }
 
+    override fun doWhenAnimationIsFinished(toPosition: Position) {
+        if(toPosition.equals(Loc.CENTER.position)){ // if picture move to center
+            finishActivity()
+        } else { // if picture move to left or right top corner
+            configurePickActivity()
+        }
+    }
+
     public override fun goToBackToMainPage(){
 
         super.goToBackToMainPage()
@@ -383,12 +443,12 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
             // Hide layout for event picking
             findViewById<FrameLayout>(R.id.layout_event).visibility = View.GONE
             // Move camera to the center of image in background
-            movePicture(imageBackground, Loc.TOP_RIGHT.position,Loc.CENTER.position, matrix, this)
+            movePicture(imageBackground, Loc.TOP_RIGHT.position,Loc.CENTER.position, matrix)
         } else {
             // Hide layout for meal picking
             findViewById<FrameLayout>(R.id.layout_meal).visibility = View.GONE
             // Move camera to the center of image in background
-            movePicture(imageBackground, Loc.TOP_LEFT.position,Loc.CENTER.position, matrix, this)
+            movePicture(imageBackground, Loc.TOP_LEFT.position,Loc.CENTER.position, matrix)
         }
     }
 
@@ -406,6 +466,10 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
         val fm = supportFragmentManager
         val myDialogFragment = AddEventTypeDialog().newInstance(eventType)
         myDialogFragment.show(fm, null)
+    }
+
+    fun showConfirmationMessageInSnackBar(message:String){
+        Snackbar.make(this.findViewById(R.id.pickactivity_layout), message, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun handleDialogClose(typeDisplay: TypeDisplay) {

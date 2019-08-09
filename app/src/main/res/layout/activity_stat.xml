@@ -19,18 +19,6 @@
             android:animateLayoutChanges="true"
             android:src="@drawable/image"/>
 
-
-
-    <ImageView
-            android:id="@+id/image_empty"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="matrix"
-            android:clickable="true"
-            android:focusable="true"
-            android:animateLayoutChanges="true"
-            android:background="@android:color/white"/>
-
     <android.support.v7.widget.Toolbar
             android:id="@+id/activity_toolbar"
             android:minHeight="?android:attr/actionBarSize"

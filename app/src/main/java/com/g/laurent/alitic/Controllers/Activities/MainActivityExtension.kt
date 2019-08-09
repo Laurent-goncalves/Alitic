@@ -1,7 +1,6 @@
 package com.g.laurent.alitic.Controllers.Activities
 
 import android.content.Context
-import android.support.v7.widget.Toolbar
 import android.view.View
 import com.g.laurent.alitic.Models.AppDataBase
 import com.g.laurent.alitic.Models.EventType
@@ -144,22 +143,6 @@ fun isAlreadySelected(idSelected:Long?,  list:MutableList<Any>?):Boolean{
         }
     }
     return false
-}
-
-fun configureToolbar(toolbar:Toolbar, activity:MainActivity, context: Context){
-
-    // Configure Title
-    toolbar.title = context.getString(R.string.app_name)
-
-    // Disable home button
-    activity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
-
-    // Settings icon click listener
-    val settingsIcon = toolbar.menu.findItem(R.id.action_settings)
-    settingsIcon.setOnMenuItemClickListener {
-        activity.showSettingsDialog()
-        true
-    }
 }
 
 fun populateDatabase(context: Context){

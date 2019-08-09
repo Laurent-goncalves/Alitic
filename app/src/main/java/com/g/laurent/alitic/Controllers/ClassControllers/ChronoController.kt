@@ -37,24 +37,21 @@ fun organizeEventsByTime(listEvents:List<Event>?, listMeals:List<Meal>?, mode:Bo
         if(listMeals!=null)
             result.addAll(listMeals.toMutableList())
 
-        Collections.sort(result, object : Comparator<Any> {
-            override fun compare(any1: Any, any2: Any): Int {
+        result.sortWith(Comparator { any1, any2 ->
+            var dateAny1:Long = 0
+            var dateAny2:Long = 0
 
-                var dateAny1:Long = 0
-                var dateAny2:Long = 0
-
-                when(any1){
-                    is Event -> { dateAny1 = any1.dateCode }
-                    is Meal -> { dateAny1 = any1.dateCode }
-                }
-
-                when(any2){
-                    is Event -> { dateAny2 = any2.dateCode }
-                    is Meal -> { dateAny2 = any2.dateCode }
-                }
-
-                return dateAny1.compareTo(dateAny2)
+            when(any1){
+                is Event -> { dateAny1 = any1.dateCode }
+                is Meal -> { dateAny1 = any1.dateCode }
             }
+
+            when(any2){
+                is Event -> { dateAny2 = any2.dateCode }
+                is Meal -> { dateAny2 = any2.dateCode }
+            }
+
+            dateAny1.compareTo(dateAny2)
         })
 
         return result

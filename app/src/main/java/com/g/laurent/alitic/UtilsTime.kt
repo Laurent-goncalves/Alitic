@@ -1,12 +1,9 @@
 package com.g.laurent.alitic
 
 import android.content.Context
-import com.g.laurent.alitic.Controllers.ClassControllers.getEventsFromDate
 import hirondelle.date4j.DateTime
 import java.text.SimpleDateFormat
-import java.time.Year
 import java.util.*
-import kotlin.collections.HashMap
 import kotlin.math.max
 import kotlin.math.min
 

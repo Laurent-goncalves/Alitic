@@ -2,6 +2,7 @@ package com.g.laurent.alitic.Views
 
 import android.content.Context
 import android.graphics.PorterDuff
+import android.graphics.Typeface
 import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
@@ -12,6 +13,7 @@ import android.widget.TextView
 import com.g.laurent.alitic.Models.Food
 import android.support.constraint.ConstraintSet
 import android.support.constraint.Group
+import android.support.v7.widget.AppCompatTextView
 import com.g.laurent.alitic.Controllers.Activities.OnFoodToDeleteListener
 import com.g.laurent.alitic.R
 
@@ -91,13 +93,12 @@ class FoodLayout : ConstraintLayout {
                         else
                             set.connect(list[i].idView, ConstraintSet.TOP, topId, ConstraintSet.BOTTOM)
 
-
                         startId = list[i].idView
                         listIds.add(list[i])
                         sumChar += list[i].nameFood.length + 5
 
                     } else {
-                        topId = listIds[0].idView
+                        topId = list[0].idView
                         break
                     }
                 }
@@ -122,3 +123,18 @@ class FoodLayout : ConstraintLayout {
 }
 
 class FoodViewId(val idView:Int, val nameFood:String)
+
+class MealTextView : AppCompatTextView {
+
+    constructor(context: Context, attrs: AttributeSet) : this(context, attrs, 0)
+
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle){
+        applyStyle(context)
+    }
+
+    private fun applyStyle(context: Context){
+        val customFont : String = resources.getString(R.string.Satisfy_Regular)
+        val tf : Typeface = Typeface.createFromAsset(context.assets, "fonts/$customFont.ttf")
+        typeface = tf
+    }
+}

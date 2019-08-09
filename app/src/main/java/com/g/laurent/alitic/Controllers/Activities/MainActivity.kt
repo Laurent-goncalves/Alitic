@@ -75,9 +75,25 @@ class MainActivity : BaseActivity(), View.OnClickListener, ResetDatabaseListener
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar_main, menu)
-        configureToolbar(toolbar, this, context)
+
+        configureToolbar(toolbar,
+            title = context.getString(R.string.app_name),
+            homeButtonNeeded = false,
+            infoIconNeeded = false
+        )
+
+        // Settings icon click listener
+        val settingsIcon = toolbar.menu.findItem(R.id.action_settings)
+        settingsIcon.setOnMenuItemClickListener {
+            showSettingsDialog()
+            true
+        }
+
         return super.onCreateOptionsMenu(menu)
     }
+
+    override fun onClickBackButtonToolbar() {}
+    override fun onMenuItemClick() {}
 
     fun showSettingsDialog(){
         val fm = supportFragmentManager
@@ -149,6 +165,10 @@ class MainActivity : BaseActivity(), View.OnClickListener, ResetDatabaseListener
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
         overridePendingTransition(0, 0)
+    }
+
+    override fun doWhenAnimationIsFinished(toPosition: Position) {
+        // NO IMPLEMENTATION
     }
 
     override fun onBackPressed() {}

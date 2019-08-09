@@ -3,6 +3,7 @@ package com.g.laurent.alitic.Controllers.DialogFragments
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.DialogFragment
 import android.text.Editable
 import android.text.TextWatcher

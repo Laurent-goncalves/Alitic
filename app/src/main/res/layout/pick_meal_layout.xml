@@ -54,11 +54,12 @@
      <!--PANEL WITH THE MEAL-->
     <include
             android:id="@+id/panel_content"
-            android:layout_width="400dp"
-            android:layout_height="400dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="100dp"
             android:visibility="gone"
             layout="@layout/panel_meal_content"
-            android:layout_gravity="start|bottom"/>
+            android:layout_gravity="center"/>
 
     <TextView
             android:id="@+id/counter_meal"

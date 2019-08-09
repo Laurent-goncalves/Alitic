@@ -431,50 +431,50 @@ class DBobjectsControllerTest {
                     context
                 )
 
-                val list1 : MutableList<MealItem> = mutableListOf()
-                list1.add(MealItem(null,0,idFood1))
-                list1.add(MealItem(null,0,idFood2))
-                list1.add(MealItem(null,0,idFood3))
+                val list1 : MutableList<Food> = mutableListOf()
+                list1.add(getFood(idFood1, context = context)!!)
+                list1.add(getFood(idFood2, context = context)!!)
+                list1.add(getFood(idFood3, context = context)!!)
 
-                val list2 : MutableList<MealItem> = mutableListOf()
-                list2.add(MealItem(null,0,idFood1))
-                list2.add(MealItem(null,0,idFood2))
-                list2.add(MealItem(null,0,idFood3))
-                list2.add(MealItem(null,0,idFood4))
+                val list2 : MutableList<Food> = mutableListOf()
+                list2.add(getFood(idFood1, context = context)!!)
+                list2.add(getFood(idFood2, context = context)!!)
+                list2.add(getFood(idFood3, context = context)!!)
+                list2.add(getFood(idFood4, context = context)!!)
 
-                val list3 : MutableList<MealItem> = mutableListOf()
-                list3.add(MealItem(null,0,idFood5))
-                list3.add(MealItem(null,0,idFood6))
+                val list3 : MutableList<Food> = mutableListOf()
+                list3.add(getFood(idFood5, context = context)!!)
+                list3.add(getFood(idFood6, context = context)!!)
 
-                val list4 : MutableList<MealItem> = mutableListOf()
-                list4.add(MealItem(null,0,idFood1))
-                list4.add(MealItem(null,0,idFood1))
-                list4.add(MealItem(null,0,idFood1))
-                list4.add(MealItem(null,0,idFood2))
-                list4.add(MealItem(null,0,idFood2))
-                list1.add(MealItem(null,0,idFood3))
-                list4.add(MealItem(null,0,idFood6))
+                val list4 : MutableList<Food> = mutableListOf()
+                list4.add(getFood(idFood1, context = context)!!)
+                list4.add(getFood(idFood1, context = context)!!)
+                list4.add(getFood(idFood1, context = context)!!)
+                list4.add(getFood(idFood2, context = context)!!)
+                list4.add(getFood(idFood2, context = context)!!)
+                list1.add(getFood(idFood3, context = context)!!)
+                list4.add(getFood(idFood6, context = context)!!)
 
                 val idMeal1 = saveNewMeal(
-                    list1,
+                    list1.map { it.id },
                     getDateAsLong(2, 12, 2018, 12, 0),
                     true,
                     context
                 )
                 val idMeal2 = saveNewMeal(
-                    list2,
+                    list2.map { it.id },
                     getDateAsLong(12, 12, 2018, 10, 0),
                     true,
                     context
                 )
                 val idMeal3 = saveNewMeal(
-                    list3,
+                    list3.map { it.id },
                     getDateAsLong(14, 1, 2019, 14, 0),
                     true,
                     context
                 )
                 val idMeal4 = saveNewMeal(
-                    list4,
+                    list4.map { it.id },
                     getDateAsLong(14, 1, 2019, 10, 0),
                     true,
                     context

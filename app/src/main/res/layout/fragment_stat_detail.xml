@@ -2,76 +2,108 @@
 <LinearLayout
         tools:context=".Controllers.Fragments.StatDetailFragment"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+        android:orientation="horizontal"
+        android:background="@drawable/background_header_panel"
+        android:minHeight="40dp"
+        android:layout_marginBottom="20dp">
 
+        <!--EVOLUTION-->
         <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/background_header_panel"
-                android:minHeight="40dp"
-                android:layout_marginBottom="20dp">
+                android:id="@+id/evolution_layout"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="2dp"
+                android:gravity="center">
 
-            <!--EVOLUTION-->
-            <LinearLayout
-                    android:id="@+id/evolution_layout"
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
+            <TextView
+                    android:id="@+id/text_evolution"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:text="@string/evolution"/>
 
-                <TextView
-                        android:id="@+id/text_evolution"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@android:color/white"
-                        android:text="@string/evolution"/>
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/symbol_evolution"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-
-            <!--SELECT TYPE OF EVENT-->
-            <Spinner
-                    android:id="@+id/select_event_type"
-                    android:layout_width="0dp"
-                    android:layout_weight="3"
-                    android:layout_height="match_parent"/>
+            <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/symbol_evolution"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
         </LinearLayout>
 
-        <!--CHRONOLOGY TITLE-->
-        <TextView
-                android:id="@+id/title_chronology"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:text="@string/chronology"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="10dp"/>
+        <!--SELECT TYPE OF EVENT-->
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent">
 
-        <!--  LINE SEPARATOR  -->
-        <View
-                android:id="@+id/line_separator_top"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="10dp"
-                android:background="#c0c0c0"/>
+            <Spinner
+                    android:id="@+id/select_event_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+            android:foregroundTint="@color/caldroid_holo_blue_dark"/>
 
-        <!--CHRONOLOGY-->
+            <ImageView
+                    android:id="@+id/arrow_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="5dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/baseline_arrow_drop_down_black_24"/>
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+    <ScrollView
+        tools:context=".Controllers.Fragments.StatDetailFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
         <LinearLayout
+                tools:context=".Controllers.Fragments.StatDetailFragment"
                 android:layout_width="match_parent"
-                android:layout_height="98dp"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <!--CHRONOLOGY TITLE-->
+            <TextView
+                    android:id="@+id/title_chronology"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:text="@string/chronology"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="10dp"/>
+
+            <!--  LINE SEPARATOR  -->
+            <View
+                    android:id="@+id/line_separator_top"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="#c0c0c0"/>
+
+            <!--CHRONOLOGY-->
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="98dp"
+                    android:orientation="horizontal">
 
                 <RelativeLayout
                         android:layout_width="wrap_content"
@@ -79,82 +111,84 @@
                         android:gravity="center_horizontal">
 
                     <View
-                        android:id="@+id/empty_view"
-                        android:layout_width="1dp"
-                        android:layout_height="10dp"
-                        android:layout_alignParentTop="true"/>
+                            android:id="@+id/empty_view"
+                            android:layout_width="1dp"
+                            android:layout_height="10dp"
+                            android:layout_alignParentTop="true"/>
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/first_day_week"
-                        android:layout_below="@+id/empty_view"/>
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/first_day_week"
+                            android:layout_below="@+id/empty_view"/>
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/last_day_week"
-                        android:layout_alignParentBottom="true"/>
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/last_day_week"
+                            android:layout_alignParentBottom="true"/>
 
                 </RelativeLayout>
 
-            <android.support.v7.widget.RecyclerView
-                    android:id="@+id/chronology"
+                <android.support.v7.widget.RecyclerView
+                        android:id="@+id/chronology"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <!-- LEGEND -->
+            <include
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_margin="10dp"
+                    layout="@layout/legend_chrono_stat"/>
+
+            <!--DETAIL PER FOOD TITLE -->
+            <TextView
+                    android:id="@+id/title_detail_per_food"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:text="@string/detail_per_food_title"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="10dp"/>
+
+            <!--  LINE SEPARATOR  -->
+            <View
+                    android:id="@+id/line_separator_bottom"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="#c0c0c0"/>
 
-    </LinearLayout>
+            <!--DETAIL PER FOOD-->
+            <com.github.mikephil.charting.charts.HorizontalBarChart
+                    android:id="@+id/barchart_detail_per_food"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"/>
 
-        <!-- LEGEND -->
-        <include
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_gravity="end"
-                android:layout_margin="10dp"
-                layout="@layout/legend_chrono_stat"/>
+            <!--LEGEND FOR BARCHART -->
+            <include
+                    android:id="@+id/legend_barchart"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_margin="10dp"
+                    layout="@layout/legend_barchart"/>
 
-        <!--DETAIL PER FOOD TITLE -->
-        <TextView
-                android:id="@+id/title_detail_per_food"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:text="@string/detail_per_food_title"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="10dp"/>
+            <!--  EMPTY VIEW TO AVOID OVERLAPPING OF TABLAYOUT  -->
+            <View android:layout_width="match_parent"
+                  android:layout_height="120dp"/>
 
-        <!--  LINE SEPARATOR  -->
-        <View
-                android:id="@+id/line_separator_bottom"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="10dp"
-                android:background="#c0c0c0"/>
-<!--
-    <ScrollView
-            tools:context=".Controllers.Fragments.StatDetailFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fillViewport="true">
--->
-    <!--DETAIL PER FOOD-->
-    <com.github.mikephil.charting.charts.HorizontalBarChart
-            android:id="@+id/barchart_detail_per_food"
-            android:layout_width="match_parent"
-            android:layout_height="400dp"/>
+        </LinearLayout>
 
+    </ScrollView>
 
-    <!--
-        </ScrollView>
-            -->
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="100dp" />
-
-    </LinearLayout>
+</LinearLayout>
 
 

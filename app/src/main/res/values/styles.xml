@@ -63,4 +63,7 @@
 
     <style name="CaldroidDefaultDarkSquareCell" parent="CaldroidDefaultDarkCell" />
 
+    <!-- Style for spinner in StatDetailFragment. -->
+
+
 </resources>

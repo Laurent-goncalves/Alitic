@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import com.g.laurent.alitic.Controllers.Activities.OnTimeLineDisplay
 import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Views.CalendarAdapter
-import com.g.laurent.alitic.getDateTimeFromLong
 import com.g.laurent.alitic.getMonth
 import com.g.laurent.alitic.getYear
 import com.roomorama.caldroid.CaldroidFragment

@@ -2,12 +2,9 @@ package com.g.laurent.alitic
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.os.Build
 import android.os.Handler
-import android.view.View
-import android.widget.FrameLayout
 import com.g.laurent.alitic.Views.FoodTypeViewHolder
-import com.ianpinto.androidrangeseekbar.rangeseekbar.RangeSeekBar
+
 
 fun enlargeThumbnail(holder:FoodTypeViewHolder, duration:Long, color: Int, ratio:Float){
 
@@ -15,9 +12,7 @@ fun enlargeThumbnail(holder:FoodTypeViewHolder, duration:Long, color: Int, ratio
     val scaleDownY = ObjectAnimator.ofFloat(holder.itemView, "scaleY", 1/ratio)
     val moveRightX = ObjectAnimator.ofFloat(holder.itemView, "x", holder.itemView.width.toFloat() * (1-ratio)/(2*ratio))
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        holder.itemView.elevation = 3f
-    }
+    holder.itemView.elevation = 3f
 
     // Move viewholder
     move(scaleDownX, scaleDownY, moveRightX, duration)
@@ -39,10 +34,7 @@ fun reduceThumbnail(holder:FoodTypeViewHolder, duration:Long, color: Int){
 
     // Move viewholder
     move(scaleDownX, scaleDownY, moveRightX, duration)
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        holder.itemView.elevation = 0f
-    }
+    holder.itemView.elevation = 0f
 
     // Change color viewholder
     holder.itemView.setBackgroundColor(color)

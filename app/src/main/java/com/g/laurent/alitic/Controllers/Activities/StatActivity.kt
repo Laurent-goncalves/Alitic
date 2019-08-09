@@ -28,25 +28,38 @@ class StatActivity : BaseActivity(), OnEventTypeChangeListener{
 
         listEventTypes = getListEventTypesForStatDetailFragment(applicationContext)
 
-        movePicture(imageBackground, Loc.CENTER.position, Loc.BOTTOM_RIGHT.position, matrix, this)
+        movePicture(imageBackground, Loc.CENTER.position, Loc.BOTTOM_RIGHT.position, matrix)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar_stats, menu)
-        configureToolbar(toolbar, this, applicationContext)
+
+        configureToolbar(toolbar,
+            title = context.getString(R.string.title_toolbar_stat),
+            homeButtonNeeded = true,
+            infoIconNeeded = true)
+
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onClickBackButtonToolbar() {
+        goToBackToMainPage()
+    }
+
+    override fun onMenuItemClick() {
+        displayInformations()
     }
 
     /** ---------------------------------- TABS ---------------------------------------- **/
 
-    fun configureStatActivity(){
+    private fun configureStatActivity(){
 
         // Stop progress Bar
         findViewById<ProgressBar>(R.id.progress_bar).visibility= View.GONE
 
         // Configure StatAdapter
         stat_viewpager.visibility = View.VISIBLE
-        stat_viewpager.adapter = StatAdapter(supportFragmentManager, applicationContext, listEventTypes[0], getTitlesFromListEventTypes(listEventTypes))
+        stat_viewpager.adapter = StatAdapter(supportFragmentManager, applicationContext, 0, listEventTypes)
 
         // Configure tab layout
         tabs.setupWithViewPager(stat_viewpager)
@@ -64,7 +77,7 @@ class StatActivity : BaseActivity(), OnEventTypeChangeListener{
     }
 
     override fun changeEventType(position: Int) {
-        stat_viewpager.adapter = StatAdapter(supportFragmentManager, applicationContext, listEventTypes[position], getTitlesFromListEventTypes(listEventTypes))
+        stat_viewpager.adapter = StatAdapter(supportFragmentManager, applicationContext, position, listEventTypes)
         stat_viewpager.currentItem = 2
     }
 
@@ -74,13 +87,21 @@ class StatActivity : BaseActivity(), OnEventTypeChangeListener{
         statInfoDialog.show(fm, "statInfoDialog")
     }
 
+    override fun doWhenAnimationIsFinished(toPosition: Position) {
+        if(toPosition.equals(Loc.CENTER.position)){ // if picture move to center
+            finishActivity()
+        } else { // if picture move to bottom left corner
+            configureStatActivity()
+        }
+    }
+
     public override fun goToBackToMainPage(){
         super.goToBackToMainPage()
 
         // Hide stat_viewpager
         stat_viewpager.visibility = View.GONE
         // Move camera to the center of image in background
-        movePicture(imageBackground, Loc.BOTTOM_RIGHT.position,Loc.CENTER.position, matrix, this)
+        movePicture(imageBackground, Loc.BOTTOM_RIGHT.position,Loc.CENTER.position, matrix)
     }
 }
 

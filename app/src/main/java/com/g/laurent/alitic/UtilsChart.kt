@@ -2,60 +2,18 @@ package com.g.laurent.alitic
 
 import android.content.Context
 import android.graphics.Color
-import android.support.v4.content.ContextCompat
-import android.util.Half.toFloat
 import android.view.View
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.g.laurent.alitic.Controllers.Activities.StatType
 import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
-import com.github.mikephil.charting.formatter.IAxisValueFormatter
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.PercentFormatter
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 
-fun createPieChart(listFoodTypes:List<FoodTypeStatEntry>, view: View, context:Context){
-
-    val pieChart: PieChart = view.findViewById(R.id.piechart)
-
-    // Create list of bar entries
-    val valueSet = arrayListOf<PieEntry>()
-
-    val listColors = mutableListOf<Int>()
-
-    if(listFoodTypes.isNotEmpty()){
-        for(i in 0 until listFoodTypes.size) {
-            valueSet.add(PieEntry(listFoodTypes[i].ratio.toFloat() * 100, listFoodTypes[i].foodType.name))
-            // Add foodtype color
-            listColors.add(listFoodTypes[i].foodType.foodTypeColor)
-        }
-    }
-
-    val dataSet = PieDataSet(valueSet, null)
-
-    dataSet.setColors(listColors.toIntArray(), context)
-    dataSet.sliceSpace = 3f
-    dataSet.selectionShift = 5f
-
-    val data = PieData(dataSet)
-    data.dataSet = dataSet
-
-    data.setValueFormatter(PercentFormatter())
-    data.setValueTextSize(11f)
-
-    pieChart.setEntryLabelColor(Color.BLACK)
-    pieChart.setEntryLabelTextSize(14f)
-
-    pieChart.data = data
-    pieChart.legend.isEnabled = false
-    pieChart.isRotationEnabled = false
-    pieChart.description.isEnabled = false
-    pieChart.invalidate()
-}
 
 fun configureBigPieChart(listFoodTypes:List<FoodTypeStatEntry>, view: View, context:Context){
 
@@ -88,13 +46,13 @@ fun configureBigPieChart(listFoodTypes:List<FoodTypeStatEntry>, view: View, cont
 
     pieChart.setEntryLabelColor(Color.BLACK)
     pieChart.setEntryLabelTextSize(14f)
-
-    //pieChart.setHoleColor(android.R.color.transparent)
+    pieChart.setHoleColor(android.R.color.transparent)
 
     pieChart.data = data
     pieChart.legend.isEnabled = false
     pieChart.isRotationEnabled = false
     pieChart.description.isEnabled = false
+    pieChart.setTouchEnabled(false)
     pieChart.invalidate()
 }
 
@@ -162,61 +120,13 @@ fun createBarChartTwoColumns(listStats:List<FoodStatEntry>, view: View, context:
 
     val barChart:HorizontalBarChart = view.findViewById(R.id.barchart_detail_per_food)
 
-    fun configureLegend(){
-        barChart.legend.isEnabled = true
-        val legend = barChart.legend
-        legend.textSize = 14f
-
-        val legendEntry1 = LegendEntry()
-        legendEntry1.label = "Food nok"
-        legendEntry1.formColor = R.color.colorFoodNOK
-
-        val legendEntry2 = LegendEntry()
-        legendEntry2.label = "Food OOOK"
-        legendEntry2.formColor = R.color.colorFoodOK
-
-        legend.setCustom(mutableListOf(legendEntry1, legendEntry2))
-    }
-
     // Initialization
     val valueSet = arrayListOf<BarEntry>()
     val listFood = mutableListOf<String>()
     val listColors = mutableListOf<Int>()
+    val mEntriesCount = if(listStats.size >= 10) 9 else listStats.size-1
 
-    // Create bar entries
-    if(listStats.isNotEmpty()){
-
-        barChart.visibility = View.VISIBLE
-        view.findViewById<TextView>(R.id.title_detail_per_food).visibility = View.VISIBLE // show title graph
-        view.findViewById<View>(R.id.line_separator_bottom).visibility = View.VISIBLE // show line separator
-
-        val mEntriesCount = if(listStats.size >= 10) 9 else listStats.size - 1
-
-        for(i in 0 .. mEntriesCount){
-            valueSet.add(BarEntry(i.toFloat(), floatArrayOf(listStats[i].counter.countNOK.toFloat(), listStats[i].counter.countOK.toFloat())))
-            listColors.add(R.color.colorFoodNOK)
-            listColors.add(R.color.colorFoodOK)
-            listFood.add(listStats[i].food.name!!)
-        }
-
-        // custom X-axis labels
-        val xAxis = barChart.xAxis
-        xAxis.setDrawGridLines(false)
-        xAxis.setDrawAxisLine(false)
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
-        xAxis.textSize = 14f
-        xAxis.axisMinimum = 0f
-        xAxis.axisMaximum = listFood.size.toFloat() - 1
-        xAxis.granularity = 1f
-        barChart.notifyDataSetChanged()
-        xAxis.valueFormatter = MyXAxisValueFormatter(listFood.toTypedArray())
-
-        // Data
-        val barDataSet = BarDataSet(valueSet, null)
-        barDataSet.setDrawValues(true)
-        barDataSet.setColors(listColors.toIntArray(), context) // Set colors for each bar
-        barDataSet.valueTextSize = 14f
-        barDataSet.valueFormatter = MyYAxisValueFormatter()
+    fun configureBarChart(){
 
         // hide Y-axis and gridlines
         val left = barChart.axisLeft
@@ -227,90 +137,66 @@ fun createBarChartTwoColumns(listStats:List<FoodStatEntry>, view: View, context:
         right.setDrawLabels(false)
         right.setDrawGridLines(false)
 
-        // Finalize bar chart
-        val barData = BarData(barDataSet)
-        barData.barWidth = 0.9f
-        barChart.data = barData
         barChart.setFitBars(true)
-        barChart.notifyDataSetChanged()
         barChart.setDrawValueAboveBar(false)
-        configureLegend()
 
+        barChart.legend.isEnabled = false
         barChart.description.isEnabled = false
         barChart.setTouchEnabled(false)
-
-        barChart.invalidate()
-
-    } else {
-        barChart.visibility = View.GONE // hide barchart
-        view.findViewById<TextView>(R.id.title_detail_per_food).visibility = View.GONE // hide title graph
-        view.findViewById<View>(R.id.line_separator_bottom).visibility = View.GONE // hide line separator
     }
-}
 
+    fun configureXAxis(){
+        val xAxis = barChart.xAxis
+        xAxis.setDrawGridLines(false)
+        xAxis.setDrawAxisLine(false)
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        xAxis.textSize = 14f
+        xAxis.setCenterAxisLabels(false)
+        xAxis.granularity = 1f // axis display values in multiple of 1
+        xAxis.isGranularityEnabled=true
+        xAxis.valueFormatter = IndexAxisValueFormatter(listFood.toTypedArray()) // show labels (foods) on xAxis
+    }
 
+    fun showBarChart(show:Boolean){
 
-/*
-fun createBarChartOneColumn(listStats:List<StatEntry>, statType:StatType, view: View, context:Context){
+        val VIEW_VISIBILITY = if(show) View.VISIBLE else View.GONE
 
-    // Initialization
-    val barChart: HorizontalBarChart = view.findViewById(R.id.barchart)
-    val valueSet = arrayListOf<BarEntry>()
-    val listFood = mutableListOf<String>()
-    val listColors = mutableListOf<Int>()
+        barChart.visibility = VIEW_VISIBILITY // visibility barchart
+        view.findViewById<TextView>(R.id.title_detail_per_food).visibility = VIEW_VISIBILITY // visibility title graph
+        view.findViewById<View>(R.id.line_separator_bottom).visibility = VIEW_VISIBILITY // visibility line separator
+        view.findViewById<RelativeLayout>(R.id.legend_barchart).visibility = VIEW_VISIBILITY // visibility barchart legend
+    }
 
     // Create bar entries
     if(listStats.isNotEmpty()){
 
-        val limit = if(listStats.size >= 8) 8 else listStats.size
+        showBarChart(true)
+        configureBarChart()
 
-        for(i in 0 until limit){
-
-            listFood.add(listStats[i].food!!)
-
-            if(statType == StatType.GLOBAL_ANALYSIS_NEG) {
-                valueSet.add(BarEntry(i.toFloat(), listStats[i].countNOK.toFloat()))
-                listColors.add(R.color.colorFoodNOK)
-            } else {
-                valueSet.add(BarEntry(i.toFloat(), listStats[i].countOK.toFloat()))
-                listColors.add(R.color.colorFoodOK)
-            }
+        for(i in mEntriesCount downTo 0){
+            valueSet.add(BarEntry(mEntriesCount - i.toFloat(), floatArrayOf(listStats[i].counter.countNOK.toFloat(), listStats[i].counter.countOK.toFloat())))
+            listColors.add(R.color.colorFoodNOK)
+            listColors.add(R.color.colorFoodOK)
+            listFood.add(listStats[i].food.name!!)
         }
+
+        // custom X-axis labels
+        configureXAxis()
+
+        // Data
+        val barDataSet = BarDataSet(valueSet, null)
+        barDataSet.setDrawValues(true)
+        barDataSet.setColors(listColors.toIntArray(), context) // Set colors for each bar
+        barDataSet.valueTextSize = 14f
+        barDataSet.valueFormatter = MyYAxisValueFormatter()
+        barChart.xAxis.labelCount = barDataSet.entryCount
+
+        // Finalize bar chart
+        val barData = BarData(barDataSet)
+        barChart.data = barData
+        barChart.invalidate()
+
+    } else {
+        showBarChart(false)
     }
-
-    val barDataSet = BarDataSet(valueSet, null)
-    val dataSets = ArrayList<IBarDataSet>()
-    dataSets.add(barDataSet)
-    barDataSet.setDrawValues(true)
-
-    // Set colors for each bar
-    barDataSet.setColors(listColors.toIntArray(), context)
-
-    // hide Y-axis and gridlines
-    val left = barChart.axisLeft
-    left.setDrawLabels(false)
-    left.setDrawGridLines(false)
-
-    val right = barChart.axisRight
-    right.setDrawLabels(false)
-    right.setDrawGridLines(false)
-
-    // custom X-axis labels
-    val xAxis = barChart.xAxis
-    xAxis.position = XAxis.XAxisPosition.BOTTOM
-    xAxis.textSize = 14f
-    xAxis.granularity = 1f // restrict the minimum interval of your axis to "1"
-    xAxis.valueFormatter = MyXAxisValueFormatter(listFood.toTypedArray())
-    xAxis.setDrawGridLines(false)
-
-    // Finalize bar chart
-    val barData = BarData(barDataSet)
-    barChart.data = barData
-    barChart.legend.isEnabled = false
-    barChart.description.isEnabled = false
-    barChart.setTouchEnabled(false)
-    barChart.invalidate()
 }
-
-
-*/

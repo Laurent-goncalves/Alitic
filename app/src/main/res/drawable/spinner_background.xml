@@ -2,22 +2,10 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item>
-
-        <layer-list>
-
-            <item>
-                <color
-                        android:color="@android:color/white"/>
-            </item>
-
-            <item>
-                <bitmap
-                        android:gravity="center_vertical|right"
-                        android:src="@drawable/baseline_arrow_drop_down_black_24"/>
-            </item>
-
-        </layer-list>
-
+        <bitmap
+                android:gravity="center_vertical|right"
+                android:src="@drawable/baseline_arrow_drop_down_black_24"
+                android:tint="@android:color/holo_green_dark"/>
     </item>
 
 </selector>

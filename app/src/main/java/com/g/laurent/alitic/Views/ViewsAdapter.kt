@@ -445,13 +445,24 @@ class CalendarAdapter(private val frag:ChronoFragment, context: Context, private
 }
 
 /** STAT ADAPTER**/
-open class StatAdapter(mgr: FragmentManager, val context: Context, var eventType: EventType, private val listEventType: ArrayList<String>): FragmentPagerAdapter(mgr) {
+open class StatAdapter(mgr: FragmentManager, val context: Context, var position: Int, private val listEventType: List<EventType>): FragmentPagerAdapter(mgr) {
 
+    private fun getTitlesFromListEventTypes(list:List<EventType>):ArrayList<String>{
+
+        val result = arrayListOf<String>()
+
+        if(list.isNotEmpty()){
+            for(e in list){
+                val title = e.name
+                if(title!=null){
+                    result.add(title)
+                }
+            }
+        }
+        return result
+    }
 
     override fun getItemPosition(`object`: Any): Int {
-
-        //mgr.executePendingTransactions()
-
         if(`object` is StatDetailFragment)
             return POSITION_NONE
         return POSITION_UNCHANGED
@@ -459,9 +470,9 @@ open class StatAdapter(mgr: FragmentManager, val context: Context, var eventType
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> StatGlobalFragment().newInstance(null, StatType.GLOBAL_ANALYSIS_NEG)
-            1 -> StatGlobalFragment().newInstance(null, StatType.GLOBAL_ANALYSIS_POS)
-            else -> StatDetailFragment().newInstance(eventType, StatType.DETAIL_ANALYSIS, listEventType)
+            0 -> StatGlobalFragment().newInstance(StatType.GLOBAL_ANALYSIS_NEG)
+            1 -> StatGlobalFragment().newInstance(StatType.GLOBAL_ANALYSIS_POS)
+            else -> StatDetailFragment().newInstance(getTitlesFromListEventTypes(listEventType))
         }
     }
 

@@ -258,66 +258,17 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
         ------------------------------------------ MEAL INSERTION ------------------------------------------------
         ------------------------------------------------------------------------------------------------------ **/
 
-        val list1 : MutableList<MealItem> = mutableListOf()
-        list1.add(MealItem(null,null, alcool))
-        list1.add(MealItem(null,null, bonbon))
-        list1.add(MealItem(null,null, volailles))
+        val list1 : MutableList<Long?> = mutableListOf(alcool,bonbon,volailles)
+        val list2 : MutableList<Long?> = mutableListOf(alcool,bonbon,crustaces,chocolat)
+        val list3 : MutableList<Long?> = mutableListOf(pain, moutarde, patisserie, lait)
+        val list4 : MutableList<Long?> = mutableListOf(alcool,viandeRouge,bonbon,volailles,pain,chocolat)
+        val list5 : MutableList<Long?> = mutableListOf(haricot, lait, crustaces, peche)
+        val list6 : MutableList<Long?> = mutableListOf(pain,olives,patisserie,endive)
+        val list7 : MutableList<Long?> = mutableListOf(viandeRouge,chocolat,crustaces,lait)
+        val list8 : MutableList<Long?> = mutableListOf(lait,peche,pain,olives)
+        val list9 : MutableList<Long?> = mutableListOf(haricot,bonbon,pain,crustaces)
+        val list10 : MutableList<Long?> = mutableListOf(lait,chocolat,endive,viandeRouge)
 
-        val list2 : MutableList<MealItem> = mutableListOf()
-        list2.add(MealItem(null,null, alcool))
-        list2.add(MealItem(null,null, bonbon))
-        list2.add(MealItem(null,null, crustaces))
-        list2.add(MealItem(null,null, chocolat))
-
-        val list3 : MutableList<MealItem> = mutableListOf()
-        list3.add(MealItem(null,null,pain))
-        list3.add(MealItem(null,null,moutarde))
-        list3.add(MealItem(null,null,patisserie))
-        list3.add(MealItem(null,null,lait))
-
-        val list4 : MutableList<MealItem> = mutableListOf()
-        list4.add(MealItem(null,null,alcool))
-        list4.add(MealItem(null,null,viandeRouge))
-        list4.add(MealItem(null,null,bonbon))
-        list4.add(MealItem(null,null,volailles))
-        list4.add(MealItem(null,null,pain))
-        list4.add(MealItem(null,null,chocolat))
-
-        val list5 : MutableList<MealItem> = mutableListOf()
-        list5.add(MealItem(null,null,haricot))
-        list5.add(MealItem(null,null,lait))
-        list5.add(MealItem(null,null,crustaces))
-        list5.add(MealItem(null,null,peche))
-
-        val list6 : MutableList<MealItem> = mutableListOf()
-        list6.add(MealItem(null,null,pain))
-        list6.add(MealItem(null,null,olives))
-        list6.add(MealItem(null,null,patisserie))
-        list6.add(MealItem(null,null,endive))
-
-        val list7 : MutableList<MealItem> = mutableListOf()
-        list7.add(MealItem(null,null,viandeRouge))
-        list7.add(MealItem(null,null,chocolat))
-        list7.add(MealItem(null,null,crustaces))
-        list7.add(MealItem(null,null,lait))
-
-        val list8 : MutableList<MealItem> = mutableListOf()
-        list8.add(MealItem(null,null,lait))
-        list8.add(MealItem(null,null,peche))
-        list8.add(MealItem(null,null,pain))
-        list8.add(MealItem(null,null,olives))
-
-        val list9 : MutableList<MealItem> = mutableListOf()
-        list9.add(MealItem(null,null,haricot))
-        list9.add(MealItem(null,null,bonbon))
-        list9.add(MealItem(null,null,pain))
-        list9.add(MealItem(null,null,crustaces))
-
-        val list10 : MutableList<MealItem> = mutableListOf()
-        list10.add(MealItem(null,null,lait))
-        list10.add(MealItem(null,null,chocolat))
-        list10.add(MealItem(null,null,endive))
-        list10.add(MealItem(null,null,viandeRouge))
 
         val idMeal1 = saveNewMeal(list1, getDateAsLong(10, 2, 2019, 12, 0),
             false, context)

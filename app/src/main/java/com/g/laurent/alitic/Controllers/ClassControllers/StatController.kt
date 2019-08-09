@@ -1,13 +1,10 @@
 package com.g.laurent.alitic.Controllers.ClassControllers
 
 import android.content.Context
-import com.facebook.stetho.inspector.helper.IntegerFormatter
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.Activities.StatType
 import com.g.laurent.alitic.Models.*
-import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.github.mikephil.charting.formatter.IValueFormatter
 import com.github.mikephil.charting.utils.ViewPortHandler
 import org.apache.commons.math3.stat.regression.SimpleRegression
@@ -21,22 +18,14 @@ class FoodStatEntry(val food:Food, val ratio:Float, val counter:Counter)
 
 class Counter(var countOK:Int, var countNOK:Int)
 
-enum class Evolution(val status:Int?, val icon:Int, val colorId:Int){
-    NEGATIVE(-1, R.drawable.baseline_thumb_down_white_24, android.R.color.holo_red_dark),
-    NEUTRAL(0, R.drawable.baseline_thumbs_up_down_white_24, android.R.color.holo_blue_dark),
-    POSITIVE(1, R.drawable.baseline_thumb_up_white_24, android.R.color.holo_green_dark),
-    UNDEFINED(null,R.drawable.baseline_help_white_24, android.R.color.darker_gray);
+enum class Evolution(val icon:Int, val colorId:Int, val background:Int){
+    NEGATIVE(R.drawable.baseline_thumb_down_white_24, android.R.color.holo_red_dark, R.drawable.background_spinner_stat_red),
+    NEUTRAL(R.drawable.baseline_thumbs_up_down_white_24, android.R.color.holo_blue_dark, R.drawable.background_spinner_stat_blue),
+    POSITIVE(R.drawable.baseline_thumb_up_white_24, android.R.color.holo_green_dark, R.drawable.background_spinner_stat_green),
+    UNDEFINED(R.drawable.baseline_help_white_24, android.R.color.darker_gray, R.drawable.background_spinner_stat_gray);
 }
 
 class FoodTypeStatEntry(val foodType:FoodType, val ratio:Double)
-
-class MyXAxisValueFormatter(private val mValues: Array<String>) : IAxisValueFormatter {
-
-    override fun getFormattedValue(value: Float, axis: AxisBase): String {
-        // "value" represents the position of the label on the axis
-        return mValues[value.toInt()]
-    }
-}
 
 class MyYAxisValueFormatter : IValueFormatter {
 
@@ -59,9 +48,9 @@ class MyYAxisValueFormatter : IValueFormatter {
  * --------------------------------------- FOOD STAT ---------------------------------------------------------
    ----------------------------------------------------------------------------------------------------------*/
 
-fun getFoodStat(statType:StatType, eventType:EventType?, mode:Boolean = false, context:Context):List<FoodStatEntry>{
+fun getFoodStat(statType:StatType, eventType:EventType, mode:Boolean = false, context:Context):List<FoodStatEntry>{
 
-    fun getListOf10Food(statType:StatType, eventType:EventType?, mode:Boolean = false, context:Context):List<FoodStatEntry>{
+    fun getListOf10Food(statType:StatType, eventType:EventType, mode:Boolean = false, context:Context):List<FoodStatEntry>{
 
         fun getTop10(list:MutableList<FoodStatEntry>):List<FoodStatEntry>{
 
@@ -111,7 +100,7 @@ fun getFoodStat(statType:StatType, eventType:EventType?, mode:Boolean = false, c
     return getListOf10Food(statType, eventType, mode, context)
 }
 
-fun getListFoodsWithCounters(statType:StatType, eventType:EventType?, mode:Boolean = false, context:Context):HashMap<Food, Counter> {
+fun getListFoodsWithCounters(statType:StatType, eventType:EventType, mode:Boolean = false, context:Context):HashMap<Food, Counter> {
 
     fun getListFoodWithCountersRelatedToListEvents(listEvents:List<Event>, mode:Boolean=false, context: Context):HashMap<Food, Counter>{
 
@@ -242,7 +231,11 @@ fun getListFoodsWithCounters(statType:StatType, eventType:EventType?, mode:Boole
     if (statType == StatType.DETAIL_ANALYSIS) {
 
         // Get the list of events related to eventType
-        val listEvents = getListEventForOneEventType(eventType?.id, mode, context)
+        val listEvents = if(eventType.id==null){
+            getAllEvents(mode, context)
+        } else {
+            getListEventForOneEventType(eventType.id, mode, context)
+        }
 
         // Get list of foods with their counters
         if(listEvents!=null)
@@ -355,7 +348,7 @@ fun getEvolution(listDates:List<Long>, mode:Boolean = false, context:Context):Ev
  * --------------------------------------- FOODTYPE STAT -----------------------------------------------------
 ------------------------------------------------------------------------------------------------------------*/
 
-fun getListFoodTypesStats(statType: StatType, eventType: EventType?, mode:Boolean = false, context:Context):List<FoodTypeStatEntry>{
+fun getListFoodTypesStats(statType: StatType, eventType: EventType, mode:Boolean = false, context:Context):List<FoodTypeStatEntry>{
 
     val listFoodCounters = getListFoodsWithCounters(statType, eventType, mode, context)
 

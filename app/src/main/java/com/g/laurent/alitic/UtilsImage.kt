@@ -7,7 +7,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.g.laurent.alitic.Controllers.ClassControllers.getEventType
 import com.g.laurent.alitic.Controllers.ClassControllers.getFoodType
-import com.g.laurent.alitic.Controllers.ClassControllers.getFoodsFromMeal
 import com.g.laurent.alitic.Models.*
 
 fun getResourceId(path:String?, context: Context):Int{

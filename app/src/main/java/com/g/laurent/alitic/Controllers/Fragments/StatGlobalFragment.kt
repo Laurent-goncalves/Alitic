@@ -8,23 +8,17 @@ import android.view.ViewGroup
 import android.widget.*
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.Activities.StatType
-import com.g.laurent.alitic.Controllers.Activities.TypeDisplay
 import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Models.EventType
-import com.g.laurent.alitic.Models.Food
-import com.github.mikephil.charting.charts.PieChart
 import com.mikhaellopez.circularimageview.CircularImageView
-import kotlinx.android.synthetic.*
 
 
 class StatGlobalFragment : StatFragment() {
 
-    fun newInstance(idEventType:Long?, statType: StatType):StatGlobalFragment{
+    fun newInstance(statType: StatType):StatGlobalFragment{
 
         val frag = StatGlobalFragment()
         val args = Bundle()
-        if(idEventType!=null)
-            args.putLong(ID_EVENTTYPE, idEventType)
         args.putString(STAT_TYPE, statType.name)
         frag.arguments = args
 
@@ -70,7 +64,7 @@ class StatGlobalFragment : StatFragment() {
     /** FOOD LABELS **/
     private fun configureEachFood(view:View) {
 
-        val listFood = getFoodStat(statType, null, context = contextFrag)
+        val listFood = getFoodStat(statType, EventType(), context = contextFrag)
 
         if(listFood.isNotEmpty()){
             for ((j, i) in getListUsedViewIndex(listFood.size).withIndex()) {
@@ -169,7 +163,7 @@ class StatGlobalFragment : StatFragment() {
 
     /** PIE CHART FOODTYPES **/
     private fun configureBigPieChart(view:View){
-        val listFoodTypes = getListFoodTypesStats(statType, null, context = contextFrag)
+        val listFoodTypes = getListFoodTypesStats(statType, EventType(), context = contextFrag)
         configureBigPieChart(listFoodTypes, view, contextFrag)
     }
 }

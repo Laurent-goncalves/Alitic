@@ -6,6 +6,8 @@ import android.support.test.runner.AndroidJUnit4
 import com.g.laurent.alitic.Controllers.Activities.StatType
 import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Models.AppDataBase
+import com.g.laurent.alitic.Models.EventType
+import com.g.laurent.alitic.Models.Food
 import com.g.laurent.alitic.Models.MealItem
 import org.junit.After
 import org.junit.Assert
@@ -32,7 +34,7 @@ class StatTest {
         AppDataBase.clearDatabase()
         getIds("meal", context)
         val listIds = getListEvents(context)
-        var list = getFoodStat(StatType.GLOBAL_ANALYSIS_NEG, null, true, context)
+        var list = getFoodStat(StatType.GLOBAL_ANALYSIS_NEG, EventType(), true, context)
 
         Assert.assertTrue(list.size==6)
 
@@ -47,7 +49,7 @@ class StatTest {
             }
         }
 
-        list = getFoodStat(StatType.GLOBAL_ANALYSIS_POS, null, true, context)
+        list = getFoodStat(StatType.GLOBAL_ANALYSIS_POS, EventType(), true, context)
 
         for(value in list){
             when(value.food.name){
@@ -61,7 +63,7 @@ class StatTest {
         }
 
         var eventType = getEventType(listIds!![0], true, context)
-        list = getFoodStat(StatType.DETAIL_ANALYSIS, eventType, true, context)
+        list = getFoodStat(StatType.DETAIL_ANALYSIS, eventType!!, true, context)
 
         for(value in list){
             when(value.food.name){
@@ -75,7 +77,7 @@ class StatTest {
         }
 
         eventType = getEventType(listIds[1], true, context)
-        list = getFoodStat(StatType.DETAIL_ANALYSIS, eventType, true, context)
+        list = getFoodStat(StatType.DETAIL_ANALYSIS, eventType!!, true, context)
 
         for(value in list){
             when(value.food.name){
@@ -99,7 +101,7 @@ class StatTest {
         val df = DecimalFormat("#.###")
 
         // Get food stat for all eventTypes for negative food
-        var result = getListFoodTypesStats(StatType.GLOBAL_ANALYSIS_NEG, null, true, context)
+        var result = getListFoodTypesStats(StatType.GLOBAL_ANALYSIS_NEG, EventType(), true, context)
 
         Assert.assertEquals(4, result.size)
 
@@ -121,7 +123,7 @@ class StatTest {
         }
 
         // Get food stat for all eventTypes for positive food
-        result = getListFoodTypesStats(StatType.GLOBAL_ANALYSIS_POS, null, true, context)
+        result = getListFoodTypesStats(StatType.GLOBAL_ANALYSIS_POS, EventType(), true, context)
 
         Assert.assertEquals(4, result.size)
 
@@ -376,73 +378,73 @@ class StatTest {
                     context
                 )
 
-                val list1 : MutableList<MealItem> = mutableListOf()
-                list1.add(MealItem(null,0,idFood1))
-                list1.add(MealItem(null,0,idFood2))
-                list1.add(MealItem(null,0,idFood3))
+                val list1 : MutableList<Food> = mutableListOf()
+                list1.add(getFood(idFood1, context = context)!!)
+                list1.add(getFood(idFood2, context = context)!!)
+                list1.add(getFood(idFood3, context = context)!!)
 
-                val list2 : MutableList<MealItem> = mutableListOf()
-                list2.add(MealItem(null,0,idFood1))
-                list2.add(MealItem(null,0,idFood2))
-                list2.add(MealItem(null,0,idFood3))
-                list2.add(MealItem(null,0,idFood4))
+                val list2 : MutableList<Food> = mutableListOf()
+                list2.add(getFood(idFood1, context = context)!!)
+                list2.add(getFood(idFood2, context = context)!!)
+                list2.add(getFood(idFood3, context = context)!!)
+                list2.add(getFood(idFood4, context = context)!!)
 
-                val list3 : MutableList<MealItem> = mutableListOf()
-                list3.add(MealItem(null,0,idFood5))
-                list3.add(MealItem(null,0,idFood6))
+                val list3 : MutableList<Food> = mutableListOf()
+                list3.add(getFood(idFood5, context = context)!!)
+                list3.add(getFood(idFood6, context = context)!!)
 
-                val list4 : MutableList<MealItem> = mutableListOf()
-                list4.add(MealItem(null,0,idFood1))
-                list4.add(MealItem(null,0,idFood2))
-                list4.add(MealItem(null,0,idFood3))
-                list4.add(MealItem(null,0,idFood6))
+                val list4 : MutableList<Food> = mutableListOf()
+                list4.add(getFood(idFood1, context = context)!!)
+                list4.add(getFood(idFood2, context = context)!!)
+                list4.add(getFood(idFood3, context = context)!!)
+                list4.add(getFood(idFood6, context = context)!!)
 
-                val list5 : MutableList<MealItem> = mutableListOf()
-                list5.add(MealItem(null,0,idFood3))
-                list5.add(MealItem(null,0,idFood4))
-                list5.add(MealItem(null,0,idFood5))
-                list5.add(MealItem(null,0,idFood6))
+                val list5 : MutableList<Food> = mutableListOf()
+                list5.add(getFood(idFood3, context = context)!!)
+                list5.add(getFood(idFood4, context = context)!!)
+                list5.add(getFood(idFood5, context = context)!!)
+                list5.add(getFood(idFood6, context = context)!!)
 
-                val list6 : MutableList<MealItem> = mutableListOf()
-                list6.add(MealItem(null,0,idFood2))
-                list6.add(MealItem(null,0,idFood4))
-                list6.add(MealItem(null,0,idFood5))
+                val list6 : MutableList<Food> = mutableListOf()
+                list6.add(getFood(idFood2, context = context)!!)
+                list6.add(getFood(idFood4, context = context)!!)
+                list6.add(getFood(idFood5, context = context)!!)
 
 
                 val idMeal1 = saveNewMeal(
-                    list1,
+                    list1.map { it.id },
                     getDateAsLong(2, 12, 2018, 12, 0),
                     true,
                     context
                 )
                 val idMeal2 = saveNewMeal(
-                    list2,
+                    list2.map { it.id },
                     getDateAsLong(12, 12, 2018, 10, 0),
                     true,
                     context
                 )
                 val idMeal3 = saveNewMeal(
-                    list3,
+                    list3.map { it.id },
                     getDateAsLong(14, 1, 2019, 14, 0),
                     true,
                     context
                 )
                 val idMeal4 = saveNewMeal(
-                    list4,
+                    list4.map { it.id },
                     getDateAsLong(14, 1, 2019, 10, 0),
                     true,
                     context
                 )
 
                 val idMeal5 = saveNewMeal(
-                    list5,
+                    list5.map { it.id },
                     getDateAsLong(1, 1, 2019, 10, 0),
                     true,
                     context
                 )
 
                 val idMeal6 = saveNewMeal(
-                    list6,
+                    list6.map { it.id },
                     getDateAsLong(5, 1, 2019, 10, 0),
                     true,
                     context

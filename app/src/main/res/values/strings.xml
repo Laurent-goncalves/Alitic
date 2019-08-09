@@ -13,6 +13,7 @@
     <string name="save_food_new">Aliment sauvegardé avec succès</string>
     <string name="save_food_update">Aliment mis à jour avec succès</string>
 
+    <string name="Satisfy_Regular">Satisfy-Regular</string>
 
     <string name="save_event_title_dialog">Sauvegarder ressenti</string>
     <string name="save_event_content_dialog">Voulez-vous sauvegarder le ressenti à cette heure-ci ?</string>
@@ -165,6 +166,11 @@
     <string name="click_allowance">INFO : vous pouvez cliquer sur un point de couleur pour avoir accès à plus de détails
         sur la chronologie.
     </string>
+
+
+    <!--LEGEND BAR CHART TWO COLUMNS -->
+    <string name="food_nok">Repas lié à un ressenti</string>
+    <string name="food_ok">Repas sans ressenti</string>
 
     <!--INFO STATS -->
     <string name="title_panel1_info">Informations 1er onglet</string>

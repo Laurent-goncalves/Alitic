@@ -14,6 +14,7 @@ import com.g.laurent.alitic.getTextDate
 class ChronoActivity : BaseActivity(), OnTimeLineDisplay, OnCalendarLoaded {
 
     private val chronoFragment = ChronoFragment()
+    private val timeLineFragment = TimeLineFragment()
     private var dateSelected:Long?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,19 +24,33 @@ class ChronoActivity : BaseActivity(), OnTimeLineDisplay, OnCalendarLoaded {
         // Start progress Bar
         findViewById<ProgressBar>(R.id.progress_bar).visibility = View.VISIBLE
 
-        movePicture(imageBackground, Loc.CENTER.position, Loc.BOTTOM_LEFT.position, matrix, this)
+        movePicture(imageBackground, Loc.CENTER.position, Loc.BOTTOM_LEFT.position, matrix)
+    }
+
+    override fun onMenuItemClick() {
+        val fm = supportFragmentManager
+        val legendCalendarDialog = LegendCalendarDialog().newInstance()
+        legendCalendarDialog.show(fm, "legendCalendarDialog")
+    }
+
+    override fun onClickBackButtonToolbar(){
+        if(chronoFragment.isVisible){
+            goToBackToMainPage()
+        } else if(timeLineFragment.isVisible){
+            showChronoFragment()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar_chrono, menu)
-        configureToolbarWhenChronoFragment(toolbar, context.resources.getString(R.string.chronology), this)
-        return super.onCreateOptionsMenu(menu)
-    }
 
-    fun showInfo(){
-        val fm = supportFragmentManager
-        val legendCalendarDialog = LegendCalendarDialog().newInstance()
-        legendCalendarDialog.show(fm, "legendCalendarDialog")
+        configureToolbar(toolbar,
+            title = context.resources.getString(R.string.chronology),
+            homeButtonNeeded = true,
+            infoIconNeeded = true
+        )
+
+        return super.onCreateOptionsMenu(menu)
     }
 
     fun configureChronoActivity() {
@@ -46,7 +61,7 @@ class ChronoActivity : BaseActivity(), OnTimeLineDisplay, OnCalendarLoaded {
         findViewById<ProgressBar>(R.id.progress_bar).visibility = View.GONE
     }
 
-    fun showChronoFragment(){
+    private fun showChronoFragment(){
 
         chronoFragment.updateData(dateSelected)
 
@@ -55,15 +70,17 @@ class ChronoActivity : BaseActivity(), OnTimeLineDisplay, OnCalendarLoaded {
         fragmentManager.commit()
 
         // Configure Toolbar
-        configureToolbarWhenChronoFragment(toolbar, context.resources.getString(R.string.chronology), this)
+        configureToolbar(toolbar,
+            title = context.resources.getString(R.string.chronology),
+            homeButtonNeeded = true,
+            infoIconNeeded = true
+        )
     }
 
     override fun displayTimeLineFragment(day: Int, month: Int, year: Int) {
 
         // Update dateSelected
         dateSelected = getDateAsLong(day, month, year,0,0)
-
-        val timeLineFragment = TimeLineFragment()
 
         val bundle=Bundle()
         bundle.putInt(DAY_ARGS, day)
@@ -75,7 +92,11 @@ class ChronoActivity : BaseActivity(), OnTimeLineDisplay, OnCalendarLoaded {
         fragmentManager.replace(R.id.fragment_place, timeLineFragment, TIMELINE_FRAGMENT)
         fragmentManager.commit()
 
-        configureToolbarWhenTimeLineFragment(toolbar, getTextDate(getDateAsLong(day,month,year,0,0)), this)
+        configureToolbar(toolbar,
+            title = getTextDate(getDateAsLong(day,month,year,0,0)),
+            homeButtonNeeded = true,
+            infoIconNeeded = false
+        )
     }
 
     public override fun goToBackToMainPage(){
@@ -87,23 +108,19 @@ class ChronoActivity : BaseActivity(), OnTimeLineDisplay, OnCalendarLoaded {
         fragmentManager.commit()
 
         // Move camera to the center of image in background
-        movePicture(imageBackground, Loc.BOTTOM_LEFT.position,Loc.CENTER.position, matrix, this)
+        movePicture(imageBackground, Loc.BOTTOM_LEFT.position,Loc.CENTER.position, matrix)
+    }
+
+    override fun doWhenAnimationIsFinished(toPosition:Position) {
+        if(toPosition.equals(Loc.CENTER.position)){ // if picture move to center
+            finishActivity()
+        } else { // if picture move to bottom left corner
+            configureChronoActivity()
+        }
     }
 
     override fun onBackPressed() {
-
-        val chronoFrag = supportFragmentManager.findFragmentByTag(CHRONO_FRAGMENT)
-        val timeLineFrag = supportFragmentManager.findFragmentByTag(TIMELINE_FRAGMENT)
-
-        if(chronoFrag!=null){
-            if((chronoFrag as ChronoFragment).isVisible){
-                goToBackToMainPage()
-            }
-        } else if(timeLineFrag!=null){
-            if((timeLineFrag as TimeLineFragment).isVisible){
-                showChronoFragment()
-            }
-        }
+        onClickBackButtonToolbar()
     }
 }
 
@@ -111,3 +128,5 @@ interface OnTimeLineDisplay {
     fun displayTimeLineFragment(day:Int, month:Int, year:Int)
 }
 
+const val TIMELINE_FRAGMENT = "Timeline_fragment"
+const val CHRONO_FRAGMENT = "Chrono_fragment"
