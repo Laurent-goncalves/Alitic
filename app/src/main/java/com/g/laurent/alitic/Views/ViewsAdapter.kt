@@ -570,7 +570,7 @@ class StatChronoAdapter(val list:List<Long>, val context: Context): RecyclerView
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): StatChronoHolder {
         val view = View.inflate(p0.context, R.layout.stat_chrono_viewholder, null)
-        return StatChronoHolder(view, list, getMonthItem(list, p1), getYearItem(list, p1))
+        return StatChronoHolder(view)
     }
 
     override fun getItemCount(): Int {

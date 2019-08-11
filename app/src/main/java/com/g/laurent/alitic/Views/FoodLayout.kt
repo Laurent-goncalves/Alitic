@@ -153,3 +153,10 @@ class AppTitleTextView : AppCompatTextView {
         typeface = tf
     }
 }
+
+class PanelLayout {
+
+
+
+
+}

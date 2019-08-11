@@ -55,21 +55,19 @@
     <include
             android:id="@+id/panel_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginBottom="100dp"
             android:visibility="gone"
             layout="@layout/panel_meal_content"
             android:layout_gravity="center"/>
 
-    <TextView
-            android:id="@+id/counter_meal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|bottom"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/holo_red_dark"
-            android:layout_margin="3dp"/>
+    <!-- COUNTER -->
+    <include
+        layout="@layout/counter_layout"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="5dp"/>
 
     <!-- BUTTONS -->
     <LinearLayout

@@ -27,6 +27,7 @@ import com.g.laurent.alitic.Models.Food
 import com.g.laurent.alitic.Models.FoodType
 import com.g.laurent.alitic.R
 import com.g.laurent.alitic.Views.*
+import kotlinx.android.synthetic.main.counter_layout.*
 import kotlinx.android.synthetic.main.pick_event_layout.*
 import kotlinx.android.synthetic.main.pick_meal_layout.*
 
@@ -259,15 +260,15 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
 
         fun showMeal(){
 
-            val panel = findViewById<LinearLayout>(R.id.panel_content)
+            val panel = findViewById<RelativeLayout>(R.id.panel_content)
             panel.visibility = View.VISIBLE
 
             val panelLayout = panel.findViewById<FoodLayout>(R.id.layout_all_foods)
             panelLayout.onFoodToDeleteListener = this
+            panelLayout.visibility = View.VISIBLE
 
             // Show relevant views of panel
             panel.findViewById<TextView>(R.id.title_meal).visibility = View.VISIBLE
-            panelLayout.visibility = View.VISIBLE
 
             if(listSelected.size > 0){
                 panelLayout.visibility = View.VISIBLE
@@ -288,11 +289,10 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
         }
 
         val panel = findViewById<View>(R.id.panel)
-        val panelContent = findViewById<LinearLayout>(R.id.panel_content)
 
         // init constraint layout with all foods (remove all views)
-        panelContent.findViewById<FoodLayout>(R.id.layout_all_foods).removeAllViews()
-        panelContent.findViewById<FoodLayout>(R.id.layout_all_foods).visibility = View.GONE
+        panel.findViewById<FoodLayout>(R.id.layout_all_foods).removeAllViews()
+        panel.findViewById<FoodLayout>(R.id.layout_all_foods).visibility = View.GONE
         counter_meal.text = 0.toString()
 
         // Set panel touch listener to control movement of the panel
@@ -309,12 +309,12 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
                     if (event.rawY > posY1 && panel.scaleX >= Pan.SCALE_PANEL.min) { // UP direction
                         closePanel(panel)
                         panel_content.visibility = View.GONE
-                        counter_meal.visibility = View.VISIBLE
+                        counter_layout.visibility = View.VISIBLE
                         counter_meal.text = listSelected.size.toString()
 
                     } else if (event.rawY < posY1 && panel.scaleX >= Pan.SCALE_PANEL.min) { // DOWN direction
                         openPanel(panel)
-                        counter_meal.visibility = View.GONE
+                        counter_layout.visibility = View.GONE
                         Handler().postDelayed({
                             showMeal()
                         }, 1000)
@@ -352,7 +352,6 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
 
         // Create onTouchEventListener for panel moving and scalling
         panel.setOnTouchListener(panelTouchListener)
-        panelContent.setOnTouchListener(panelTouchListener)
     }
 
     fun updateListFoodsAfterQueryChange(listFoods:List<Food>){
@@ -393,12 +392,12 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
             }
         }
 
-        val panelLayout = findViewById<LinearLayout>(R.id.panel_content)
+        val panelLayout = findViewById<RelativeLayout>(R.id.panel_content)
             .findViewById<FoodLayout>(R.id.layout_all_foods)
 
         // If no more food selected, show message "no food selected"
         if(listSelected.isEmpty()){
-            findViewById<LinearLayout>(R.id.panel_content)
+            findViewById<RelativeLayout>(R.id.panel_content)
                 .findViewById<MealTextView>(R.id.no_food_in_meal).visibility = View.VISIBLE
         }
 

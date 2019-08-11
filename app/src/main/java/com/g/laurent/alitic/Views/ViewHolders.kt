@@ -2,16 +2,11 @@ package com.g.laurent.alitic.Views
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.*
 import com.g.laurent.alitic.*
-import com.g.laurent.alitic.Controllers.Activities.TypeDisplay
 import com.g.laurent.alitic.Controllers.ClassControllers.Chrono
-import com.g.laurent.alitic.Controllers.ClassControllers.deleteEvent
-import com.g.laurent.alitic.Controllers.ClassControllers.deleteMeal
-import com.g.laurent.alitic.Controllers.Fragments.OnChronoItemDeleted
 import com.g.laurent.alitic.Models.FoodType
 import com.github.vipulasri.timelineview.TimelineView
 
@@ -107,13 +102,7 @@ class ChronoViewHolder(itemView: View?){
     var imageBackground: ImageView? = itemView?.findViewById(R.id.image_background)
 }
 
-class StatChronoHolder(itemView: View, list:List<Long>, month:Int, year:Int): RecyclerView.ViewHolder(itemView){
+class StatChronoHolder(itemView: View): RecyclerView.ViewHolder(itemView){
     var monthView: TextView = itemView.findViewById(R.id.month_text)
     var gridView: GridView = itemView.findViewById(R.id.grid_month)
-
-    fun configureGridView(month:Int, year:Int){
-
-
-//TODO : to delete
-    }
 }
