@@ -9,4 +9,6 @@
     <dimen name="height_legend_barchart">10dp</dimen>
     <dimen name="width_legend_barchart">20dp</dimen>
 
+    <dimen name="button_main_activity_size">130dp</dimen>
+
 </resources>

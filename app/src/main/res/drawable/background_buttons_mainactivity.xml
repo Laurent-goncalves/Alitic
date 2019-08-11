@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+
+        <ripple
+                android:color="@color/colorPrimaryDark">
+            <item>
+                <shape android:shape="rectangle" >
+                    <gradient
+                            android:type="radial"
+                            android:centerX="50%"
+                            android:centerY="50%"
+                            android:startColor="@android:color/transparent"
+                            android:endColor="@color/caldroid_white"
+                            android:gradientRadius="70dp"/>
+                </shape>
+            </item>
+        </ripple>
+
+    </item>
+
+</layer-list>

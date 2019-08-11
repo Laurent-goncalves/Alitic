@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <!-- THEME COLORS -->
+    <color name="colorPrimary">#a66d14</color>
+    <color name="colorPrimaryDark">#663f03</color>
+    <color name="colorAccent">#d7b643</color>
+
+    <!-- CHRONO ACTIVITY COLORS -->
     <color name="colorTimeLine">#70dbdb</color>
     <color name="colorTimeLineContent">#DDf6ffe8</color>
+
+    <!-- STAT ACTIVITY COLORS -->
+    <color name="color_selected_tab">#ffffff</color>
+    <color name="color_unselected_tab">#D4E0F8</color>
+
+    <!-- PICK ACTIVITY COLORS -->
     <color name="colorPanelMeal">#CCf2f2f2</color>
     <color name="colorFoodPicked">#5bc855</color>
-
     <color name="colorFoodTypeSelected">#ffd699</color>
     <color name="colorFoodTypeNOTselected">#996633</color>
-
     <color name="colorUnderline">#8a8a8a</color>
 
+    <!-- EVENT DAY COLORS -->
     <color name="colorNoEventDay">#d8d8d8</color>
     <color name="colorLevel1">#ff9999</color>
     <color name="colorLevel2">#ff3333</color>
     <color name="colorLevel3">#990000</color>
 
+    <!-- FOOD COLORS -->
     <color name="boissons_color">#66b3ff</color>
     <color name="viandes_color">#ff6666</color>
     <color name="poissons_color">#9999ff</color>
@@ -29,12 +38,8 @@
     <color name="sauces_color">#adad85</color>
     <color name="autres_color">#c2c2d6</color>
 
+    <!-- MEAL OK / NOK COLORS -->
     <color name="colorFoodNOK">#f1744b</color>
     <color name="colorFoodOK">#19b480</color>
-
-
-    <color name="colorOrange">#d7b643</color>
-    <color name="colorBrown">#a66d14</color>
-
 
 </resources>

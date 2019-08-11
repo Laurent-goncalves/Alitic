@@ -7,14 +7,16 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Matrix
 import android.os.Bundle
-import android.support.design.widget.NavigationView
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.view.View
 import android.view.ViewTreeObserver
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import com.g.laurent.alitic.Controllers.DialogFragments.SHAREDPREF
 import com.g.laurent.alitic.R
+import com.g.laurent.alitic.Views.AppTitleTextView
 import kotlin.math.roundToInt
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -34,9 +36,8 @@ abstract class BaseActivity : AppCompatActivity() {
         toolbar.setTitleTextColor(Color.WHITE)
         setSupportActionBar(toolbar)
 
-        if(checkScreenDimensions()){
-            goToCenter(imageBackground, Loc.CENTER.position, matrix)
-        }
+        // Hide title of App and buttons
+        showAppTitleAndButtons(findViewById(R.id.title_and_buttons), false)
     }
 
     /** -------------------------------- IMAGE BACKGROUND UTILS -------------------------------------------
@@ -44,57 +45,11 @@ abstract class BaseActivity : AppCompatActivity() {
      *  ---------------------------------------------------------------------------------------------------
      */
 
-    private fun checkScreenDimensions():Boolean{
-
-        val prefs = applicationContext.getSharedPreferences(SHAREDPREF, 0)
-
-        val dWidth = prefs.getInt(SHARED_PREF_DWIDTH,0)
-        val dHeight = prefs.getInt(SHARED_PREF_DHEIGHT,0)
-        val sHeight = prefs.getInt(SHARED_PREF_SHEIGHT,0)
-        val sWidth = prefs.getInt(SHARED_PREF_SWIDTH,0)
-
-        if(dWidth==0 || dHeight==0 || sHeight==0 || sWidth==0){
-            getAndSaveScreenDimensions()
-            return false
-        }
-
-        configureLocEnum(dWidth, dHeight, sWidth, sHeight)
-        return true
-    }
-
-    private fun getAndSaveScreenDimensions(){
-
-        val vto = imageBackground.viewTreeObserver
-        vto.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-            override fun onPreDraw(): Boolean {
-                // Remove after the first run so it doesn't fire forever
-                imageBackground.viewTreeObserver.removeOnPreDrawListener(this)
-
-                val dWidth = imageBackground.drawable.intrinsicWidth
-                val dHeight = imageBackground.drawable.intrinsicHeight
-                val sHeight = imageBackground.measuredHeight
-                val sWidth = imageBackground.measuredWidth
-
-                val prefs = applicationContext.getSharedPreferences(SHAREDPREF, 0)
-                prefs.edit().putInt(SHARED_PREF_DWIDTH, dWidth).apply()
-                prefs.edit().putInt(SHARED_PREF_DHEIGHT, dHeight).apply()
-                prefs.edit().putInt(SHARED_PREF_SWIDTH, sWidth).apply()
-                prefs.edit().putInt(SHARED_PREF_SHEIGHT, sHeight).apply()
-
-                configureLocEnum(dWidth, dHeight, sWidth, sHeight)
-
-                goToCenter(imageBackground, Loc.CENTER.position, matrix)
-
-                return true
-            }
-        })
-    }
-
     fun movePicture(imageView: ImageView, fromPosition:Position?, toPosition:Position, matrix: Matrix){
 
         fun animatePictureOpacity(){
 
-            val valueAnimator = ValueAnimator.ofFloat(0.5f, 1f) // 1f = transparent ; 0.5f = semi-transparent
+            val valueAnimator = ValueAnimator.ofFloat(OPACITY_LIMIT, 1f) // 1f = transparent ; 0f = opaque
             valueAnimator.interpolator = AccelerateDecelerateInterpolator() // increase the speed first and then decrease
             valueAnimator.duration = DURATION_MOVE_CAMERA
             valueAnimator.addUpdateListener { animation ->
@@ -104,7 +59,7 @@ abstract class BaseActivity : AppCompatActivity() {
                 if(toPosition.equals(Loc.CENTER.position)){
                     imageView.alpha = progress // increase value of alpha
                 } else {
-                    imageView.alpha = 1.5f - progress // decrease value of alpha
+                    imageView.alpha = 1f + OPACITY_LIMIT - progress // decrease value of alpha
                 }
             }
 
@@ -148,34 +103,38 @@ abstract class BaseActivity : AppCompatActivity() {
 
     abstract fun doWhenAnimationIsFinished(toPosition:Position)
 
-    fun goToCenter(imageView: ImageView, toPosition:Position, matrix: Matrix){
-        matrix.reset()
-        matrix.setTranslate(toPosition.px, toPosition.py)
-        imageView.imageMatrix = matrix
-    }
+    private fun showAppTitleAndButtons(titleAndButtons: RelativeLayout, show:Boolean) {
 
-    private fun configureLocEnum(dWidth:Int, dHeight:Int, sWidth:Int, sHeight:Int){
+        fun createAndStartAnimationForTitle(titleView: View){
+            val valueAnimator = ValueAnimator.ofFloat(0f, 1f) // 1f = opaque ; 0f = transparent
+            valueAnimator.interpolator = AccelerateDecelerateInterpolator() // increase the speed first and then decrease
+            valueAnimator.duration = DURATION_MOVE_CAMERA
+            valueAnimator.addUpdateListener { animation ->
 
-        Loc.setPosition(Loc.CENTER,
-            Position(((dWidth - sWidth) * -0.5f).roundToInt().toFloat(), ((dHeight - sHeight) * -0.5f).roundToInt().toFloat()))
-        Loc.setPosition(Loc.TOP_RIGHT,
-            Position(-(dWidth - sWidth).toFloat(), 0f))
-        Loc.setPosition(Loc.TOP_LEFT,
-            Position(0f, 0f))
-        Loc.setPosition(Loc.BOTTOM_LEFT,
-            Position(0f, -(dHeight - sHeight).toFloat()))
-        Loc.setPosition(Loc.BOTTOM_RIGHT,
-            Position(-(dWidth - sWidth).toFloat(), -(dHeight - sHeight).toFloat()))
+                val progress = animation.animatedValue as Float
 
-        // Center from small and big meal panel :
-        //       x -> in the middle of the width of foodtype recyclerView
-        //       y -> screen height - (radius of small panel + margin (=a quarter of the radius of the small panel))
+                if(show){
+                    titleView.alpha = progress // increase value of alpha
+                    titleView.visibility = View.VISIBLE
+                } else {
+                    titleView.alpha = 1f - progress // decrease value of alpha
+                }
+            }
+            valueAnimator.addListener(object: AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    super.onAnimationEnd(animation)
+                    titleView.visibility = if(show) View.VISIBLE else View.GONE
+                }
+            })
 
-        val xCenter = (1f/8f)*sWidth.toFloat()
-        val yCenter = (sHeight - (5f/4f)*(1f/6f)*sWidth)
+            valueAnimator.start()
+        }
 
-        Loc.setPosition(Loc.SMALL_PANEL_CENTER, Position(xCenter, yCenter))
-        Loc.setPosition(Loc.BIG_PANEL_CENTER, Position(xCenter, yCenter))
+        createAndStartAnimationForTitle(titleAndButtons.findViewById(R.id.app_title))
+        createAndStartAnimationForTitle(titleAndButtons.findViewById(R.id.top_left_corner))
+        createAndStartAnimationForTitle(titleAndButtons.findViewById(R.id.top_right_corner))
+        createAndStartAnimationForTitle(titleAndButtons.findViewById(R.id.bottom_left_corner))
+        createAndStartAnimationForTitle(titleAndButtons.findViewById(R.id.bottom_right_corner))
     }
 
     /** -------------------------------- TOOLBAR CONFIGURATION --------------------------------------------
@@ -218,8 +177,12 @@ abstract class BaseActivity : AppCompatActivity() {
      */
 
     protected open fun goToBackToMainPage(){
+
         toolbar.title = context.getString(R.string.app_name)
         this.actionBar?.setDisplayHomeAsUpEnabled(false)
+
+        // Show title of App and buttons
+        showAppTitleAndButtons(findViewById(R.id.title_and_buttons), true)
     }
 
     override fun onBackPressed() {
@@ -231,3 +194,5 @@ abstract class BaseActivity : AppCompatActivity() {
         overridePendingTransition(0, 0)
     }
 }
+
+const val OPACITY_LIMIT = 0.25f

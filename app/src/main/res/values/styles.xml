@@ -23,6 +23,7 @@
         <item name="colorControlNormal">@android:color/white</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 
     <!-- Custom Spinner dropdown background theme. -->
@@ -63,7 +64,18 @@
 
     <style name="CaldroidDefaultDarkSquareCell" parent="CaldroidDefaultDarkCell" />
 
-    <!-- Style for spinner in StatDetailFragment. -->
+    <!-- BUTTON FOR MAINACTIVITY-->
+    <style name="MainActivityButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:layout_width">@dimen/button_main_activity_size</item>
+        <item name="android:layout_height">@dimen/button_main_activity_size</item>
+        <item name="android:elevation">10dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:drawableTint">@color/colorPrimary</item>
+        <item name="android:background">@drawable/background_buttons_mainactivity</item>
 
+    </style>
 
 </resources>

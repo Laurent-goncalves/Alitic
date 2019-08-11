@@ -17,7 +17,13 @@
             android:clickable="true"
             android:focusable="true"
             android:animateLayoutChanges="true"
-            android:src="@drawable/image"/>
+            android:src="@drawable/main_background"/>
+
+    <include
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/activity_toolbar"
+            layout="@layout/buttons_main_activity"/>
 
     <!-- TOOLBAR -->
     <android.support.v7.widget.Toolbar
@@ -25,8 +31,7 @@
             android:minHeight="?android:attr/actionBarSize"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            app:theme="@style/ToolBarStyle"/>
+            style="@style/ToolBarStyle"/>
 
     <!-- LAYOUT PICK FOOD FOR MEAL -->
     <include

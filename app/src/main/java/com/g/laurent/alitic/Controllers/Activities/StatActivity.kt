@@ -47,7 +47,9 @@ class StatActivity : BaseActivity(), OnEventTypeChangeListener{
     }
 
     override fun onMenuItemClick() {
-        displayInformations()
+        val fm = supportFragmentManager
+        val statInfoDialog = StatInfoDialog().newInstance()
+        statInfoDialog.show(fm, "statInfoDialog")
     }
 
     /** ---------------------------------- TABS ---------------------------------------- **/
@@ -62,6 +64,7 @@ class StatActivity : BaseActivity(), OnEventTypeChangeListener{
         stat_viewpager.adapter = StatAdapter(supportFragmentManager, applicationContext, 0, listEventTypes)
 
         // Configure tab layout
+        tabs.visibility = View.VISIBLE
         tabs.setupWithViewPager(stat_viewpager)
         tabs.tabMode = TabLayout.MODE_FIXED // Tabs have the same width
 
@@ -81,12 +84,6 @@ class StatActivity : BaseActivity(), OnEventTypeChangeListener{
         stat_viewpager.currentItem = 2
     }
 
-    fun displayInformations(){
-        val fm = supportFragmentManager
-        val statInfoDialog = StatInfoDialog().newInstance()
-        statInfoDialog.show(fm, "statInfoDialog")
-    }
-
     override fun doWhenAnimationIsFinished(toPosition: Position) {
         if(toPosition.equals(Loc.CENTER.position)){ // if picture move to center
             finishActivity()
@@ -98,7 +95,8 @@ class StatActivity : BaseActivity(), OnEventTypeChangeListener{
     public override fun goToBackToMainPage(){
         super.goToBackToMainPage()
 
-        // Hide stat_viewpager
+        // Hide stat_viewpager and tablayout
+        tabs.visibility = View.INVISIBLE
         stat_viewpager.visibility = View.GONE
         // Move camera to the center of image in background
         movePicture(imageBackground, Loc.BOTTOM_RIGHT.position,Loc.CENTER.position, matrix)

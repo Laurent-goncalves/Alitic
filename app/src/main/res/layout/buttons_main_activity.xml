@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        android:id="@+id/title_and_buttons"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:padding="20dp">
+
+    <Button
+        android:id="@+id/top_left_corner"
+        style="@style/MainActivityButton"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:text="@string/button_top_left"
+        android:drawableTop="@drawable/baseline_local_dining_white_48"/>
+
+    <Button
+        android:id="@+id/top_right_corner"
+        style="@style/MainActivityButton"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:text="@string/button_top_right"
+        android:drawableTop="@drawable/baseline_offline_bolt_white_48"/>
+
+    <Button
+        android:id="@+id/bottom_left_corner"
+        style="@style/MainActivityButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:text="@string/button_bottom_left"
+        android:drawableTop="@drawable/baseline_access_time_white_48"/>
+
+    <Button
+        android:id="@+id/bottom_right_corner"
+        style="@style/MainActivityButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:text="@string/button_bottom_right"
+        android:drawableTop="@drawable/baseline_search_white_48"/>
+
+    <com.g.laurent.alitic.Views.AppTitleTextView
+            android:id="@+id/app_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="70sp"
+            android:textColor="@color/colorPrimary"
+            app:fontNameAppTitle="Knewave-Regular"
+            android:layout_centerInParent="true"/>
+
+</RelativeLayout>

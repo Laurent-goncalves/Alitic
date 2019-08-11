@@ -6,6 +6,15 @@
     <string name="no">NON</string>
     <string name="ok">OK</string>
 
+
+    <!-- MAIN ACTIVITY BUTTONS-->
+    <string name="button_top_left">Ajouter un repas</string>
+    <string name="button_top_right">Ajouter un ressenti</string>
+    <string name="button_bottom_left">Chronologie</string>
+    <string name="button_bottom_right">Analyse</string>
+    <string name="Knewave_Regular">Knewave-Regular</string>
+
+
     <string name="save_meal_title_dialog">Sauvegarder un repas</string>
     <string name="save_meal_content_dialog">Voulez-vous sauvegarder le repas à cette heure-ci ?</string>
     <string name="save_meal_success_message_dialog">Repas sauvegardé avec succès</string>
@@ -174,28 +183,43 @@
 
     <!--INFO STATS -->
     <string name="title_panel1_info">Informations 1er onglet</string>
-    <string name="content_1st_panel_1" tools:ignore="Typos">Le premier onglet montre les statistiques liées aux aliments causant le plus de
-    ressentis: \n \n
-    - Aliments les plus \"perturbants\". La photo et le nom de l\'aliment est indiqué. La portion de cercle en rouge autour
-    de la photo correspond à la proportion de repas (contenant l\'aliment en question) qui sont à l\'origine d\'un
-        ressenti. Par exemple:</string>
-    <string name="content_1st_panel_2">100% des repas contenant du pain ont causé au moins un ressenti par la suite.</string>
-    <string name="content_1st_panel_3">50% des repas contenant du pain ont causé au moins un ressenti par la suite.</string>
+    <string name="content_1st_panel_1" tools:ignore="Typos">Le premier onglet montre les statistiques liées aux aliments
+        causant le plus de
+        ressentis: \n \n
+        - Aliments les plus \"perturbants\". La photo et le nom de l\'aliment est indiqué. La portion de cercle en rouge
+        autour
+        de la photo correspond à la proportion de repas (contenant l\'aliment en question) qui sont à l\'origine d\'un
+        ressenti. Par exemple:
+    </string>
+    <string name="content_1st_panel_2">100% des repas contenant du pain ont causé au moins un ressenti par la suite.
+    </string>
+    <string name="content_1st_panel_3">50% des repas contenant du pain ont causé au moins un ressenti par la suite.
+    </string>
     <string name="content_1st_panel_4" tools:ignore="Typos">- Répartition des aliments les plus \"perturbants\". Par
-        exemple, un taux de 50% pour la viande signifie que, parmi tous les aliments à l\'origine d\'au moins un ressenti,
-        la moitié d\'entre eux sont de la viande.</string>
+        exemple, un taux de 50% pour la viande signifie que, parmi tous les aliments à l\'origine d\'au moins un
+        ressenti,
+        la moitié d\'entre eux sont de la viande.
+    </string>
 
     <string name="title_panel2_info">Remarques</string>
     <string name="content_2nd_panel_1">Ces deux graphiques permetent au bout de quelques mois d\'étude de dégager des
-        tendances sur les aliments ou types d\'aliment causant le plus de ressentis. \n \n Il s\'agit bien de tendances car de nombreux autres paramètres ont un impact sur les résultats (quantité des
+        tendances sur les aliments ou types d\'aliment causant le plus de ressentis. \n \n Il s\'agit bien de tendances
+        car de nombreux autres paramètres ont un impact sur les résultats (quantité des
         aliments, leur qualité, le stress, intolérances,… D\'autre part, les résultats sont valables
-        pour tous les types de ressenti rencontrés.</string>
-    <string name="subtitle_panel2"><u><b>Activer/désactiver un aliment</b></u></string>
-    <string name="content_2nd_panel_2">Si un aliment ne doit plus être pris en compte dans les statistiques, il est possible de le désactiver en suivant
+        pour tous les types de ressenti rencontrés.
+    </string>
+    <string name="subtitle_panel2">
+        <u>
+            <b>Activer/désactiver un aliment</b>
+        </u>
+    </string>
+    <string name="content_2nd_panel_2">Si un aliment ne doit plus être pris en compte dans les statistiques, il est
+        possible de le désactiver en suivant
         la procédure suivante:\n
         - Faire un appui long sur l\'aliment.\n
         - Dans le menu qui s\'ouvre, sélectionner \"ne plus prendre en compte\"\n
-        - Cliquer sur OK.</string>
+        - Cliquer sur OK.
+    </string>
 
     <string name="content_3rd_panel_1">
         Pour le prendre à nouveau en compte, suivre la procédure suivante:\n
@@ -203,43 +227,58 @@
         - Retrouver l\'aliment \n
         - Faire un appui long sur sa photo \n
         - Dans le menu qui s\'ouvre, sélectionner \"modifier les paramètres\"\n
-        - Décocher la case \"prendre en compte dans l\'analyse\".</string>
+        - Décocher la case \"prendre en compte dans l\'analyse\".
+    </string>
 
     <string name="title_panel3_info">Informations 2ème onglet</string>
 
-    <string name="content_3rd_panel_2">Le 2ème onglet présente des statistiques du même type que pour l\'onglet 1, à la différence
+    <string name="content_3rd_panel_2">Le 2ème onglet présente des statistiques du même type que pour l\'onglet 1, à la
+        différence
         qu\'il s\'agit des aliments causant le moins de ressentis: \n \n
         - Le 1er graphique indique quels sont les aliments ayant causés le moins de ressentis. \n
         - Le 2eme graphique indique la répartition des types d\'aliments contenus dans les repas qui ne sont pas à
-        l\'origine de ressenti.</string>
+        l\'origine de ressenti.
+    </string>
 
     <string name="title_panel4_info">Informations 3ème onglet</string>
 
     <string name="content_4th_panel_1">Le 3ème onglet présente des informations plus détaillées par type de ressenti.
         Le ressenti est sélectionnable dans la liste déroulante en haut de page. \n \n
-    Pour chaque ressenti, un icone décrit l\'évolution de son occurrence sur la durée de l\'étude*. Le calcul se fait
-     en découpant toute la durée de l\'étude en 10 périodes de durées égales. Pour chacune des périodes, l\'occurrence est
-        calculée. Un calcul statistique (régression linéaire) permet de déterminer si le ressenti est :</string>
+        Pour chaque ressenti, un icone décrit l\'évolution de son occurrence sur la durée de l\'étude*. Le calcul se
+        fait
+        en découpant toute la durée de l\'étude en 10 périodes de durées égales. Pour chacune des périodes,
+        l\'occurrence est
+        calculée. Un calcul statistique (régression linéaire) permet de déterminer si le ressenti est :
+    </string>
 
     <string name="content_4th_panel_2">plus fréquent (évolution négative)</string>
     <string name="content_4th_panel_3">stable (évolution neutre)</string>
     <string name="content_4th_panel_4">de moins en moins fréquent (évolution positive)</string>
-    <string name="content_4th_panel_5">indéfini si la durée de l\'étude est inférieure à 3 semaines, car les données sont insuffisantes</string>
+    <string name="content_4th_panel_5">indéfini si la durée de l\'étude est inférieure à 3 semaines, car les données
+        sont insuffisantes
+    </string>
 
 
     <string name="content_5th_panel_1">Sous l\'évolution se trouve une frise chronologique où chaque colonne représente
-        une semaine et chaque carré une journée. Un carré gris signifie qu\'aucun ressenti n\'a été enregistré ce jour-là.
-    Un carré d\'une nuance de rouge signifie qu\'au moins un ressenti a été enregistré. Plus sa couleur sera foncé, plus
-    l\'occurrence sera élevée. Le but du graphique est d\'avoir une idée plus précise de l\'évolution et de la fréquence
-     d\'apparition d\'un symptôme et éventuellement de relativiser si la fréquence est moins importante que prévu.</string>
+        une semaine et chaque carré une journée. Un carré gris signifie qu\'aucun ressenti n\'a été enregistré ce
+        jour-là.
+        Un carré d\'une nuance de rouge signifie qu\'au moins un ressenti a été enregistré. Plus sa couleur sera foncé,
+        plus
+        l\'occurrence sera élevée. Le but du graphique est d\'avoir une idée plus précise de l\'évolution et de la
+        fréquence
+        d\'apparition d\'un symptôme et éventuellement de relativiser si la fréquence est moins importante que prévu.
+    </string>
 
-    <string name="content_5th_panel_2">durée étude* = durée entre le 1er ressenti ou 1er repas (suivant celui qui est le plus ancien) jusqu\'à la date actuelle. </string>
+    <string name="content_5th_panel_2">durée étude* = durée entre le 1er ressenti ou 1er repas (suivant celui qui est le
+        plus ancien) jusqu\'à la date actuelle.
+    </string>
 
 
-    <string name="content_6th_panel_1">Sous la frise chronologique, se trouve un graphique détaillant, par aliment, le nombre de
+    <string name="content_6th_panel_1">Sous la frise chronologique, se trouve un graphique détaillant, par aliment, le
+        nombre de
         repas avec ressenti (barre en rouge) et sans ressenti (barre en vert). Le graphique prend en compte au maximum
-        10 aliments, qui correspondent aux aliments causant le plus de ressentis.</string>
-
+        10 aliments, qui correspondent aux aliments causant le plus de ressentis.
+    </string>
 
 
 </resources>

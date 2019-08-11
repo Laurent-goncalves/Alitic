@@ -1,15 +1,22 @@
 package com.g.laurent.alitic.Controllers.Activities
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Context
+import android.graphics.Matrix
+import android.support.v4.view.ViewCompat.animate
 import android.view.View
+import android.widget.ImageView
 import com.g.laurent.alitic.Models.AppDataBase
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.Models.Food
 import com.g.laurent.alitic.Models.insertData
 import com.g.laurent.alitic.R
+import com.g.laurent.alitic.Views.AppTitleTextView
 
 const val DURATION_MOVE_CAMERA = 3000.toLong()
 const val DURATION_MOVE_PANEL = 2000.toLong()
+const val DURATION_TITLE_SHOW = 2000.toLong()
 const val EVENT = "EVENT"
 const val MEAL = "MEAL"
 const val DELETE = "DELETE"
@@ -89,6 +96,12 @@ fun movePanel(panel: View, scale1:Float, delta:Float){
     }
 }
 
+fun goToCenter(imageView: ImageView, toPosition:Position, matrix: Matrix){
+    matrix.reset()
+    matrix.setTranslate(toPosition.px, toPosition.py)
+    imageView.imageMatrix = matrix
+}
+
 fun updateListSelected(any:Any, list:MutableList<Any>?):MutableList<Any>{
 
     val listUpdated = mutableListOf<Any>()
@@ -160,3 +173,4 @@ fun populateDatabase(context: Context){
     // Fill with data
     insertData(db?.foodTypeDao(), db?.foodDao(), db?.keywordDao(), db?.eventTypeDao(), context)
 }
+

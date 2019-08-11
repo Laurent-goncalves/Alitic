@@ -17,15 +17,20 @@
             android:clickable="true"
             android:focusable="true"
             android:animateLayoutChanges="true"
-            android:src="@drawable/image"/>
+            android:src="@drawable/main_background"/>
+
+    <include
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/activity_toolbar"
+            layout="@layout/buttons_main_activity"/>
 
     <android.support.v7.widget.Toolbar
             android:id="@+id/activity_toolbar"
             android:minHeight="?android:attr/actionBarSize"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            app:theme="@style/ToolBarStyle"/>
+            style="@style/ToolBarStyle"/>
 
     <android.support.v4.view.ViewPager
             android:id="@+id/stat_viewpager"
@@ -44,11 +49,13 @@
     <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             app:tabIndicatorColor="@android:color/white"
-            app:tabTextColor="#D4E0F8"
-            app:tabSelectedTextColor="#fff"
-            android:background="@color/colorPrimary"
+            app:tabTextColor="@color/color_unselected_tab"
+            app:tabSelectedTextColor="@color/color_selected_tab"
+            app:tabIconTint="@drawable/tab_selected_color"
+            android:background="@drawable/background_tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
             android:layout_alignParentBottom="true">
 
         <!--  BUTTON MAP VIEW -->

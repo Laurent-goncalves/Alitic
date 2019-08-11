@@ -15,51 +15,20 @@
             android:clickable="true"
             android:focusable="true"
             android:animateLayoutChanges="true"
-            android:src="@drawable/image"/>
+            android:src="@drawable/main_background"/>
 
-    <View
-            android:id="@+id/top_left_corner"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/activity_main_toolbar"/>
-
-    <View
-            android:id="@+id/top_right_corner"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_below="@+id/activity_main_toolbar"
-            android:layout_alignParentEnd="true"/>
-
-    <View
-            android:id="@+id/bottom_left_corner"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"/>
-
-    <View
-            android:id="@+id/bottom_right_corner"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"/>
+    <include
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/activity_toolbar"
+            layout="@layout/buttons_main_activity"/>
 
     <android.support.v7.widget.Toolbar
             android:id="@+id/activity_toolbar"
             android:minHeight="?android:attr/actionBarSize"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            app:theme="@style/ToolBarStyle"
+            style="@style/ToolBarStyle"
             tools:context="searchview.toolbar.com.searchviewtoolbar.MainActivity"/>
 
     <include

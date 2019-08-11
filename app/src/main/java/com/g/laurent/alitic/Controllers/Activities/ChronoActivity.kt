@@ -53,7 +53,7 @@ class ChronoActivity : BaseActivity(), OnTimeLineDisplay, OnCalendarLoaded {
         return super.onCreateOptionsMenu(menu)
     }
 
-    fun configureChronoActivity() {
+    private fun configureChronoActivity() {
         showChronoFragment()
     }
 

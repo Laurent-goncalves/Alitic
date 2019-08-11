@@ -79,7 +79,7 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
             movePicture(imageBackground,Loc.CENTER.position, Loc.TOP_RIGHT.position,matrix)
     }
 
-    fun configurePickActivity() {
+    private fun configurePickActivity() {
 
         if(typeDisplay.equals(TypeDisplay.MEAL)){
             findViewById<FrameLayout>(R.id.layout_meal).visibility = View.VISIBLE
@@ -360,7 +360,7 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
         gridview_food.adapter = gridAdapter
     }
 
-    fun resetMealPickingScreenAfterSearch(){
+    private fun resetMealPickingScreenAfterSearch(){
 
         // Reset list foodtype by re-selecting foodTypeSelected
         val listFoodTypes = getAllFoodTypes(context = context)!!

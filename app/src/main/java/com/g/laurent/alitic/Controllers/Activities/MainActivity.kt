@@ -1,22 +1,110 @@
 package com.g.laurent.alitic.Controllers.Activities
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Matrix
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.view.*
 import android.widget.*
 import com.g.laurent.alitic.R
 import com.g.laurent.alitic.Controllers.DialogFragments.*
 import com.g.laurent.alitic.Models.*
+import kotlin.math.roundToInt
 
 
-class MainActivity : BaseActivity(), View.OnClickListener, ResetDatabaseListener {
+class MainActivity : AppCompatActivity(), View.OnClickListener, ResetDatabaseListener {
+
+    private lateinit var toolbar: Toolbar
+    private var matrix = Matrix()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_main)
         super.onCreate(savedInstanceState)
 
+        // Configure Toolbar
+        toolbar = findViewById(R.id.activity_toolbar)
+        toolbar.setTitleTextColor(Color.WHITE)
+        setSupportActionBar(toolbar)
+
+        if(checkScreenDimensions(findViewById(R.id.image_background))){
+            goToCenter(findViewById(R.id.image_background), Loc.CENTER.position, matrix)
+        }
+
+        // Configure MainActivity
         configureMainActivity()
+    }
+
+    private fun checkScreenDimensions(imageBackground: ImageView):Boolean{
+
+        val prefs = applicationContext.getSharedPreferences(SHAREDPREF, 0)
+
+        val dWidth = prefs.getInt(SHARED_PREF_DWIDTH,0)
+        val dHeight = prefs.getInt(SHARED_PREF_DHEIGHT,0)
+        val sHeight = prefs.getInt(SHARED_PREF_SHEIGHT,0)
+        val sWidth = prefs.getInt(SHARED_PREF_SWIDTH,0)
+
+        if(dWidth==0 || dHeight==0 || sHeight==0 || sWidth==0){
+            getAndSaveScreenDimensions(imageBackground)
+            return false
+        }
+
+        configureLocEnum(dWidth, dHeight, sWidth, sHeight)
+        return true
+    }
+
+    private fun getAndSaveScreenDimensions(imageBackground: ImageView){
+
+        val vto = imageBackground.viewTreeObserver
+        vto.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                // Remove after the first run so it doesn't fire forever
+                imageBackground.viewTreeObserver.removeOnPreDrawListener(this)
+
+                val dWidth = imageBackground.drawable.intrinsicWidth
+                val dHeight = imageBackground.drawable.intrinsicHeight
+                val sHeight = imageBackground.measuredHeight
+                val sWidth = imageBackground.measuredWidth
+
+                val prefs = applicationContext.getSharedPreferences(SHAREDPREF, 0)
+                prefs.edit().putInt(SHARED_PREF_DWIDTH, dWidth).apply()
+                prefs.edit().putInt(SHARED_PREF_DHEIGHT, dHeight).apply()
+                prefs.edit().putInt(SHARED_PREF_SWIDTH, sWidth).apply()
+                prefs.edit().putInt(SHARED_PREF_SHEIGHT, sHeight).apply()
+
+                configureLocEnum(dWidth, dHeight, sWidth, sHeight)
+
+                goToCenter(imageBackground, Loc.CENTER.position, matrix)
+
+                return true
+            }
+        })
+    }
+
+    private fun configureLocEnum(dWidth:Int, dHeight:Int, sWidth:Int, sHeight:Int){
+
+        Loc.setPosition(Loc.CENTER,
+            Position(((dWidth - sWidth) * -0.5f).roundToInt().toFloat(), ((dHeight - sHeight) * -0.5f).roundToInt().toFloat()))
+        Loc.setPosition(Loc.TOP_RIGHT,
+            Position(-(dWidth - sWidth).toFloat(), 0f))
+        Loc.setPosition(Loc.TOP_LEFT,
+            Position(0f, 0f))
+        Loc.setPosition(Loc.BOTTOM_LEFT,
+            Position(0f, -(dHeight - sHeight).toFloat()))
+        Loc.setPosition(Loc.BOTTOM_RIGHT,
+            Position(-(dWidth - sWidth).toFloat(), -(dHeight - sHeight).toFloat()))
+
+        // Center from small and big meal panel :
+        //       x -> in the middle of the width of foodtype recyclerView
+        //       y -> screen height - (radius of small panel + margin (=a quarter of the radius of the small panel))
+
+        val xCenter = (1f/8f)*sWidth.toFloat()
+        val yCenter = (sHeight - (5f/4f)*(1f/6f)*sWidth)
+
+        Loc.setPosition(Loc.SMALL_PANEL_CENTER, Position(xCenter, yCenter))
+        Loc.setPosition(Loc.BIG_PANEL_CENTER, Position(xCenter, yCenter))
     }
 
     private fun configureMainActivity(){
@@ -27,7 +115,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, ResetDatabaseListener
         val isDatabasePopulated = prefs.getBoolean(POPULATE_DATABASE, false)
 
         if(!isDatabasePopulated){
-            populateDatabase(context)
+            populateDatabase(applicationContext)
             prefs.edit().putBoolean(POPULATE_DATABASE, true).apply()
         }
 
@@ -40,10 +128,10 @@ class MainActivity : BaseActivity(), View.OnClickListener, ResetDatabaseListener
      */
 
     private fun configure4Buttons(){
-        findViewById<View>(R.id.top_left_corner).setOnClickListener(this)
-        findViewById<View>(R.id.top_right_corner).setOnClickListener(this)
-        findViewById<View>(R.id.bottom_left_corner).setOnClickListener(this)
-        findViewById<View>(R.id.bottom_right_corner).setOnClickListener(this)
+        findViewById<Button>(R.id.top_left_corner).setOnClickListener(this)
+        findViewById<Button>(R.id.top_right_corner).setOnClickListener(this)
+        findViewById<Button>(R.id.bottom_left_corner).setOnClickListener(this)
+        findViewById<Button>(R.id.bottom_right_corner).setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -76,11 +164,19 @@ class MainActivity : BaseActivity(), View.OnClickListener, ResetDatabaseListener
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar_main, menu)
 
-        configureToolbar(toolbar,
-            title = context.getString(R.string.app_name),
-            homeButtonNeeded = false,
-            infoIconNeeded = false
-        )
+        fun configureToolbar(toolbar: Toolbar, title:String){
+
+            // Set title of toolbar
+            toolbar.title = title
+
+            // Hide info icon
+            toolbar.menu.findItem(R.id.action_info)?.isVisible = false
+
+            // Disable home button icon
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        }
+
+        configureToolbar(toolbar, applicationContext.getString(R.string.app_name))
 
         // Settings icon click listener
         val settingsIcon = toolbar.menu.findItem(R.id.action_settings)
@@ -92,10 +188,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, ResetDatabaseListener
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onClickBackButtonToolbar() {}
-    override fun onMenuItemClick() {}
-
-    fun showSettingsDialog(){
+    private fun showSettingsDialog(){
         val fm = supportFragmentManager
         val myDialogFragment = SettingsDialog().newInstance()
         myDialogFragment.show(fm, null)
@@ -106,25 +199,23 @@ class MainActivity : BaseActivity(), View.OnClickListener, ResetDatabaseListener
         val builder = AlertDialog.Builder(this@MainActivity)
 
         // Display a message on alert dialog
-
-        builder.setTitle(context.resources.getString(R.string.reset_data)) // TITLE
-        builder.setMessage(context.resources.getString(R.string.confirmation_data_reset)) // MESSAGE
-
+        builder.setTitle(applicationContext.resources.getString(R.string.reset_data)) // TITLE
+        builder.setMessage(applicationContext.resources.getString(R.string.confirmation_data_reset)) // MESSAGE
 
         // Set positive button and its click listener on alert dialog
-        builder.setPositiveButton(context.resources.getString(R.string.yes)){ dialog, _ ->
+        builder.setPositiveButton(applicationContext.resources.getString(R.string.yes)){ dialog, _ ->
             dialog.dismiss()
 
-            val db = AppDataBase.getInstance(context)
+            val db = AppDataBase.getInstance(applicationContext)
             db?.mealItemDao()?.deleteAll()
             db?.mealDao()?.deleteAll()
             db?.eventDao()?.deleteAll()
 
-            Toast.makeText(context, context.resources.getString(R.string.data_reset),Toast.LENGTH_LONG).show()
+            Toast.makeText(applicationContext, applicationContext.resources.getString(R.string.data_reset),Toast.LENGTH_LONG).show()
         }
 
         // Display negative button on alert dialog
-        builder.setNegativeButton(context.resources.getString(R.string.no)){ dialog, _ ->
+        builder.setNegativeButton(applicationContext.resources.getString(R.string.no)){ dialog, _ ->
             dialog.dismiss()
         }
 
@@ -166,12 +257,6 @@ class MainActivity : BaseActivity(), View.OnClickListener, ResetDatabaseListener
         startActivity(intent)
         overridePendingTransition(0, 0)
     }
-
-    override fun doWhenAnimationIsFinished(toPosition: Position) {
-        // NO IMPLEMENTATION
-    }
-
-    override fun onBackPressed() {}
 }
 
 const val POPULATE_DATABASE = "POPULATE_DATABASE"

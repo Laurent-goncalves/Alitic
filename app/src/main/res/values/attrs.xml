@@ -5,4 +5,11 @@
             <enum name="Satisfy-Regular" value="1" />
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="AppTitleTextView">
+        <attr name="fontNameAppTitle" format="enum">
+            <enum name="Knewave-Regular" value="1" />
+        </attr>
+    </declare-styleable>
+
 </resources>
