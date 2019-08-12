@@ -9,6 +9,8 @@ import android.view.View
 import android.widget.ProgressBar
 import com.g.laurent.alitic.Controllers.ClassControllers.getListEventTypesForStatDetailFragment
 import com.g.laurent.alitic.Models.EventType
+import com.g.laurent.alitic.Models.Loc
+import com.g.laurent.alitic.Models.Position
 import com.g.laurent.alitic.R
 import com.g.laurent.alitic.Views.StatInfoDialog
 import kotlinx.android.synthetic.main.activity_stat.*

@@ -3,7 +3,6 @@ package com.g.laurent.alitic.Controllers.DialogFragments
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.DialogFragment
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,13 +10,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.g.laurent.alitic.Controllers.Activities.TypeDisplay
 import com.g.laurent.alitic.Controllers.ClassControllers.getAllFood
 import com.g.laurent.alitic.Controllers.ClassControllers.getAllFoodTypes
 import com.g.laurent.alitic.Controllers.ClassControllers.saveNewFood
 import com.g.laurent.alitic.Controllers.ClassControllers.updateFood
 import com.g.laurent.alitic.Models.Food
 import com.g.laurent.alitic.Models.FoodType
+import com.g.laurent.alitic.Models.TypeDisplay
 import com.g.laurent.alitic.R
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -50,7 +49,7 @@ class AddFoodDialog : DialogFragment(){
             val gson = Gson()
             val json = arg.getString(FOOD_PARAMS, null)
             val foodTransf = object : TypeToken<Food>() {}.type
-            foodToSave = gson.fromJson<Food>(json, foodTransf)
+            foodToSave = gson.fromJson(json, foodTransf)
             foodInit.foodPic = foodToSave.foodPic
             foodInit.idFoodType = foodToSave.idFoodType
         }

@@ -5,6 +5,8 @@ import android.view.Menu
 import android.view.View
 import android.widget.ProgressBar
 import com.g.laurent.alitic.Controllers.Fragments.*
+import com.g.laurent.alitic.Models.Loc
+import com.g.laurent.alitic.Models.Position
 import com.g.laurent.alitic.R
 import com.g.laurent.alitic.Views.LegendCalendarDialog
 import com.g.laurent.alitic.getDateAsLong
@@ -111,7 +113,7 @@ class ChronoActivity : BaseActivity(), OnTimeLineDisplay, OnCalendarLoaded {
         movePicture(imageBackground, Loc.BOTTOM_LEFT.position,Loc.CENTER.position, matrix)
     }
 
-    override fun doWhenAnimationIsFinished(toPosition:Position) {
+    override fun doWhenAnimationIsFinished(toPosition: Position) {
         if(toPosition.equals(Loc.CENTER.position)){ // if picture move to center
             finishActivity()
         } else { // if picture move to bottom left corner

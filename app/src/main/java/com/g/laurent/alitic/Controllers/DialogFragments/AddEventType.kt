@@ -3,7 +3,6 @@ package com.g.laurent.alitic.Controllers.DialogFragments
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.DialogInterface
-import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.text.Editable
@@ -13,13 +12,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.*
-import com.g.laurent.alitic.Controllers.Activities.TypeDisplay
 import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Models.EventType
+import com.g.laurent.alitic.Models.TypeDisplay
 import com.g.laurent.alitic.R
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.ianpinto.androidrangeseekbar.rangeseekbar.RangeSeekBar
+
 
 class AddEventTypeDialog : DialogFragment(), RangeSeekBar.OnRangeSeekBarChangeListener<Int> {
 
@@ -49,7 +49,7 @@ class AddEventTypeDialog : DialogFragment(), RangeSeekBar.OnRangeSeekBarChangeLi
             val gson = Gson()
             val json = arg.getString(EVENT_TYPE_PARAMS, null)
             val eventTypeTransf = object : TypeToken<EventType>() {}.type
-            eventTypeToSave = gson.fromJson<EventType>(json, eventTypeTransf)
+            eventTypeToSave = gson.fromJson(json, eventTypeTransf)
         }
 
         configureViews(view)
@@ -251,14 +251,11 @@ class AddEventTypeDialog : DialogFragment(), RangeSeekBar.OnRangeSeekBarChangeLi
 
     private fun hideOrRevealRangeSeekBar(rangeSeekBar: FrameLayout, height:Int, hide:Boolean){
 
-        if (Build.VERSION.SDK_INT >= 21) { // with animation
+        val factor = if(hide) 0 else -1
 
-            val factor = if(hide) 0 else -1
-
-            ObjectAnimator.ofFloat(rangeSeekBar, "translationY", factor * height.toFloat()).apply {
-                duration = 1000
-                start()
-            }
+        ObjectAnimator.ofFloat(rangeSeekBar, "translationY", factor * height.toFloat()).apply {
+            duration = 1000
+            start()
         }
 
         if(hide)

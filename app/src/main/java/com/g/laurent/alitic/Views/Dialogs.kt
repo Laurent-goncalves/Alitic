@@ -8,7 +8,6 @@ import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.g.laurent.alitic.Models.MealItem
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import android.app.DatePickerDialog
@@ -22,6 +21,7 @@ import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Models.Event
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.Models.Food
+import com.g.laurent.alitic.Models.TypeDisplay
 import kotlinx.android.synthetic.main.time_picker_dialog.*
 
 class SaveDialog : DialogFragment() {

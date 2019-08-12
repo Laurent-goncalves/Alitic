@@ -13,10 +13,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.g.laurent.alitic.Models.AppDataBase
 import com.g.laurent.alitic.R
 import com.g.laurent.alitic.writeToExcelFile
-import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import java.io.File
 

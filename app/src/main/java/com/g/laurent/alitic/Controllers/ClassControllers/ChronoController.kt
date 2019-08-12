@@ -1,9 +1,9 @@
 package com.g.laurent.alitic.Controllers.ClassControllers
 
 import android.content.Context
-import com.g.laurent.alitic.Controllers.Activities.TypeDisplay
 import com.g.laurent.alitic.Models.Event
 import com.g.laurent.alitic.Models.Meal
+import com.g.laurent.alitic.Models.TypeDisplay
 import com.g.laurent.alitic.getDateAsLong
 import com.g.laurent.alitic.getHourAsInt
 import com.g.laurent.alitic.getMinutesAsInt

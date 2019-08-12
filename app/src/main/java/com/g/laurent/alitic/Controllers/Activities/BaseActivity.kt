@@ -15,6 +15,8 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import com.g.laurent.alitic.Controllers.DialogFragments.SHAREDPREF
+import com.g.laurent.alitic.Models.Loc
+import com.g.laurent.alitic.Models.Position
 import com.g.laurent.alitic.R
 import com.g.laurent.alitic.Views.AppTitleTextView
 import kotlin.math.roundToInt
@@ -46,6 +48,12 @@ abstract class BaseActivity : AppCompatActivity() {
      */
 
     fun movePicture(imageView: ImageView, fromPosition:Position?, toPosition:Position, matrix: Matrix){
+
+        fun goToCenter(imageView: ImageView, toPosition: Position, matrix: Matrix){
+            matrix.reset()
+            matrix.setTranslate(toPosition.px, toPosition.py)
+            imageView.imageMatrix = matrix
+        }
 
         fun animatePictureOpacity(){
 
@@ -101,7 +109,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    abstract fun doWhenAnimationIsFinished(toPosition:Position)
+    abstract fun doWhenAnimationIsFinished(toPosition: Position)
 
     private fun showAppTitleAndButtons(titleAndButtons: RelativeLayout, show:Boolean) {
 
@@ -196,3 +204,4 @@ abstract class BaseActivity : AppCompatActivity() {
 }
 
 const val OPACITY_LIMIT = 0.25f
+const val DURATION_MOVE_CAMERA = 3000.toLong()

@@ -107,6 +107,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ResetDatabaseLis
         Loc.setPosition(Loc.BIG_PANEL_CENTER, Position(xCenter, yCenter))
     }
 
+    private fun goToCenter(imageView: ImageView, toPosition: Position, matrix: Matrix){
+        matrix.reset()
+        matrix.setTranslate(toPosition.px, toPosition.py)
+        imageView.imageMatrix = matrix
+    }
+
     private fun configureMainActivity(){
 
         // Check if database has already been populated
@@ -260,3 +266,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ResetDatabaseLis
 }
 
 const val POPULATE_DATABASE = "POPULATE_DATABASE"
+const val SHARED_PREF_SWIDTH = "sWidth"
+const val SHARED_PREF_SHEIGHT = "sHeight"
+const val SHARED_PREF_DWIDTH = "dWidth"
+const val SHARED_PREF_DHEIGHT = "dHeight"
+
+interface OnMenuSelectionListener {
+    fun onMenuSelected(selection:Int)
+}
+
+interface OnItemSelectionListener {
+    fun onItemSelected(selected:Any)
+}
+
+interface OnFoodToDeleteListener {
+    fun onFoodToDelete(nameFood: String)
+}

@@ -6,7 +6,45 @@ import android.content.Context
 import android.arch.persistence.room.OnConflictStrategy
 import com.g.laurent.alitic.EventData
 import com.g.laurent.alitic.MealData
+import com.g.laurent.alitic.R
 import java.util.concurrent.Executors
+
+class Position(val px:Float, val py:Float)
+
+enum class Loc(var position : Position) {
+    CENTER(Position(0.toFloat(),0.toFloat())),
+    TOP_LEFT(Position(0.toFloat(),0.toFloat())),
+    TOP_RIGHT(Position(0.toFloat(),0.toFloat())),
+    BOTTOM_LEFT(Position(0.toFloat(),0.toFloat())),
+    BOTTOM_RIGHT(Position(0.toFloat(),0.toFloat())),
+    SMALL_PANEL_CENTER(Position(0.toFloat(),0.toFloat())),
+    BIG_PANEL_CENTER(Position(0.toFloat(),0.toFloat()));
+
+    companion object {
+        fun setPosition(loc:Loc, newPosition: Position){
+            loc.position = newPosition
+        }
+    }
+}
+
+enum class Pan(var min : Float, var max:Float) {
+
+    DIAMETER_PANEL(0.toFloat(),0.toFloat()),
+    DELTA_Y(0.toFloat(),0.toFloat()),
+    SCALE_PANEL(0.toFloat(),0.toFloat());
+
+    companion object {
+        fun setMinMax(pan:Pan, min : Float, max:Float){
+            pan.min = min
+            pan.max = max
+        }
+    }
+}
+
+enum class TypeDisplay(val type:String, val idCancel : Int, val idSave : Int){
+    EVENT("EVENT", R.id.button_cancel_event, R.id.button_save_event),
+    MEAL("MEAL", R.id.button_cancel_meal, R.id.button_save_meal);
+}
 
 
 // -------------------------------- MEAL CLASSES ----------------------------------------------
@@ -76,6 +114,7 @@ data class EventType(@PrimaryKey(autoGenerate = true) var id: Long?,
                      @ColumnInfo(name = "maxTime") var maxTime:Long?,
                      @ColumnInfo(name = "forLastMeal") var forLastMeal:Boolean?,
                      @ColumnInfo(name = "takenIntoAcc") var takenIntoAcc:Boolean = true){
+
     constructor() : this(null, null, "ressenti",null, null, true, true)
 }
 
@@ -89,6 +128,7 @@ data class Event(
     @ColumnInfo(name = "idEventType") var idEventType: Long?,
     @ColumnInfo(name = "dateCode") var dateCode:Long,
     @Ignore var chosen:Boolean = false){
+
     constructor() : this(null, null, 0, false)
 }
 
@@ -345,4 +385,20 @@ abstract class AppDataBase : RoomDatabase() {
             IO_EXECUTOR.execute(f)
         }
     }
+}
+
+fun populateDatabase(context: Context){
+
+    // Clear database
+    val db = AppDataBase.getInstance(context)
+    db?.mealItemDao()?.deleteAll()
+    db?.mealDao()?.deleteAll()
+    db?.keywordDao()?.deleteAll()
+    db?.foodDao()?.deleteAll()
+    db?.foodTypeDao()?.deleteAll()
+    db?.eventDao()?.deleteAll()
+    db?.eventTypeDao()?.deleteAll()
+
+    // Fill with data
+    insertData(db?.foodTypeDao(), db?.foodDao(), db?.keywordDao(), db?.eventTypeDao(), context)
 }
