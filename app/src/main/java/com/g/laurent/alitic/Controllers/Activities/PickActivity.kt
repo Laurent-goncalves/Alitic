@@ -48,15 +48,7 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
 
         // init variables
         listFoodType = getAllFoodTypes(context = applicationContext)!!
-
-        val listFoodTotal = getAllFood(context = applicationContext)
-
-        if(listFoodTotal!=null){
-            for(i in 0 .. 25){
-                listSelected.add(listFoodTotal[i])
-            }
-        }
-
+        
         // Recover TypeDisplay
         val bundle = intent.extras
         typeDisplay = if(bundle!=null){
@@ -286,7 +278,7 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
         }
 
         if(mealPickDialog.isVisible){
-            mealPickDialog.onFoodToDelete(nameFood)
+            mealPickDialog.foodDeleted(nameFood)
         }
 
         configureCounter()
@@ -415,7 +407,7 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
 
     private fun showDialogSaveTime(){
         val fm = supportFragmentManager
-        val myDialogFragment = SaveDialog().newInstance(TypeDisplay.MEAL, listSelected.toList())
+        val myDialogFragment = SaveDialog().newInstance(typeDisplay, listSelected.toList())
         myDialogFragment.show(fm, TAG_SCHEDULE_DIALOG)
     }
 

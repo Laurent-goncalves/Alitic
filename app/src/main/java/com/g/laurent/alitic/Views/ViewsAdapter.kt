@@ -621,6 +621,53 @@ class GridChronoAdapter(val list:List<DayGrid>, val context: Context): BaseAdapt
     }
 }
 
+/** FOOD ITEMS MEAL PICK ADAPTER**/
+@SuppressLint("RecyclerView")
+class MealPickAdapter(private val listSelected: MutableList<Food>, private val onFoodToDeleteListener:OnFoodToDeleteListener, val context: Context) : RecyclerView.Adapter<MealPickViewHolder>() {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealPickViewHolder {
+        val view = LayoutInflater.from(context).inflate(R.layout.food_item_pick_meal_layout, parent, false)
+        //val view = View.inflate(parent.context, R.layout.food_item_pick_meal_layout, null)
+        return MealPickViewHolder(view)
+    }
+
+    override fun getItemCount(): Int {
+        return if(listSelected.isEmpty())
+            1
+        else
+            listSelected.size
+    }
+
+    override fun onBindViewHolder(holder: MealPickViewHolder, position: Int) {
+
+        if(listSelected.isEmpty()){
+
+            holder.foodName.text = context.resources.getString(R.string.message_no_food)
+            holder.deleteButton.visibility = View.GONE
+
+        } else {
+
+            val foodName = listSelected[holder.adapterPosition].name
+
+            holder.foodName.text = foodName
+
+            holder.deleteButton.setOnClickListener {
+                if(foodName!=null) {
+                    onFoodToDeleteListener.onFoodToDelete(foodName)
+                    if(holder.adapterPosition >= 0 && holder.adapterPosition < listSelected.size)
+                        listSelected.removeAt(holder.adapterPosition)
+                    notifyDataSetChanged()
+                }
+            }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+}
+
+
 enum class DayGrid(val colorId: Int){
     DONT_EXISTS(android.R.color.white),
     NO_EVENT_DAY(R.color.colorNoEventDay),

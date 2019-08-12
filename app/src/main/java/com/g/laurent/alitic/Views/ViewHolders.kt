@@ -102,6 +102,11 @@ class ChronoViewHolder(itemView: View?){
     var imageBackground: ImageView? = itemView?.findViewById(R.id.image_background)
 }
 
+class MealPickViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    var foodName: MealTextView = itemView.findViewById(R.id.food_name)
+    var deleteButton: ImageView = itemView.findViewById(R.id.delete_button)
+}
+
 class StatChronoHolder(itemView: View): RecyclerView.ViewHolder(itemView){
     var monthView: TextView = itemView.findViewById(R.id.month_text)
     var gridView: GridView = itemView.findViewById(R.id.grid_month)

@@ -3,6 +3,8 @@ package com.g.laurent.alitic.Controllers.DialogFragments
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +13,13 @@ import com.g.laurent.alitic.Controllers.Activities.OnFoodToDeleteListener
 import com.g.laurent.alitic.Controllers.Activities.OnPickMealSaveListener
 import com.g.laurent.alitic.Models.Food
 import com.g.laurent.alitic.R
-import com.g.laurent.alitic.Views.FoodViewId
 import com.g.laurent.alitic.Views.LIST_TO_SAVE
+import com.g.laurent.alitic.Views.MealPickAdapter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.pick_meal_dialog.*
+import kotlinx.android.synthetic.main.pick_meal_dialog.button_cancel_meal
+import kotlinx.android.synthetic.main.pick_meal_dialog.button_save_meal
 
 
 class MealPickDialog : DialogFragment() {
@@ -67,27 +71,18 @@ class MealPickDialog : DialogFragment() {
     }
 
     private fun configureViews() {
-
-        if(listSelected.isEmpty()){
-            no_food_in_meal.visibility = View.VISIBLE
-            layout_all_foods.visibility = View.GONE
-        } else {
-            no_food_in_meal.visibility = View.GONE
-            layout_all_foods.visibility = View.VISIBLE
-
-            configureFoodLayout()
-        }
+        configureFoodList()
         configureButtonSaveAndCancel()
     }
 
-    fun onFoodToDelete(nameFood: String) {
+    fun foodDeleted(foodName:String){
 
         // Remove food from listSelected
         val filteredList:MutableList<Food> = mutableListOf()
         filteredList.addAll(listSelected)
 
         for(food in listSelected){
-            if(food.name.equals(nameFood)){
+            if(food.name.equals(foodName)){
                 filteredList.remove(food)
                 break
             }
@@ -95,23 +90,17 @@ class MealPickDialog : DialogFragment() {
 
         this.listSelected = filteredList.toList()
 
-        // Update views
-        configureViews()
+        // Update buttons
+        configureButtonSaveAndCancel()
     }
 
-    private fun configureFoodLayout(){
+    private fun configureFoodList(){
 
-        layout_all_foods.removeAllViews()
+        val mLayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        layout_all_foods.layoutManager = mLayoutManager
 
-        val listIds = mutableListOf<FoodViewId>()
-
-        for(i in 0 until listSelected.size) {
-            val id = layout_all_foods.addFood(listSelected[i], onFoodToDeleteListener)
-            if(id!=null)
-                listIds.add(id)
-        }
-
-        layout_all_foods.organizeViews(listIds)
+        val mealPickAdapter = MealPickAdapter(listSelected.toMutableList(), onFoodToDeleteListener, contextDialog)
+        layout_all_foods.adapter = mealPickAdapter
     }
 
     private fun configureButtonSaveAndCancel() {

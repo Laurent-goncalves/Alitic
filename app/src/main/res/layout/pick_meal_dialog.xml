@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <!-- TITLE MON REPAS-->
+    <!-- TITLE "MON REPAS" -->
     <com.g.laurent.alitic.Views.MealTextView
             android:id="@+id/title_meal"
             android:layout_width="wrap_content"
@@ -19,39 +19,14 @@
             android:textSize="28sp"
             android:text="@string/panel_title"/>
 
-    <FrameLayout
-            android:id="@+id/framelayout_foods"
+    <!-- LIST FOODS -->
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/layout_all_foods"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:minWidth="230dp"
+            android:layout_height="250dp"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp">
-
-        <!-- MESSAGE "aucun aliment sélectionné" -->
-        <com.g.laurent.alitic.Views.MealTextView
-                android:id="@+id/no_food_in_meal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                app:fontName="Satisfy-Regular"
-                android:textSize="20sp"
-                android:text="@string/message_no_food"
-                android:visibility="gone"/>
-        
-
-        <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            <!-- View with all foods selected -->
-            <com.g.laurent.alitic.Views.FoodLayout
-                    android:id="@+id/layout_all_foods"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"/>
-
-        </ScrollView>
-
-    </FrameLayout>
+            android:layout_marginTop="20dp"/>
 
     <!-- BUTTONS -->
     <LinearLayout

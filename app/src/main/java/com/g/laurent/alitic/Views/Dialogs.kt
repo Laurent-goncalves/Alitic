@@ -108,8 +108,7 @@ class SaveDialog : DialogFragment() {
                     // Save event(s) in DB
                     if(listEventType.isNotEmpty()){
                         for(eventType in listEventType){
-                            val eventToSave = Event(null, eventType.id, getTodayDate())
-                            saveNewEvent(eventToSave.idEventType, getTodayDate(), context = contextDialog)
+                            saveNewEvent(eventType.id, getTodayDate(), context = contextDialog)
                         }
                     }
 
