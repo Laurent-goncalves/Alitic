@@ -6,19 +6,21 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.Button
+import android.widget.FrameLayout
+import android.support.v7.widget.SearchView
+import android.widget.Toast
 import com.g.laurent.alitic.Controllers.ClassControllers.*
-import com.g.laurent.alitic.Controllers.DialogFragments.AddEventTypeDialog
-import com.g.laurent.alitic.Controllers.DialogFragments.AddFoodDialog
-import com.g.laurent.alitic.Controllers.DialogFragments.DialogCloseListener
-import com.g.laurent.alitic.Controllers.DialogFragments.SHAREDPREF
+import com.g.laurent.alitic.Controllers.DialogFragments.*
 import com.g.laurent.alitic.Models.*
 import com.g.laurent.alitic.R
-import com.g.laurent.alitic.Views.*
+import com.g.laurent.alitic.Views.FoodTypeAdapter
+import com.g.laurent.alitic.Views.GridAdapter
+import com.g.laurent.alitic.Views.SaveDialog
+import com.g.laurent.alitic.Views.TAG_SCHEDULE_DIALOG
 import kotlinx.android.synthetic.main.counter_layout.*
 import kotlinx.android.synthetic.main.pick_event_layout.*
 import kotlinx.android.synthetic.main.pick_meal_layout.*
@@ -26,19 +28,19 @@ import kotlinx.android.synthetic.main.pick_meal_layout.*
 /**
  * Activity for picking food or eventTypes and save them
  */
-class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteListener, OnItemSelectionListener, DialogCloseListener {
+class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteListener, OnItemSelectionListener, DialogCloseListener, OnPickMealSaveListener {
 
     private lateinit var menuAdapter: FoodTypeAdapter
     private lateinit var gridAdapter: GridAdapter
     private lateinit var listFoodType: List<FoodType>
     private lateinit var typeDisplay: TypeDisplay
-    private lateinit var panelLayout:PanelLayout
     private val onMenuSelectionListener = this
     private val onItemSelectionListener = this
     private var listSelected:MutableList<Any> = mutableListOf()
     private var sWidth:Int = 0
     private var sHeight:Int = 0
     var foodTypeSelected: FoodType? = null
+    private lateinit var mealPickDialog : MealPickDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_pick)
@@ -46,6 +48,14 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
 
         // init variables
         listFoodType = getAllFoodTypes(context = applicationContext)!!
+
+        val listFoodTotal = getAllFood(context = applicationContext)
+
+        if(listFoodTotal!=null){
+            for(i in 0 .. 25){
+                listSelected.add(listFoodTotal[i])
+            }
+        }
 
         // Recover TypeDisplay
         val bundle = intent.extras
@@ -71,20 +81,30 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
             movePicture(imageBackground,Loc.CENTER.position, Loc.TOP_RIGHT.position,matrix)
     }
 
+    override fun doWhenAnimationIsFinished(toPosition: Position) {
+        if(toPosition.equals(Loc.CENTER.position)){ // if picture move to center
+            finishActivity()
+        } else { // if picture move to left or right top corner
+            configurePickActivity()
+        }
+    }
+
+    /** ---------------------------------- CONFIGURATION -----------------------------------------------
+    ----------------------------------------------------------------------------------------------------
+     */
+
     private fun configurePickActivity() {
 
         if(typeDisplay.equals(TypeDisplay.MEAL)){
             findViewById<FrameLayout>(R.id.layout_meal).visibility = View.VISIBLE
             configureFoodTypes()
-            configureGridView(TypeDisplay.MEAL)
-            panelLayout = findViewById(R.id.panel_content)
-            panelLayout.configureMealPanel(listSelected, panel, counter_layout, sWidth, sHeight,this)
-            configureButtonsSaveCancel(TypeDisplay.MEAL)
         } else {
             findViewById<FrameLayout>(R.id.layout_event).visibility = View.VISIBLE
-            configureGridView(TypeDisplay.EVENT)
-            configureButtonsSaveCancel(TypeDisplay.EVENT)
         }
+
+        configureGridView(typeDisplay)
+        configureButtonsSaveCancel(typeDisplay)
+        configureCounter()
     }
 
     private fun configureFoodTypes(){
@@ -119,34 +139,13 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
         }
     }
 
-    private fun getConfirmationToLeavePickActivity(typeDisplay:TypeDisplay){
-        val builder = AlertDialog.Builder(this@PickActivity)
+    private fun configureCounter(){
 
-        // Display a message on alert dialog
-        if(typeDisplay.equals(TypeDisplay.MEAL)){
-            builder.setTitle(context.resources.getString(R.string.error_cancel_meal_title)) // TITLE
-            builder.setMessage(context.resources.getString(R.string.error_cancel_meal)) // MESSAGE
-        } else{
-            builder.setTitle(context.resources.getString(R.string.error_cancel_event_title)) // TITLE
-            builder.setMessage(context.resources.getString(R.string.error_cancel_event)) // MESSAGE
+        counter_meal.text = listSelected.size.toString()
+
+        counter_layout.setOnClickListener{
+            showDialogMealPick()
         }
-
-        // Set positive button and its click listener on alert dialog
-        builder.setPositiveButton(context.resources.getString(R.string.yes)){ dialog, _ ->
-            dialog.dismiss()
-            goToBackToMainPage()
-        }
-
-        // Display negative button on alert dialog
-        builder.setNegativeButton(context.resources.getString(R.string.no)){ dialog, _ ->
-            dialog.dismiss()
-        }
-
-        // Finally, make the alert dialog using builder
-        val dialog: AlertDialog = builder.create()
-
-        // Display the alert dialog on app interface
-        dialog.show()
     }
 
     private fun configureButtonsSaveCancel(typeDisplay:TypeDisplay){
@@ -161,8 +160,7 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
         }
 
         buttonSave.setOnClickListener {
-
-            if(listSelected.size == 0){ // IF NO ITEM SELECTED, WARN THE USER
+            if(listSelected.isEmpty()){ // IF NO ITEM SELECTED, WARN THE USER
 
                 if(typeDisplay.equals(TypeDisplay.MEAL))
                     Toast.makeText(context, context.resources.getString(R.string.error_save_meal), Toast.LENGTH_LONG).show()
@@ -170,13 +168,14 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
                     Toast.makeText(context, context.resources.getString(R.string.error_save_event), Toast.LENGTH_LONG).show()
 
             } else { // IF AT LEAST ONE ITEM SELECTED, DATA CAN BE SAVED
-                /**    Show dialog fragment to confirm date for saving  **/
-                val fm = supportFragmentManager
-                val myDialogFragment = SaveDialog().newInstance(typeDisplay, listSelected.toList())
-                myDialogFragment.show(fm, TAG_SCHEDULE_DIALOG)
+                showDialogSaveTime()
             }
         }
     }
+
+    /** ------------------------------------- TOOLBAR  -------------------------------------------------
+    ----------------------------------------------------------------------------------------------------
+     */
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar_pick, menu)
@@ -245,7 +244,7 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
         listSelected = updateListSelected(selected, listSelected)
 
         // Update counter
-        panelLayout.configureCounter(listSelected, counter_meal)
+        counter_meal.text = listSelected.size.toString()
     }
 
     fun updateListFoodsAfterQueryChange(listFoods:List<Food>){
@@ -286,8 +285,19 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
             }
         }
 
-        // Delete food in panel
-        panelLayout.deleteFood(listSelected)
+        if(mealPickDialog.isVisible){
+            mealPickDialog.onFoodToDelete(nameFood)
+        }
+
+        configureCounter()
+    }
+
+    override fun saveMeal() {
+        if(listSelected.isEmpty()){ // IF NO ITEM SELECTED, WARN THE USER
+            Toast.makeText(context, context.resources.getString(R.string.error_save_meal), Toast.LENGTH_LONG).show()
+        } else { // IF AT LEAST ONE ITEM SELECTED, DATA CAN BE SAVED
+            showDialogSaveTime()
+        }
     }
 
     fun deleteFromDatabase(id:Long, typeDisplay: TypeDisplay){
@@ -377,13 +387,79 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
         configureGridView(typeDisplay)
     }
 
-    override fun doWhenAnimationIsFinished(toPosition: Position) {
-        if(toPosition.equals(Loc.CENTER.position)){ // if picture move to center
-            finishActivity()
-        } else { // if picture move to left or right top corner
-            configurePickActivity()
-        }
+    /**---------------------------------------- DIALOG FRAG ------------------------------------
+     * -----------------------------------------------------------------------------------------
+     */
+
+    fun showDialogAddFood(food:Food){
+        val fm = supportFragmentManager
+        val myDialogFragment = AddFoodDialog().newInstance(food)
+        myDialogFragment.show(fm, null)
     }
+
+    fun showDialogAddEventType(eventType: EventType){
+        val fm = supportFragmentManager
+        val myDialogFragment = AddEventTypeDialog().newInstance(eventType)
+        myDialogFragment.show(fm, null)
+    }
+
+    private fun showDialogMealPick(){
+        val fm = supportFragmentManager
+        val list = mutableListOf<Food>()
+        for(any in listSelected){
+            list.add(any as Food)
+        }
+        mealPickDialog = MealPickDialog().newInstance(list.toList())
+        mealPickDialog.show(fm, null)
+    }
+
+    private fun showDialogSaveTime(){
+        val fm = supportFragmentManager
+        val myDialogFragment = SaveDialog().newInstance(TypeDisplay.MEAL, listSelected.toList())
+        myDialogFragment.show(fm, TAG_SCHEDULE_DIALOG)
+    }
+
+    private fun getConfirmationToLeavePickActivity(typeDisplay:TypeDisplay){
+        val builder = AlertDialog.Builder(this@PickActivity)
+
+        // Display a message on alert dialog
+        if(typeDisplay.equals(TypeDisplay.MEAL)){
+            builder.setTitle(context.resources.getString(R.string.error_cancel_meal_title)) // TITLE
+            builder.setMessage(context.resources.getString(R.string.error_cancel_meal)) // MESSAGE
+        } else{
+            builder.setTitle(context.resources.getString(R.string.error_cancel_event_title)) // TITLE
+            builder.setMessage(context.resources.getString(R.string.error_cancel_event)) // MESSAGE
+        }
+
+        // Set positive button and its click listener on alert dialog
+        builder.setPositiveButton(context.resources.getString(R.string.yes)){ dialog, _ ->
+            dialog.dismiss()
+            goToBackToMainPage()
+        }
+
+        // Display negative button on alert dialog
+        builder.setNegativeButton(context.resources.getString(R.string.no)){ dialog, _ ->
+            dialog.dismiss()
+        }
+
+        // Finally, make the alert dialog using builder
+        val dialog: AlertDialog = builder.create()
+
+        // Display the alert dialog on app interface
+        dialog.show()
+    }
+
+    fun showConfirmationMessageInSnackBar(message:String){
+        Snackbar.make(this.findViewById(R.id.pickactivity_layout), message, Snackbar.LENGTH_SHORT).show()
+    }
+
+    override fun handleDialogClose(typeDisplay: TypeDisplay) {
+        configureGridView(typeDisplay)
+    }
+
+    /**---------------------------------------- BACK ACTION ------------------------------------
+     * -----------------------------------------------------------------------------------------
+     */
 
     public override fun goToBackToMainPage(){
 
@@ -402,40 +478,23 @@ class PickActivity : BaseActivity(), OnMenuSelectionListener, OnFoodToDeleteList
         }
     }
 
-    /**---------------------------------------- DIALOG ADD -------------------------------------
-     * -----------------------------------------------------------------------------------------
-     */
-
-    fun showDialogAddFood(food:Food){
-        val fm = supportFragmentManager
-        val myDialogFragment = AddFoodDialog().newInstance(food)
-        myDialogFragment.show(fm, null)
-    }
-
-    fun showDialogAddEventType(eventType: EventType){
-        val fm = supportFragmentManager
-        val myDialogFragment = AddEventTypeDialog().newInstance(eventType)
-        myDialogFragment.show(fm, null)
-    }
-
-    fun showConfirmationMessageInSnackBar(message:String){
-        Snackbar.make(this.findViewById(R.id.pickactivity_layout), message, Snackbar.LENGTH_SHORT).show()
-    }
-
-    override fun handleDialogClose(typeDisplay: TypeDisplay) {
-        configureGridView(typeDisplay)
-    }
-
     override fun onBackPressed() {
         getConfirmationToLeavePickActivity(typeDisplay)
     }
-
-    fun getListSelected():List<Any>{
-        return listSelected.toList()
-    }
 }
 
-const val DELETE = "DELETE"
-const val UNSELECT = "UNSELECT"
-const val SELECT = "SELECT"
-const val TYPEDISPLAY = "typeDisplay"
+interface OnMenuSelectionListener {
+    fun onMenuSelected(selection:Int)
+}
+
+interface OnItemSelectionListener {
+    fun onItemSelected(selected:Any)
+}
+
+interface OnFoodToDeleteListener {
+    fun onFoodToDelete(nameFood: String)
+}
+
+interface OnPickMealSaveListener {
+    fun saveMeal()
+}

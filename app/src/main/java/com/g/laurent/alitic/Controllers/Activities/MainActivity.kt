@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ResetDatabaseLis
 
         // Check if database has already been populated
         val prefs = applicationContext.getSharedPreferences(SHAREDPREF, 0)
-        prefs.edit().putBoolean(POPULATE_DATABASE, false).apply()
+        //prefs.edit().putBoolean(POPULATE_DATABASE, false).apply()
         val isDatabasePopulated = prefs.getBoolean(POPULATE_DATABASE, false)
 
         if(!isDatabasePopulated){
@@ -270,15 +270,8 @@ const val SHARED_PREF_SWIDTH = "sWidth"
 const val SHARED_PREF_SHEIGHT = "sHeight"
 const val SHARED_PREF_DWIDTH = "dWidth"
 const val SHARED_PREF_DHEIGHT = "dHeight"
+const val DELETE = "DELETE"
+const val UNSELECT = "UNSELECT"
+const val SELECT = "SELECT"
+const val TYPEDISPLAY = "typeDisplay"
 
-interface OnMenuSelectionListener {
-    fun onMenuSelected(selection:Int)
-}
-
-interface OnItemSelectionListener {
-    fun onItemSelected(selected:Any)
-}
-
-interface OnFoodToDeleteListener {
-    fun onFoodToDelete(nameFood: String)
-}

@@ -39,27 +39,9 @@
     <View
         android:id="@+id/gradient_view_bottom"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:layout_gravity="bottom"
         android:background="@drawable/gradient"/>
-
-    <!-- EMPTY PANEL -->
-    <include
-        android:id="@+id/panel"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        layout="@layout/panel_meal"
-        android:layout_gravity="start|bottom"/>
-
-     <!--PANEL WITH THE MEAL-->
-    <include
-            android:id="@+id/panel_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="100dp"
-            android:visibility="gone"
-            layout="@layout/panel_meal_content"
-            android:layout_gravity="center"/>
 
     <!-- COUNTER -->
     <include
