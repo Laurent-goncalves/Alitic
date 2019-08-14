@@ -211,12 +211,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ResetDatabaseLis
         // Set positive button and its click listener on alert dialog
         builder.setPositiveButton(applicationContext.resources.getString(R.string.yes)){ dialog, _ ->
             dialog.dismiss()
-
-            val db = AppDataBase.getInstance(applicationContext)
-            db?.mealItemDao()?.deleteAll()
-            db?.mealDao()?.deleteAll()
-            db?.eventDao()?.deleteAll()
-
+            populateDatabase(applicationContext)
             Toast.makeText(applicationContext, applicationContext.resources.getString(R.string.data_reset),Toast.LENGTH_LONG).show()
         }
 
@@ -255,7 +250,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ResetDatabaseLis
     }
 
     private fun showPickActivity(typeDisplay:TypeDisplay){
-        val intent = Intent(this, PickActivity::class.java)
+        val intent = if(typeDisplay.equals(TypeDisplay.MEAL))
+            Intent(this, PickMealActivity::class.java)
+        else
+            Intent(this, PickEventActivity::class.java)
+
         intent.putExtra(TYPEDISPLAY, typeDisplay.type)
         intent.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK

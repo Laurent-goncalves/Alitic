@@ -10,16 +10,13 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.View
-import android.view.ViewTreeObserver
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import com.g.laurent.alitic.Controllers.DialogFragments.SHAREDPREF
 import com.g.laurent.alitic.Models.Loc
 import com.g.laurent.alitic.Models.Position
 import com.g.laurent.alitic.R
-import com.g.laurent.alitic.Views.AppTitleTextView
-import kotlin.math.roundToInt
+
 
 abstract class BaseActivity : AppCompatActivity() {
 

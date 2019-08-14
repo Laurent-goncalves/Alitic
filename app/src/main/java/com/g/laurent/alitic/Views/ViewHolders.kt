@@ -27,73 +27,40 @@ class TimeLineViewHolder(itemView: View, viewType: Int, val mode:Boolean = false
 
         // Configure GridAdapter
         hourView.text = chrono.hour
-        val adapter = GridAdapter(chrono.item, null, false,null, mode, null, context)
+        val adapter = GridAdapter(chrono.item, null, false,null, mode, context)
         grid.adapter = adapter
     }
 }
 
 class FoodTypeViewHolder(itemView: View, private val mode:Boolean = false, val context: Context) : RecyclerView.ViewHolder(itemView) {
 
-    private var imageFood:ImageView = itemView.findViewById(R.id.image_foodtype)
-    private var textFood:TextView = itemView.findViewById(R.id.text_foodtype)
-    private val ratio = 0.8f
-    private var index:Int = 0
-    private var oldSelect:Int = -1
-    private val duration = context.resources.getInteger(R.integer.duration_anim).toLong()
-    private val colorNotSelected = ContextCompat.getColor(context, R.color.colorFoodTypeNOTselected)
-    private val colorSelected = ContextCompat.getColor(context, R.color.colorFoodTypeSelected)
+    private var image:ImageView = itemView.findViewById(R.id.image_foodtype)
+    private var name:TextView = itemView.findViewById(R.id.name_foodtype)
+    private var oldSelectIndex = 0
 
-    fun configureFoodTypeViewHolder(newSelect:Int, width:Int, foodType: FoodType?, ind:Int?) {
+    fun configureFoodTypeViewHolder(position:Int, selectIndex:Int, foodType: FoodType) {
 
-        fun setNotSelected(){
-            // WIDTH
-            itemView.layoutParams.width = (width * ratio).toInt()
-            imageFood.layoutParams.width = (width * ratio).toInt()
-            textFood.layoutParams.width = (width * ratio).toInt()
-            reduceThumbnail(this, 0, colorNotSelected)
+        // Edit text to display
+        name.text = foodType.name
 
-            // COLOR
-            itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorFoodTypeNOTselected))
-        }
-
-        // Initialization
-        if(foodType!=null && ind!=null) {
-            index = ind
-
-            // Edit text to display
-            textFood.text = foodType.name
-
-            // Edit image to display
-            val image = getImagePath(foodType, mode, context)
-            val imageDraw = getImageDrawPath(foodType, mode, context)
-            getImageFromPath(image, imageDraw, imageFood, context)
-
-        } else { // empty foodtype
-            setNotSelected()
-        }
+        // set image to display
+        setImageInImageView(foodType, image, mode, context)
 
         // Adapt the layout of the viewholder (if selected or not)
-        if(oldSelect!=-1 && newSelect!=-1){
-            if(oldSelect!=newSelect && oldSelect==index)
-                reduceThumbnail(this, duration, colorNotSelected)
-            else if(index==newSelect)
-                enlargeThumbnail(this, duration, colorSelected, ratio)
-        } else if(oldSelect==-1 && newSelect==index)
-                enlargeThumbnail(this, duration, colorSelected, ratio)
-            else
-                setNotSelected()
-
-        oldSelect = newSelect
+        if(selectIndex==-1){ // INITIALIZATION -> select the first item
+            select(position==0)
+        } else { // CHANGE OF ITEM SELECTED
+            select(position==selectIndex)
+            oldSelectIndex = selectIndex
+        }
     }
 
-    fun setEmptyViewAsLastItem(width:Int) {
-        // WIDTH
-        itemView.layoutParams.width = (width * ratio).toInt()
-        imageFood.layoutParams.width = (width * ratio).toInt()
-        textFood.layoutParams.width = (width * ratio).toInt()
-
-        // COLOR TRANSPARENT
-        itemView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
+    private fun select(select:Boolean){
+        if(select){
+            itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorFoodTypeSelected))
+        } else {
+            itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary))
+        }
     }
 }
 

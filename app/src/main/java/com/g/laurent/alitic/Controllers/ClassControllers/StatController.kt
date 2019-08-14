@@ -53,18 +53,7 @@ fun getFoodStat(statType:StatType, eventType:EventType, mode:Boolean = false, co
     fun getListOf10Food(statType:StatType, eventType:EventType, mode:Boolean = false, context:Context):List<FoodStatEntry>{
 
         fun getTop10(list:MutableList<FoodStatEntry>):List<FoodStatEntry>{
-
-            val result:MutableList<FoodStatEntry> = mutableListOf()
-
-            for(i in 0 .. 10){
-                val max = list.maxBy { it.ratio }
-                if(max!=null) {
-                    result.add(max)
-                    list.remove(max)
-                }
-            }
-
-            return result.toList()
+            return list.sortedWith(compareBy({it.ratio}, {it.counter.countNOK})).reversed()
         }
 
         fun getListStatEntryWithRatio(statType:StatType, hashmap:HashMap<Food, Counter>):MutableList<FoodStatEntry>{

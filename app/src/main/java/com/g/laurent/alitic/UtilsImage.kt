@@ -1,10 +1,11 @@
 package com.g.laurent.alitic
 
 import android.content.Context
+import android.support.v4.content.res.ResourcesCompat
 import android.webkit.URLUtil
+import android.widget.Button
 import android.widget.ImageView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.g.laurent.alitic.Controllers.ClassControllers.getEventType
 import com.g.laurent.alitic.Controllers.ClassControllers.getFoodType
 import com.g.laurent.alitic.Models.*
@@ -23,20 +24,50 @@ fun setImageResource(path:String?, imageView: ImageView, context: Context):Boole
     return false
 }
 
-fun getImageFromPath(path:String?, pathDraw:String?, imageView: ImageView, context: Context){
+fun isDrawable(path:String?, context: Context):Boolean {
 
-    if(path!=null){
-        if(URLUtil.isValidUrl(path)){ // image path is URL
-            Glide.with(context)
-                .load(path)
-                .apply(RequestOptions().placeholder(getResourceId(pathDraw, context)))
-                .into(imageView)
-        } else {  // -------------------- image path is drawable type
-            if(!setImageResource(path, imageView, context)){
-                if(pathDraw!=null)
-                    setImageResource(pathDraw, imageView, context) // placeholder of the category of food type
-            }
-        }
+    if(path==null){
+        return false
+    } else {
+        if(getResourceId(path, context)!=0)
+            return true
+    }
+    return false
+}
+
+fun isUrl(path:String?):Boolean {
+
+    if(path==null){
+        return false
+    } else {
+        if(URLUtil.isValidUrl(path))
+            return true
+    }
+    return false
+}
+
+fun setImageInImageView(any: Any , imageView: ImageView, mode:Boolean = false, context: Context){
+
+    val path = getImagePath(any, mode, context)
+
+    if (isUrl(path))
+        Glide.with(context)
+            .load(path)
+            .into(imageView)
+    else if (isDrawable(path, context))
+        imageView.setImageResource(getResourceId(path, context))
+}
+
+fun setImageInButton(any: Any , button: Button, mode:Boolean = false, context: Context){
+
+    val path = getImagePath(any, mode, context)
+
+    if (isDrawable(path, context)){
+        val top = ResourcesCompat.getDrawable(context.resources, getResourceId(path, context), null)
+
+        top?.setBounds(0, 0, top.intrinsicWidth *0.10.toInt(), top.intrinsicHeight *0.10.toInt())
+
+        button.setCompoundDrawables(null, top,null,null)
     }
 }
 
@@ -44,7 +75,13 @@ fun getImagePath(any: Any, mode:Boolean = false, context: Context):String?{
 
     return when (any) {
         is Food -> {
-            any.foodPic
+            if(isUrl(any.foodPic) || isDrawable(any.foodPic, context)){
+                any.foodPic
+            } else
+                getFoodType(any.idFoodType, mode, context)?.foodTypePic
+        }
+        is Event -> {
+            getEventType(any.idEventType, mode, context)?.eventPic
         }
         is EventType -> {
             any.eventPic
@@ -52,27 +89,13 @@ fun getImagePath(any: Any, mode:Boolean = false, context: Context):String?{
         is FoodType -> {
             any.foodTypePic
         }
-        is Event -> {
-            getEventType(any.idEventType, mode, context)?.eventPic
-        }
         else ->
             null
     }
 }
 
-fun getImageDrawPath(any: Any, mode:Boolean, context: Context):String?{
 
-    return when (any) {
-        is EventType -> { // if eventType
-            any.eventPic
-        }
-        is Food -> { // if food
-            getFoodType(any.idFoodType, mode, context)?.foodTypePic
-        }
-        is Event -> { // if event
-            getEventType(any.idEventType, mode, context)?.eventPic
-        }
-        else ->
-            null
-    }
-}
+
+
+
+

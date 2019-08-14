@@ -360,7 +360,7 @@ abstract class AppDataBase : RoomDatabase() {
                                     super.onCreate(db)
                                     // insert the data on the IO Thread
                                     ioThread {
-                                        insertData(INSTANCE?.foodTypeDao(), INSTANCE?.foodDao(), INSTANCE?.keywordDao(), INSTANCE?.eventTypeDao(), context)
+                                        insertData(INSTANCE?.foodTypeDao(), INSTANCE?.foodDao(), INSTANCE?.keywordDao(), INSTANCE?.eventTypeDao(), false, context)
                                     }
                                 }
                             })
@@ -400,5 +400,5 @@ fun populateDatabase(context: Context){
     db?.eventTypeDao()?.deleteAll()
 
     // Fill with data
-    insertData(db?.foodTypeDao(), db?.foodDao(), db?.keywordDao(), db?.eventTypeDao(), context)
+    insertData(db?.foodTypeDao(), db?.foodDao(), db?.keywordDao(), db?.eventTypeDao(), false, context)
 }

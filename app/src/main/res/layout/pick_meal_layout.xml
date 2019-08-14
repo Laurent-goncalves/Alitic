@@ -4,79 +4,54 @@
         android:layout_height="match_parent"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- TRANSPARENT GRADIENT VIEW -->
+    <View
+            android:id="@+id/gradient_view_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/gradient"/>
+
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.v7.widget.RecyclerView
+        <!-- LIST FOOD TYPES -->
+        <android.support.v7.widget.RecyclerView
                 android:id="@+id/food_recycler_view"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"/>
 
-            <GridView
-                android:id="@+id/gridview_food"
+        <FrameLayout
                 android:layout_width="0dp"
-                android:layout_weight="3"
+                android:layout_weight="4"
                 android:layout_height="match_parent"
-                android:numColumns="3"
-                android:layout_marginBottom="100dp"
-                android:verticalSpacing="5dp"
-                android:horizontalSpacing="5dp"/>
+                android:background="@android:color/transparent">
 
-        </LinearLayout>
+            <GridView
+                    android:id="@+id/gridview_food"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:overScrollMode="never"
+                    android:numColumns="3"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="10dp"
+                    android:verticalSpacing="5dp"
+                    android:horizontalSpacing="5dp"/>
 
-    </LinearLayout>
+            <!-- COUNTER -->
+            <include
+                    layout="@layout/counter_layout"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="bottom|end"/>
 
-    <!-- TRANSPARENT GRADIENT VIEW -->
-    <View
-        android:id="@+id/gradient_view_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_gravity="bottom"
-        android:background="@drawable/gradient"/>
-
-    <!-- COUNTER -->
-    <include
-        layout="@layout/counter_layout"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="bottom|start"
-        android:layout_margin="5dp"/>
-
-    <!-- BUTTONS -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="10dp"
-        android:orientation="horizontal">
-
-        <!-- BUTTON CANCEL -->
-        <Button
-                android:id="@+id/button_cancel_meal"
-                android:layout_width="@dimen/button_width"
-                android:layout_height="@dimen/button_height"
-                android:text="@string/cancel"
-                android:textColor="@color/colorAccent"
-                android:background="@android:color/white"/>
-
-        <!-- BUTTON SAVE -->
-        <Button
-                android:id="@+id/button_save_meal"
-                android:layout_width="@dimen/button_width"
-                android:layout_height="@dimen/button_height"
-                android:layout_marginStart="10dp"
-                android:text="@string/save"
-                android:textColor="@android:color/white"
-                android:background="@color/colorAccent"/>
+        </FrameLayout>
 
     </LinearLayout>
 

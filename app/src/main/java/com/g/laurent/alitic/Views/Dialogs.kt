@@ -132,8 +132,14 @@ class SaveDialog : DialogFragment() {
 
             // Launch dialog to pick time and date
             val fm = fragmentManager
-            val myDialogFragment = DateTimePickerDialog().newInstance(typeDisplay, listFoodtems)
-            myDialogFragment.show(fm, "DateTimePickerDialog")
+
+            if(typeDisplay.equals(TypeDisplay.MEAL)) {
+                val myDialogFragment = DateTimePickerDialog().newInstance(typeDisplay, listFoodtems)
+                myDialogFragment.show(fm, "DateTimePickerDialog")
+            } else {
+                val myDialogFragment = DateTimePickerDialog().newInstance(typeDisplay, listEventType)
+                myDialogFragment.show(fm, "DateTimePickerDialog")
+            }
 
             this.dismiss()
         }
@@ -224,11 +230,11 @@ class DateTimePickerDialog : DialogFragment() {
                             val eventToSave = Event(null, eventType.id, date + time)
                             saveNewEvent(eventToSave.idEventType, date + time, context = contextDialog)
                         }
-                    }
 
-                    // Show snackbar "meal successfully saved"
-                    val message = contextDialog.resources.getString(R.string.save_event_success_message_dialog)
-                    (activity as PickActivity).showConfirmationMessageInSnackBar(message)
+                        // Show snackbar "meal successfully saved"
+                        val message = contextDialog.resources.getString(R.string.save_event_success_message_dialog)
+                        (activity as PickActivity).showConfirmationMessageInSnackBar(message)
+                    }
                 }
 
                 // Dismiss dialog
@@ -248,14 +254,14 @@ class DateTimePickerDialog : DialogFragment() {
             if(date==0.toLong()){
                 val datePickerDialog = DatePickerDialog(contextDialog, onDateChangeListener,
                     getYear(getTodayDate()),
-                    getMonth(getTodayDate()),
+                    getMonth(getTodayDate()) - 1,
                     getDayOfMonth(getTodayDate())
                 )
                 datePickerDialog.show()
             } else {
                 val datePickerDialog = DatePickerDialog(contextDialog, onDateChangeListener,
                     getYear(date),
-                    getMonth(date),
+                    getMonth(date) - 1,
                     getDayOfMonth(date)
                 )
                 datePickerDialog.show()
@@ -291,7 +297,7 @@ class DateTimePickerDialog : DialogFragment() {
     }
 
     private val onDateChangeListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-        date = getDateAsLong(dayOfMonth, monthOfYear,year,0,0)
+        date = getDateAsLong(dayOfMonth, monthOfYear + 1,year,0,0)
         val text = getTextDate(date)
         date_picker.text = text
     }

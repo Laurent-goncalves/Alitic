@@ -8,7 +8,7 @@ import com.g.laurent.alitic.Controllers.ClassControllers.saveNewMeal
 import com.g.laurent.alitic.R
 import com.g.laurent.alitic.getDateAsLong
 
-fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao?, eventTypeDao:EventTypeDao?, context:Context){
+fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao?, eventTypeDao:EventTypeDao?, forTest:Boolean, context:Context){
 
     /** ------------------------------------------------------------------------------------------------------
     -------------------------------------- FOODTYPE INSERTION ------------------------------------------------
@@ -362,7 +362,8 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
 
     }
 
-    insertAdditionnalDataForTest()
+    if(forTest)
+        insertAdditionnalDataForTest()
 }
 
 

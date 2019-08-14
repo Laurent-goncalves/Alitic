@@ -155,9 +155,10 @@
     <string name="file_excel_not_created">Fichier excel non créé. Erreur:</string>
     <string name="reset_data">Reset des données</string>
     <string name="reset">RAZ</string>
-    <string name="confirmation_data_reset">Etes-vous sûr de vouloir supprimer tous les ressentis et repas de la base de
-        données? Les données seront définitivement perdues. Avant suppression, vous avez la possibilité d\'exporter les
-        données sous excel dans le menu paramètres. \n \n Les aliments et types de ressenti ajoutés ne seront pas
+    <string name="confirmation_data_reset">Etes-vous sûr de vouloir supprimer de la base de données tous les ressentis
+        et repas que vous avez renseignés? Les données seront définitivement perdues. Avant suppression, vous avez la
+        possibilité d\'exporter les
+        données sous excel dans le menu paramètres. \n \n Les aliments et types de ressenti ajoutés seront aussi
         supprimés.
     </string>
     <string name="data_reset">Tous les ressentis et repas ont été supprimés de la base de données.</string>
