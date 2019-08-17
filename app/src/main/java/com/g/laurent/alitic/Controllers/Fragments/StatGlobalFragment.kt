@@ -10,6 +10,7 @@ import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.Activities.StatType
 import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Models.EventType
+import com.github.mikephil.charting.charts.PieChart
 import com.mikhaellopez.circularimageview.CircularImageView
 
 
@@ -63,7 +64,6 @@ class StatGlobalFragment : StatFragment() {
 
     /** FOOD LABELS **/
     private fun configureEachFood(view:View) {
-
         val listFood = getFoodStat(statType, EventType(), context = contextFrag)
 
         if(listFood.isNotEmpty()){
@@ -106,6 +106,10 @@ class StatGlobalFragment : StatFragment() {
                 }
                 foodLayout.findViewById<View>(id).visibility = View.GONE
             }
+
+        } else {
+            view.findViewById<TextView>(R.id.not_enough_data_small_piecharts).visibility = View.VISIBLE
+            view.findViewById<LinearLayout>(R.id.content_small_piecharts).visibility = View.GONE
         }
     }
 
@@ -164,6 +168,13 @@ class StatGlobalFragment : StatFragment() {
     /** PIE CHART FOODTYPES **/
     private fun configureBigPieChart(view:View){
         val listFoodTypes = getListFoodTypesStats(statType, EventType(), context = contextFrag)
-        configureBigPieChart(listFoodTypes, view, contextFrag)
+
+        if(listFoodTypes.isNotEmpty()){
+            configureBigPieChart(listFoodTypes, view, contextFrag)
+
+        } else {
+            view.findViewById<TextView>(R.id.not_enough_data_big_piecharts).visibility = View.VISIBLE
+            view.findViewById<PieChart>(R.id.global_pie_chart).visibility = View.GONE
+        }
     }
 }

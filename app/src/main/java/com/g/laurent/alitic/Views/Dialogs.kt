@@ -23,6 +23,7 @@ import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.Models.Food
 import com.g.laurent.alitic.Models.TypeDisplay
 import kotlinx.android.synthetic.main.time_picker_dialog.*
+import java.util.*
 
 class SaveDialog : DialogFragment() {
 
@@ -257,6 +258,7 @@ class DateTimePickerDialog : DialogFragment() {
                     getMonth(getTodayDate()) - 1,
                     getDayOfMonth(getTodayDate())
                 )
+                datePickerDialog.datePicker.firstDayOfWeek = Calendar.MONDAY
                 datePickerDialog.show()
             } else {
                 val datePickerDialog = DatePickerDialog(contextDialog, onDateChangeListener,
@@ -264,6 +266,7 @@ class DateTimePickerDialog : DialogFragment() {
                     getMonth(date) - 1,
                     getDayOfMonth(date)
                 )
+                datePickerDialog.datePicker.firstDayOfWeek = Calendar.MONDAY
                 datePickerDialog.show()
             }
         }
@@ -377,7 +380,3 @@ class StatInfoDialog : DialogFragment() {
             contextDialog = context
     }
 }
-
-const val TAG_SCHEDULE_DIALOG = "schedule_dialog_fragment"
-const val LIST_TO_SAVE = "list to save"
-const val TYPE_DISPLAY = "typedisplay"

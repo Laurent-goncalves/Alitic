@@ -4,8 +4,6 @@ import android.content.Context
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Models.*
 import hirondelle.date4j.DateTime
-import java.sql.Date
-import kotlin.math.max
 
 fun saveNewMeal(foodList:List<Long?>, dateCode:Long, mode:Boolean = false, context: Context):Long?{
 

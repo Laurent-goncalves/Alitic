@@ -4,13 +4,11 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import android.widget.ProgressBar
+import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.Fragments.*
 import com.g.laurent.alitic.Models.Loc
 import com.g.laurent.alitic.Models.Position
-import com.g.laurent.alitic.R
 import com.g.laurent.alitic.Views.LegendCalendarDialog
-import com.g.laurent.alitic.getDateAsLong
-import com.g.laurent.alitic.getTextDate
 
 
 class ChronoActivity : BaseActivity(), OnTimeLineDisplay, OnCalendarLoaded {
@@ -130,5 +128,4 @@ interface OnTimeLineDisplay {
     fun displayTimeLineFragment(day:Int, month:Int, year:Int)
 }
 
-const val TIMELINE_FRAGMENT = "Timeline_fragment"
-const val CHRONO_FRAGMENT = "Chrono_fragment"
+

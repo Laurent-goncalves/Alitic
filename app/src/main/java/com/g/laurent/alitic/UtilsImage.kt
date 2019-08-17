@@ -1,9 +1,7 @@
 package com.g.laurent.alitic
 
 import android.content.Context
-import android.support.v4.content.res.ResourcesCompat
 import android.webkit.URLUtil
-import android.widget.Button
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.g.laurent.alitic.Controllers.ClassControllers.getEventType
@@ -56,19 +54,6 @@ fun setImageInImageView(any: Any , imageView: ImageView, mode:Boolean = false, c
             .into(imageView)
     else if (isDrawable(path, context))
         imageView.setImageResource(getResourceId(path, context))
-}
-
-fun setImageInButton(any: Any , button: Button, mode:Boolean = false, context: Context){
-
-    val path = getImagePath(any, mode, context)
-
-    if (isDrawable(path, context)){
-        val top = ResourcesCompat.getDrawable(context.resources, getResourceId(path, context), null)
-
-        top?.setBounds(0, 0, top.intrinsicWidth *0.10.toInt(), top.intrinsicHeight *0.10.toInt())
-
-        button.setCompoundDrawables(null, top,null,null)
-    }
 }
 
 fun getImagePath(any: Any, mode:Boolean = false, context: Context):String?{

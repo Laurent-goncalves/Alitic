@@ -11,9 +11,9 @@ import android.view.ViewGroup
 import android.widget.*
 import com.g.laurent.alitic.Controllers.Activities.OnFoodToDeleteListener
 import com.g.laurent.alitic.Controllers.Activities.OnPickMealSaveListener
+import com.g.laurent.alitic.LIST_TO_SAVE
 import com.g.laurent.alitic.Models.Food
 import com.g.laurent.alitic.R
-import com.g.laurent.alitic.Views.LIST_TO_SAVE
 import com.g.laurent.alitic.Views.MealPickAdapter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

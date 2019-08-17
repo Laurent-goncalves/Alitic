@@ -1,9 +1,11 @@
 package com.g.laurent.alitic
 
+import com.g.laurent.alitic.Controllers.ClassControllers.organizeEventsByTime
 import com.g.laurent.alitic.Models.Event
 import com.g.laurent.alitic.Models.Food
 import com.g.laurent.alitic.Models.Meal
 import com.g.laurent.alitic.Views.DayGrid
+import hirondelle.date4j.DateTime
 import org.junit.Assert
 import org.junit.Test
 import org.junit.Assert.*
@@ -15,21 +17,8 @@ import java.util.*
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
-/*
-    @Test
-    fun test_organize_events_by_date(){
 
-        val list =
-            organizeEventsByTime(getListEventsForTest(), null, true, 1, 2019)
 
-        val date1 = DateTime.forDateOnly(2019, 1, 5)
-        val date2 = DateTime.forDateOnly(2019, 1, 15)
-        val date3 = DateTime.forDateOnly(2019, 1, 2)
-
-       assertEquals(3, list[date1]!![0].count)
-        assertEquals(1, list[date2]!![0].count)
-        assertTrue(list[date3]!![0].count == 1 && list[date3]!![1].count == 1)
-    }*/
 
     @Test
     fun test_last_day_month(){
@@ -38,6 +27,9 @@ class ExampleUnitTest {
         Assert.assertFalse(isLastDayOfMonthTheLastWeekDay(5,2019))
         Assert.assertTrue(isLastDayOfMonthTheLastWeekDay(6,2019))
     }
+
+
+
 
     @Test
     fun test_hashmap_dates_stats(){

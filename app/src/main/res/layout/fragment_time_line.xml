@@ -3,12 +3,20 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+             android:layout_gravity="center_vertical"
              tools:context=".Controllers.Fragments.TimeLineFragment">
 
-    <android.support.v7.widget.RecyclerView
+    <View
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/timeline_marker_empty"
+            android:layout_marginStart="13dp"/>
+
+    <com.g.laurent.alitic.Views.TimeLineRecyclerView
             android:id="@+id/timeline_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:padding="5dp"/>
 
 </FrameLayout>

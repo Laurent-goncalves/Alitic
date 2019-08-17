@@ -5,7 +5,6 @@ import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Models.AppDataBase
 import com.g.laurent.alitic.Models.Event
 import com.g.laurent.alitic.Models.EventType
-import com.g.laurent.alitic.Models.Food
 import hirondelle.date4j.DateTime
 
 // ---------------------------------------------------------------------------------------------------------------

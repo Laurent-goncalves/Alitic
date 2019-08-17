@@ -2,6 +2,7 @@ package com.g.laurent.alitic.Controllers.DialogFragments
 
 import android.Manifest
 import android.content.Context
+import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Environment
@@ -13,11 +14,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.g.laurent.alitic.R
-import com.g.laurent.alitic.writeToExcelFile
+import com.g.laurent.alitic.*
+import com.g.laurent.alitic.Controllers.Activities.MainActivity
 import pub.devrel.easypermissions.EasyPermissions
 import java.io.File
-
 
 class SettingsDialog : DialogFragment(), EasyPermissions.PermissionCallbacks{
 
@@ -149,7 +149,14 @@ class SettingsDialog : DialogFragment(), EasyPermissions.PermissionCallbacks{
             prefs.edit().putString(NAME_USER, nameUser).apply()
             Toast.makeText(contextDialog, contextDialog.resources.getString(R.string.data_saved), Toast.LENGTH_LONG).show()
 
+            this.dismiss()
         }
+    }
+
+    override fun onDismiss(dialog: DialogInterface?) {
+        super.onDismiss(dialog)
+        val activity = activity as MainActivity
+        activity.updateToolbarTitle()
     }
 
     override fun onAttach(context: Context?) {
@@ -158,10 +165,6 @@ class SettingsDialog : DialogFragment(), EasyPermissions.PermissionCallbacks{
             contextDialog = context
     }
 }
-
-const val NAME_USER = "name_user"
-const val SHAREDPREF = "sharedpref_alitic"
-const val PERMISSION_WRITE_STORAGE = 105
 
 interface ResetDatabaseListener {
     fun emptyDatabase()

@@ -67,6 +67,7 @@
     <integer name="duration_anim">500</integer>
 
     <!-- MENU STATS -->
+    <string name="not_enough_data">Pas de donnée disponible. Impossible d\'afficher le graphe.</string>
     <string name="title_toolbar_stat">Statistiques</string>
     <string name="menu_global_positive">Effets positifs</string>
     <string name="menu_global_negative">Effets négatifs</string>
@@ -280,6 +281,7 @@
         repas avec ressenti (barre en rouge) et sans ressenti (barre en vert). Le graphique prend en compte au maximum
         10 aliments, qui correspondent aux aliments causant le plus de ressentis.
     </string>
+    <string name="hello">Hello</string>
 
 
 </resources>

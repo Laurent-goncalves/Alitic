@@ -3,6 +3,7 @@ package com.g.laurent.alitic.Views
 import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
+import android.view.MotionEvent
 import android.view.View
 import android.widget.*
 import com.g.laurent.alitic.*
@@ -21,6 +22,22 @@ class TimeLineViewHolder(itemView: View, viewType: Int, val mode:Boolean = false
         mTimelineView.initLine(viewType)
         hourView = itemView.findViewById(R.id.hour)
         grid = itemView.findViewById(R.id.grid)
+
+        grid.setOnTouchListener { v, e ->
+            (v.parent.parent.parent.parent as TimeLineRecyclerView).layoutManager?.canScrollVertically()
+            true
+        }
+
+
+        //val scrollview = itemView.findViewById<ScrollView>(R.id.scrollview)
+/*
+        grid.setOnTouchListener { v, _ ->
+            v.parent.requestDisallowInterceptTouchEvent(false)
+            v.parent.parent.requestDisallowInterceptTouchEvent(false)
+            v.parent.parent.parent.requestDisallowInterceptTouchEvent(false)
+            v.parent.parent.parent.parent.requestDisallowInterceptTouchEvent(false)
+            true
+        }*/
     }
 
     fun configureTimeLineViewHolder(chrono: Chrono) {

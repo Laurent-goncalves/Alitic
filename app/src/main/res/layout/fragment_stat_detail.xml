@@ -99,8 +99,21 @@
                     android:layout_marginEnd="10dp"
                     android:background="#c0c0c0"/>
 
+            <TextView
+                    android:id="@+id/not_enough_data_chrono"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="italic"
+                    android:text="@string/not_enough_data"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:visibility="gone"/>
+
             <!--CHRONOLOGY-->
             <LinearLayout
+                    android:id="@+id/chronology_layout"
                     android:layout_width="match_parent"
                     android:layout_height="98dp"
                     android:orientation="horizontal">
@@ -108,6 +121,7 @@
                 <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginHorizontal="5dp"
                         android:gravity="center_horizontal">
 
                     <View
@@ -139,6 +153,7 @@
 
             <!-- LEGEND -->
             <include
+                    android:id="@+id/legend_chrono"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_gravity="end"
@@ -166,6 +181,18 @@
                     android:layout_marginStart="15dp"
                     android:layout_marginEnd="10dp"
                     android:background="#c0c0c0"/>
+
+            <TextView
+                    android:id="@+id/not_enough_data_barchart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="italic"
+                    android:text="@string/not_enough_data"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:visibility="gone"/>
 
             <!--DETAIL PER FOOD-->
             <com.github.mikephil.charting.charts.HorizontalBarChart

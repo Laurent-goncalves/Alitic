@@ -4,11 +4,8 @@ import android.content.Context
 import android.support.v4.app.Fragment
 import android.os.Bundle
 import com.g.laurent.alitic.Controllers.Activities.StatType
+import com.g.laurent.alitic.STAT_TYPE
 
-
-const val LIST_EVENT_TYPES = "list_eventTypes"
-const val ID_EVENTTYPE = "id_eventType"
-const val STAT_TYPE = "stat_type"
 
 open class StatFragment : Fragment() {
 

@@ -14,6 +14,7 @@ import com.g.laurent.alitic.Controllers.ClassControllers.getAllFood
 import com.g.laurent.alitic.Controllers.ClassControllers.getAllFoodTypes
 import com.g.laurent.alitic.Controllers.ClassControllers.saveNewFood
 import com.g.laurent.alitic.Controllers.ClassControllers.updateFood
+import com.g.laurent.alitic.FOOD_PARAMS
 import com.g.laurent.alitic.Models.Food
 import com.g.laurent.alitic.Models.FoodType
 import com.g.laurent.alitic.Models.TypeDisplay
@@ -213,8 +214,6 @@ class AddFoodDialog : DialogFragment(){
             contextDialog = context
     }
 }
-
-const val FOOD_PARAMS = "food_params"
 
 interface DialogCloseListener {
     fun handleDialogClose(typeDisplay: TypeDisplay)

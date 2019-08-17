@@ -7,15 +7,14 @@ import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.Toast
+import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.ClassControllers.getAllEventTypes
 import com.g.laurent.alitic.Controllers.ClassControllers.getEventType
 import com.g.laurent.alitic.Controllers.ClassControllers.updateEventType
 import com.g.laurent.alitic.Controllers.DialogFragments.AddEventTypeDialog
 import com.g.laurent.alitic.Models.*
-import com.g.laurent.alitic.R
 import com.g.laurent.alitic.Views.GridAdapter
 import com.g.laurent.alitic.Views.SaveDialog
-import com.g.laurent.alitic.Views.TAG_SCHEDULE_DIALOG
 import kotlinx.android.synthetic.main.pick_event_layout.*
 
 

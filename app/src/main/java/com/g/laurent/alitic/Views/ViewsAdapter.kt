@@ -19,6 +19,7 @@ import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Controllers.Fragments.*
 import com.g.laurent.alitic.Models.*
 import com.roomorama.caldroid.CaldroidGridAdapter
+import java.time.DayOfWeek
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -145,7 +146,7 @@ class TimeLineAdapter(val list: MutableList<Chrono>, val onChronoItemDeleted: On
             true
         }
 
-        holder.itemView.findViewById<ImageView>(R.id.timeline_viewholder).setOnLongClickListener(onLongClickListener)
+        //holder.itemView.findViewById<ImageView>(R.id.timeline_viewholder).setOnLongClickListener(onLongClickListener)
     }
 
 
@@ -298,7 +299,10 @@ class GridAdapter(private val listItems: List<*>, var listItemSelected: MutableL
                     view = inflater.inflate(R.layout.gridviewholder_add, parent, false)
                     configureAddButton(view)
                 }
-                else -> view = inflater.inflate(R.layout.gridviewholder, parent, false)
+                else -> {
+                    view = inflater.inflate(R.layout.gridviewholder, parent, false)
+                    view.setBackgroundResource(android.R.color.darker_gray)
+                }
             }
         }
 
@@ -504,6 +508,7 @@ class StatChronoAdapter(val list:List<Long>, val context: Context): RecyclerView
 
         // Configure grid view
         val list = getListDayGridForGridView(list, month, year)
+
         p0.gridView.numColumns = getNumberColumnsGridView(getFirstDateGridView(month, year), getLastDateGridView(month, year))
         val gridAdapter = GridChronoAdapter(list, context)
         p0.gridView.adapter = gridAdapter
@@ -586,11 +591,19 @@ class MealPickAdapter(private val listSelected: MutableList<Food>, private val o
 
 
 enum class DayGrid(val colorId: Int){
-    DONT_EXISTS(android.R.color.white),
+    DONT_EXISTS(android.R.color.transparent),
     NO_EVENT_DAY(R.color.colorNoEventDay),
     EVENT_LEV1(R.color.colorLevel1),
     EVENT_LEV2(R.color.colorLevel2),
     EVENT_LEV3(R.color.colorLevel3);
 }
 
-const val PAGE = "PAGE"
+enum class RowDay(val dayOfWeek: Int, val row: Int){
+    MONDAY(2, 0),
+    TUESDAY(3, 1),
+    WEDNESDAY(4, 2),
+    THURSDAY(5, 3),
+    FRIDAY(6, 4),
+    SATURDAY(7, 5),
+    SUNDAY(1, 6);
+}

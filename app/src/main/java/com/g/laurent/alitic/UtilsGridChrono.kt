@@ -1,7 +1,7 @@
 package com.g.laurent.alitic
 
-import com.g.laurent.alitic.Controllers.ClassControllers.DAY
 import com.g.laurent.alitic.Views.DayGrid
+import com.g.laurent.alitic.Views.RowDay
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -52,17 +52,22 @@ fun getLevel(value:Int, max:Int): DayGrid {
     return DayGrid.DONT_EXISTS
 }
 
+fun isCurrentMonth(month:Int, year:Int):Boolean{
+    val today = getTodayDate()
+    return getMonth(today) == month && getYear(today) == year
+}
+
 fun getListDayGridForGridView(listDates:List<Long>, month:Int, year:Int): List<DayGrid> {
 
+    val today = getTodayDate()
     val hashDates = getHashMapListDates(listDates)
     val result = mutableListOf<DayGrid>()
 
     val first = getFirstDateGridView(month,year)
     val last = getLastDateGridView(month, year)
-    val today = getTodayDate()
 
     val nbCol = getNumberColumnsGridView(first, last)
-    val table = Array(7) { Array(nbCol) { DayGrid.NO_EVENT_DAY} }
+    val table = Array(7) { Array(nbCol) { DayGrid.NO_EVENT_DAY } }
 
     // if current month & year, fill table with days which are not yet passed
     if(month == getMonth(today) && year == getYear(today)){
@@ -72,6 +77,7 @@ fun getListDayGridForGridView(listDates:List<Long>, month:Int, year:Int): List<D
             if(day > today){
                 val row = getRowDate(day)
                 val col = getColumnDate(day, first, nbCol)
+
                 table[row][col] = DayGrid.DONT_EXISTS
             }
             day+=DAY
@@ -86,6 +92,8 @@ fun getListDayGridForGridView(listDates:List<Long>, month:Int, year:Int): List<D
 
             val row = getRowDate(date.key)
             val col = getColumnDate(date.key, first, nbCol)
+
+            println("eee day=" + getTextDate(date.key) + "   row="+row + "     col="+col)
 
             table[row][col] = getLevel(date.value, maxCountEventByDay)
         }
@@ -126,14 +134,11 @@ fun getRowDate(date:Long):Int{
     val cal = Calendar.getInstance()
     cal.timeInMillis = date
 
-    return if(cal[Calendar.DAY_OF_WEEK]==cal.firstDayOfWeek)
-        0
-    else {
-        if(cal[Calendar.DAY_OF_WEEK] - cal.firstDayOfWeek > 0)
-            cal[Calendar.DAY_OF_WEEK] - cal.firstDayOfWeek
-        else
-            7 - cal[Calendar.DAY_OF_WEEK]
+    for (day in RowDay.values()) {
+        if(day.dayOfWeek == cal[Calendar.DAY_OF_WEEK])
+            return day.row
     }
+    return 0
 }
 
 fun getColumnDate(date:Long, first:Long, nbCol:Int):Int{
@@ -164,17 +169,24 @@ fun getFirstDateGridView(month:Int, year:Int):Long{
 fun getLastDateGridView(month:Int, year:Int):Long{
 
     val cal = Calendar.getInstance()
-    val lastDay = if(cal.firstDayOfWeek!=1)  cal.firstDayOfWeek - 1 else 1
-
     val lastDayMonth = getDateAsLong(getLastDayMonth(month, year), month, year,0,0)
+
     cal.timeInMillis = lastDayMonth
 
     return if(isLastDayOfMonthTheLastWeekDay(month, year))
         lastDayMonth
     else {
-        while(cal[Calendar.DAY_OF_WEEK] != lastDay){
-            cal.timeInMillis -= DAY
+
+        if(isCurrentMonth(month, year)){
+            while(cal[Calendar.DAY_OF_WEEK] != Calendar.SUNDAY){
+                cal.timeInMillis += DAY
+            }
+        } else {
+            while(cal[Calendar.DAY_OF_WEEK] != Calendar.SUNDAY){
+                cal.timeInMillis -= DAY
+            }
         }
+
         cal.timeInMillis
     }
 }

@@ -2,6 +2,7 @@ package com.g.laurent.alitic
 
 import android.content.Context
 import android.graphics.Color
+import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -13,6 +14,7 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.PercentFormatter
+import com.mikhaellopez.circularimageview.CircularImageView
 
 
 fun configureBigPieChart(listFoodTypes:List<FoodTypeStatEntry>, view: View, context:Context){
@@ -62,11 +64,18 @@ fun configureSmallPieChart(statEntry: FoodStatEntry, statType: StatType, view: V
 
     // Create list of bar entries
     val valueSet = listOf(PieEntry(1 - statEntry.ratio, ""), PieEntry(statEntry.ratio, ""))
+    val listColors: List<Int>
 
-    val listColors = if(statType == StatType.GLOBAL_ANALYSIS_NEG){
-        listOf(android.R.color.transparent, android.R.color.holo_red_dark)
+    if (statType == StatType.GLOBAL_ANALYSIS_NEG) {
+        listColors = listOf(android.R.color.transparent, android.R.color.holo_red_dark)
+        val red = context.resources.getColor(R.color.colorSmallPieChartNok,null)
+        view.findViewById<CircularImageView>(R.id.food_image).setBackgroundColor(red)
+        view.findViewById<CircularImageView>(R.id.white_circle).setImageDrawable(ContextCompat.getDrawable(context, R.drawable.red_circle))
     } else {
-        listOf(android.R.color.transparent, android.R.color.holo_green_dark)
+        listColors = listOf(android.R.color.transparent, android.R.color.holo_green_dark)
+        val green = context.resources.getColor(R.color.colorSmallPieChartOk,null)
+        view.findViewById<CircularImageView>(R.id.food_image).setBackgroundColor(green)
+        view.findViewById<CircularImageView>(R.id.white_circle).setImageDrawable(ContextCompat.getDrawable(context, R.drawable.green_circle))
     }
 
     val dataSet = PieDataSet(valueSet, null)

@@ -13,8 +13,10 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import com.g.laurent.alitic.DURATION_MOVE_CAMERA
 import com.g.laurent.alitic.Models.Loc
 import com.g.laurent.alitic.Models.Position
+import com.g.laurent.alitic.OPACITY_LIMIT
 import com.g.laurent.alitic.R
 
 
@@ -200,5 +202,3 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 }
 
-const val OPACITY_LIMIT = 0.25f
-const val DURATION_MOVE_CAMERA = 3000.toLong()

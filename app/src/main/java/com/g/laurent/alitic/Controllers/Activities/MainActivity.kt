@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.*
 import android.widget.*
-import com.g.laurent.alitic.R
+import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.DialogFragments.*
 import com.g.laurent.alitic.Models.*
 import kotlin.math.roundToInt
@@ -182,7 +182,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ResetDatabaseLis
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
         }
 
-        configureToolbar(toolbar, applicationContext.getString(R.string.app_name))
+        configureToolbar(toolbar, getTitleToolbarMainActivity())
 
         // Settings icon click listener
         val settingsIcon = toolbar.menu.findItem(R.id.action_settings)
@@ -194,10 +194,24 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ResetDatabaseLis
         return super.onCreateOptionsMenu(menu)
     }
 
+    private fun getTitleToolbarMainActivity():String{
+        val prefs = applicationContext.getSharedPreferences(SHAREDPREF, 0)
+        val nameUser = prefs.getString(NAME_USER, null)
+
+        return if(nameUser == null || nameUser.isEmpty()){
+            applicationContext.getString(R.string.app_name)
+        } else
+            "${applicationContext.getString(R.string.hello)} $nameUser!"
+    }
+
     private fun showSettingsDialog(){
         val fm = supportFragmentManager
         val myDialogFragment = SettingsDialog().newInstance()
         myDialogFragment.show(fm, null)
+    }
+
+    fun updateToolbarTitle() {
+        toolbar.title = getTitleToolbarMainActivity()
     }
 
     override fun emptyDatabase() {
@@ -264,13 +278,5 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ResetDatabaseLis
     }
 }
 
-const val POPULATE_DATABASE = "POPULATE_DATABASE"
-const val SHARED_PREF_SWIDTH = "sWidth"
-const val SHARED_PREF_SHEIGHT = "sHeight"
-const val SHARED_PREF_DWIDTH = "dWidth"
-const val SHARED_PREF_DHEIGHT = "dHeight"
-const val DELETE = "DELETE"
-const val UNSELECT = "UNSELECT"
-const val SELECT = "SELECT"
-const val TYPEDISPLAY = "typeDisplay"
+
 

@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.support.v7.widget.AppCompatTextView
+import android.support.v7.widget.RecyclerView
+import android.view.MotionEvent
 import com.g.laurent.alitic.R
 
 
@@ -34,5 +36,16 @@ class AppTitleTextView : AppCompatTextView {
         val customFont : String = resources.getString(R.string.Knewave_Regular)
         val tf : Typeface = Typeface.createFromAsset(context.assets, "fonts/$customFont.ttf")
         typeface = tf
+    }
+}
+
+class TimeLineRecyclerView : RecyclerView {
+
+    constructor(context: Context, attrs: AttributeSet) : this(context, attrs, 0)
+
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle)
+
+    override fun onInterceptTouchEvent(e: MotionEvent?): Boolean {
+        return super.onInterceptTouchEvent(e)
     }
 }

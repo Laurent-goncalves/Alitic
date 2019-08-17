@@ -10,6 +10,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+            <!--  TITLE  -->
             <TextView
                 android:id="@+id/foods_list_title"
                 android:layout_width="wrap_content"
@@ -30,7 +31,20 @@
                     android:layout_marginEnd="10dp"
                     android:background="#c0c0c0"/>
 
+            <TextView
+                    android:id="@+id/not_enough_data_small_piecharts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="italic"
+                    android:text="@string/not_enough_data"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:visibility="gone"/>
+
             <LinearLayout
+                android:id="@+id/content_small_piecharts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -109,6 +123,7 @@
 
             </LinearLayout>
 
+            <!--  TITLE  -->
             <TextView
                     android:id="@+id/piechart_title"
                     android:layout_width="wrap_content"
@@ -128,6 +143,18 @@
                     android:layout_marginStart="15dp"
                     android:layout_marginEnd="10dp"
                     android:background="#c0c0c0"/>
+
+            <TextView
+                    android:id="@+id/not_enough_data_big_piecharts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="italic"
+                    android:text="@string/not_enough_data"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:visibility="gone"/>
 
             <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/global_pie_chart"

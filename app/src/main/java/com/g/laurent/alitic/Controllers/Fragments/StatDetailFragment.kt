@@ -1,8 +1,5 @@
 package com.g.laurent.alitic.Controllers.Fragments
 
-import android.graphics.ColorFilter
-import android.graphics.PorterDuff
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.DrawableCompat
@@ -14,10 +11,12 @@ import android.view.ViewGroup
 import android.widget.*
 import com.g.laurent.alitic.Controllers.Activities.StatType
 import com.g.laurent.alitic.Controllers.ClassControllers.*
+import com.g.laurent.alitic.LIST_EVENT_TYPES
 import com.g.laurent.alitic.Views.StatChronoAdapter
 import com.g.laurent.alitic.createBarChartTwoColumns
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.R
+import com.github.mikephil.charting.charts.HorizontalBarChart
 import de.hdodenhof.circleimageview.CircleImageView
 
 
@@ -134,7 +133,7 @@ class StatDetailFragment : StatFragment(), AdapterView.OnItemSelectedListener {
         title.adapter = dataAdapter
     }
 
-    var init : Boolean = false
+    private var init : Boolean = false
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         if(init) {
             updateFragment(position)
@@ -158,11 +157,26 @@ class StatDetailFragment : StatFragment(), AdapterView.OnItemSelectedListener {
 
     /** CHRONOLOGY **/
     private fun configureChronology(view:View){
-        val chronology = view.findViewById<RecyclerView>(R.id.chronology)
-        val mLayoutManager = LinearLayoutManager(contextFrag, RecyclerView.HORIZONTAL, false)
-        chronology.layoutManager = mLayoutManager
-        val adapter = StatChronoAdapter(listDates, context = contextFrag)
-        chronology.adapter = adapter
+
+        fun showGraph(show:Boolean){
+            view.findViewById<TextView>(R.id.not_enough_data_chrono).visibility = if(show) View.GONE else View.VISIBLE
+            view.findViewById<LinearLayout>(R.id.chronology_layout).visibility = if(show) View.VISIBLE else View.GONE
+            view.findViewById<View>(R.id.legend_chrono).visibility = if(show) View.VISIBLE else View.GONE
+        }
+
+        if(listDates.isNotEmpty()){
+
+            showGraph(true)
+
+            val chronology = view.findViewById<RecyclerView>(R.id.chronology)
+            val mLayoutManager = LinearLayoutManager(contextFrag, RecyclerView.HORIZONTAL, false)
+            chronology.layoutManager = mLayoutManager
+            val adapter = StatChronoAdapter(listDates, context = contextFrag)
+            chronology.adapter = adapter
+
+        } else {
+            showGraph(false)
+        }
     }
 
     /** HORIZONTAL BAR CHART **/
@@ -170,7 +184,18 @@ class StatDetailFragment : StatFragment(), AdapterView.OnItemSelectedListener {
 
         val listStats = getFoodStat(statType, eventType, context = contextFrag)
 
-        // Create bar chart 2 columns (for detailed analysis)
-        createBarChartTwoColumns(listStats, view, contextFrag)
+        fun showGraph(show:Boolean){
+            view.findViewById<TextView>(R.id.not_enough_data_barchart).visibility = if(show) View.GONE else View.VISIBLE
+            view.findViewById<HorizontalBarChart>(R.id.barchart_detail_per_food).visibility = if(show) View.VISIBLE else View.GONE
+            view.findViewById<View>(R.id.legend_barchart).visibility = if(show) View.VISIBLE else View.GONE
+        }
+
+        if(listStats.isNotEmpty()){
+            // Create bar chart 2 columns (for detailed analysis)
+            showGraph(true)
+            createBarChartTwoColumns(listStats, view, contextFrag)
+        } else {
+            showGraph(false)
+        }
     }
 }

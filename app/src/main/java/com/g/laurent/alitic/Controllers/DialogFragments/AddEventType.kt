@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.*
 import com.g.laurent.alitic.Controllers.ClassControllers.*
+import com.g.laurent.alitic.EVENT_TYPE_PARAMS
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.Models.TypeDisplay
 import com.g.laurent.alitic.R
@@ -291,4 +292,4 @@ class AddEventTypeDialog : DialogFragment(), RangeSeekBar.OnRangeSeekBarChangeLi
     }
 }
 
-const val EVENT_TYPE_PARAMS = "event_type_params"
+

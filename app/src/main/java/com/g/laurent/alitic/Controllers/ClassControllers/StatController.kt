@@ -12,8 +12,6 @@ import java.text.DecimalFormat
 import java.util.*
 import kotlin.math.absoluteValue
 
-const val DAY:Long = 24*60*60*1000
-
 class FoodStatEntry(val food:Food, val ratio:Float, val counter:Counter)
 
 class Counter(var countOK:Int, var countNOK:Int)
@@ -207,9 +205,11 @@ fun getListFoodsWithCounters(statType:StatType, eventType:EventType, mode:Boolea
             val listFoodsCountTot = getListFoodOccurrenceInAllMeals(listMeals, mode, context)
 
             for(food in listFoodsCountTot.keys) {
-                if (result.containsKey(food) && listFoodsCountTot.containsKey(food)) {
+                if (result.containsKey(food)) {
                     val countTot:Int = listFoodsCountTot[food]!!
                     result[food]!!.countOK = countTot - result[food]!!.countNOK
+                } else {
+                    result[food] = Counter(1,0)
                 }
             }
         }
@@ -307,9 +307,9 @@ fun getEvolution(listDates:List<Long>, mode:Boolean = false, context:Context):Ev
             return Evolution.UNDEFINED // No value available
         } else {
             val gap = maxTime - minTime
-            val nbweeks = (gap / (7 * DAY)).toFloat()
+            val nbweeks = (gap / DAY).toFloat()
 
-            if (nbweeks < 3) {
+            if (nbweeks < DURATION_MIN_ANALYSIS_IN_DAYS) {
                 return Evolution.UNDEFINED
             } else {
                 val period: Long = (maxTime + DAY - minTime) / 10

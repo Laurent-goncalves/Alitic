@@ -10,16 +10,14 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
 import android.widget.Toast
+import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Controllers.DialogFragments.AddFoodDialog
 import com.g.laurent.alitic.Controllers.DialogFragments.MealPickDialog
-import com.g.laurent.alitic.Controllers.DialogFragments.SHAREDPREF
 import com.g.laurent.alitic.Models.*
-import com.g.laurent.alitic.R
 import com.g.laurent.alitic.Views.FoodTypeAdapter
 import com.g.laurent.alitic.Views.GridAdapter
 import com.g.laurent.alitic.Views.SaveDialog
-import com.g.laurent.alitic.Views.TAG_SCHEDULE_DIALOG
 import kotlinx.android.synthetic.main.counter_layout.*
 import kotlinx.android.synthetic.main.pick_meal_layout.*
 
