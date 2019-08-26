@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.RecyclerView
 import android.view.MotionEvent
+import android.widget.GridView
 import com.g.laurent.alitic.R
 
 
@@ -47,5 +48,17 @@ class TimeLineRecyclerView : RecyclerView {
 
     override fun onInterceptTouchEvent(e: MotionEvent?): Boolean {
         return super.onInterceptTouchEvent(e)
+    }
+}
+
+class StaticGridView : GridView {
+
+    constructor(context: Context, attrs: AttributeSet) : this(context, attrs, 0)
+
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle)
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        layoutParams.height = measuredHeight
     }
 }

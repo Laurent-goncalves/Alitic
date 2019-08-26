@@ -7,16 +7,12 @@ import kotlin.collections.HashMap
 
 fun isLastDayOfMonthTheLastWeekDay(month:Int, year:Int):Boolean{
 
-    val ref = Calendar.getInstance()
-
-    val lastDay = if(ref.firstDayOfWeek!=1)  ref.firstDayOfWeek - 1 else 1
-
     val cal = Calendar.getInstance()
     cal.set(Calendar.MONTH, month - 1)
     cal.set(Calendar.YEAR, year)
     cal.set(Calendar.DAY_OF_MONTH, getLastDayMonth(month, year))
 
-    return cal[Calendar.DAY_OF_WEEK] == lastDay
+    return cal[Calendar.DAY_OF_WEEK] == Calendar.SUNDAY
 }
 
 fun getLevel(value:Int, max:Int): DayGrid {
@@ -70,7 +66,7 @@ fun getListDayGridForGridView(listDates:List<Long>, month:Int, year:Int): List<D
     val table = Array(7) { Array(nbCol) { DayGrid.NO_EVENT_DAY } }
 
     // if current month & year, fill table with days which are not yet passed
-    if(month == getMonth(today) && year == getYear(today)){
+    if(isCurrentMonth(month,year)){
         var day = first
 
         while (day < last){
@@ -92,8 +88,6 @@ fun getListDayGridForGridView(listDates:List<Long>, month:Int, year:Int): List<D
 
             val row = getRowDate(date.key)
             val col = getColumnDate(date.key, first, nbCol)
-
-            println("eee day=" + getTextDate(date.key) + "   row="+row + "     col="+col)
 
             table[row][col] = getLevel(date.value, maxCountEventByDay)
         }
@@ -157,10 +151,10 @@ fun getFirstDateGridView(month:Int, year:Int):Long{
     val firstDayMonth = getDateAsLong(1, month, year, 0,0)
     cal.timeInMillis = firstDayMonth
 
-    return if(cal[Calendar.DAY_OF_WEEK] == cal.firstDayOfWeek)
+    return if(cal[Calendar.DAY_OF_WEEK] == Calendar.MONDAY)
         firstDayMonth
     else {
-        while(cal[Calendar.DAY_OF_WEEK] != cal.firstDayOfWeek){
+        while(cal[Calendar.DAY_OF_WEEK] != Calendar.MONDAY){
             cal.timeInMillis -= DAY
         }
         cal.timeInMillis

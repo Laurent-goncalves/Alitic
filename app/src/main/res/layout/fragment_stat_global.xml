@@ -54,21 +54,30 @@
                 <!-- LINE 1 -->
                 <LinearLayout
                         android:id="@+id/food_layout_line1"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center">
 
                     <include
                             android:id="@+id/food1"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             layout="@layout/food_stat_layout"/>
 
                     <include
                             android:id="@+id/food2"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             layout="@layout/food_stat_layout"/>
 
                     <include
                             android:id="@+id/food3"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             layout="@layout/food_stat_layout"/>
 
                 </LinearLayout>
@@ -83,18 +92,30 @@
 
                     <include
                             android:id="@+id/food4"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             layout="@layout/food_stat_layout"/>
 
                     <include
                             android:id="@+id/food5"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             layout="@layout/food_stat_layout"/>
 
                     <include
                             android:id="@+id/food6"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             layout="@layout/food_stat_layout"/>
 
                     <include
                             android:id="@+id/food7"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             layout="@layout/food_stat_layout"/>
 
                 </LinearLayout>
@@ -109,14 +130,23 @@
 
                     <include
                             android:id="@+id/food8"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             layout="@layout/food_stat_layout"/>
 
                     <include
                             android:id="@+id/food9"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             layout="@layout/food_stat_layout"/>
 
                     <include
                             android:id="@+id/food10"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             layout="@layout/food_stat_layout"/>
 
                 </LinearLayout>

@@ -54,7 +54,7 @@ class TimeLineFragment : Fragment(), OnChronoItemDeleted {
         val list = getChronology(day, month, year, context = contextTimeLine)
         val recyclerView = view.findViewById<RecyclerView>(R.id.timeline_recycler_view)
 
-        layoutManager = CustomLinearLayoutManager(contextTimeLine)
+        layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         recyclerView.layoutManager = layoutManager
         timeAdapter = TimeLineAdapter(list.toMutableList(), this, this, context = contextTimeLine)
         recyclerView.adapter = timeAdapter

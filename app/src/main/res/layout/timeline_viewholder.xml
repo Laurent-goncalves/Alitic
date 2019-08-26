@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
+    android:id="@+id/timeline_viewholder_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -17,17 +18,19 @@
             app:lineStyle="normal"/>
 
     <FrameLayout
+            android:id="@+id/framelayout_timeline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
         <RelativeLayout
+                android:id="@+id/time_chrono"
                 android:padding="5dp"
                 android:background="@color/colorTimeLineContent"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
             <ImageView
                     android:id="@+id/image_time"
@@ -47,28 +50,26 @@
                     android:textStyle="bold"
                     android:layout_toEndOf="@+id/image_time"/>
 
-            <GridView
-                    android:id="@+id/grid"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:numColumns="4"
-                    android:layout_marginTop="10dp"
-                    android:layout_below="@+id/hour"
-                    android:verticalSpacing="3dp"
-                    android:horizontalSpacing="3dp"
-                    android:scrollbars="vertical"
-                    android:fadeScrollbars="false"
-                    android:scrollbarThumbVertical="@android:color/darker_gray"/>
+
+
+        <com.g.laurent.alitic.Views.StaticGridView
+            android:id="@+id/grid"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:numColumns="4"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/hour"
+            android:verticalSpacing="3dp"/>
+
 
         </RelativeLayout>
 
-        <!--
         <ImageView
                 android:id="@+id/timeline_viewholder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"/>
--->
+
     </FrameLayout>
 
 </LinearLayout>

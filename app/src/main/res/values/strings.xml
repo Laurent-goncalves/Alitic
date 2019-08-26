@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Alitic</string>
-    <string name="save">SAVE</string>
-    <string name="cancel">Cancel</string>
+    <string name="save">ENREG.</string>
+    <string name="cancel">ANNULER</string>
     <string name="yes">OUI</string>
     <string name="no">NON</string>
     <string name="ok">OK</string>

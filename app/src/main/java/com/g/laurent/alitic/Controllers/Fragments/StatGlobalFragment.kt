@@ -79,6 +79,7 @@ class StatGlobalFragment : StatFragment() {
                 val id = contextFrag.resources.getIdentifier("food$i",  "id", contextFrag.packageName)
                 val framelayout = (foodLayout.findViewById<View>(id) as ViewGroup).getChildAt(0) as FrameLayout
                 val foodTitle = (foodLayout.findViewById<View>(id) as ViewGroup).getChildAt(1) as TextView
+                val linearLayout = view.findViewById<LinearLayout>(R.id.content_small_piecharts)
 
                 // -------------------------- Configure layout
                 val item = listFood[j]
@@ -91,7 +92,7 @@ class StatGlobalFragment : StatFragment() {
                 setImageResource(item.food.foodPic, foodPic, contextFrag)
 
                 // Set piechart around found picture
-                configureSmallPieChart(item, statType, framelayout, contextFrag)
+                configureSmallPieChart(item, statType, framelayout, linearLayout, contextFrag)
 
                 // Configure pop up menu
                 configurePopUpMenuFood(item, framelayout, view)

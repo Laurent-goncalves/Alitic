@@ -4,6 +4,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="3dp"
+        android:gravity="center_horizontal"
         android:id="@+id/linearlayout_food_stat"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical">
@@ -20,37 +21,26 @@
                 android:layout_gravity="center"/>
 
         <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/white_circle"
+                android:id="@+id/food_image"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_gravity="center"
                 android:scaleType="centerInside"
-                android:background="@drawable/circle_white"
-                app:civ_border_width="0dp"
-                app:civ_shadow="false"/>
-
-        <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/food_image"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center"
                 android:padding="5dp"
-                android:scaleType="centerInside"
                 android:background="@drawable/circle_white"
-                app:civ_border_width="0dp"
+                app:civ_border_width="5dp"
                 app:civ_shadow="false"/>
 
     </FrameLayout>
 
     <TextView
             android:id="@+id/title_food"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scrollHorizontally="false"
-            android:textStyle="bold"
             android:textSize="16sp"
             android:gravity="center"
             android:maxLines="2"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="5dp"
+            android:layout_marginHorizontal="3dp"/>
 
 </LinearLayout>

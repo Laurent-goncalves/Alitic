@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.content.ContextCompat
-import android.support.v4.view.PagerAdapter
 import android.support.v7.app.AlertDialog
 import android.view.*
 import android.widget.*
@@ -19,14 +18,15 @@ import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Controllers.Fragments.*
 import com.g.laurent.alitic.Models.*
 import com.roomorama.caldroid.CaldroidGridAdapter
-import java.time.DayOfWeek
+import kotlinx.android.synthetic.main.timeline_viewholder.view.*
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.ceil
 
 
 /** FOODTYPE ADAPTER**/
 @SuppressLint("RecyclerView")
-class FoodTypeAdapter(val list: List<FoodType>, val sWidth:Int, private val OnMenuSelectionListener: OnMenuSelectionListener, val mode:Boolean=false, val context: Context) : RecyclerView.Adapter<FoodTypeViewHolder>() {
+class FoodTypeAdapter(val list: List<FoodType>, private val OnMenuSelectionListener: OnMenuSelectionListener, val mode:Boolean=false, val context: Context) : RecyclerView.Adapter<FoodTypeViewHolder>() {
 
     var selection:Int = -1
 
@@ -60,7 +60,7 @@ class FoodTypeAdapter(val list: List<FoodType>, val sWidth:Int, private val OnMe
 }
 
 /** TIMELINE ADAPTER**/
-class TimeLineAdapter(val list: MutableList<Chrono>, val onChronoItemDeleted: OnChronoItemDeleted, val fragment:TimeLineFragment, val mode:Boolean=false, val context: Context) : RecyclerView.Adapter<TimeLineViewHolder>() {
+class TimeLineAdapter(val list: MutableList<Chrono>, private val onChronoItemDeleted: OnChronoItemDeleted, private val fragment:TimeLineFragment, val mode:Boolean=false, val context: Context) : RecyclerView.Adapter<TimeLineViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimeLineViewHolder {
         val view = View.inflate(parent.context, R.layout.timeline_viewholder, null)
@@ -73,6 +73,7 @@ class TimeLineAdapter(val list: MutableList<Chrono>, val onChronoItemDeleted: On
 
     override fun onBindViewHolder(holder: TimeLineViewHolder, position: Int) {
         holder.configureTimeLineViewHolder(list[position])
+        configureGridHeight(position, holder)
         configureDeleteAction(list[position], holder)
     }
 
@@ -146,10 +147,34 @@ class TimeLineAdapter(val list: MutableList<Chrono>, val onChronoItemDeleted: On
             true
         }
 
-        //holder.itemView.findViewById<ImageView>(R.id.timeline_viewholder).setOnLongClickListener(onLongClickListener)
+        holder.itemView.findViewById<ImageView>(R.id.timeline_viewholder).setOnLongClickListener(onLongClickListener)
     }
 
+    private fun configureGridHeight(position:Int, holder: TimeLineViewHolder){
 
+        if(list[position].item.size > 4){
+
+            val prefs = context.getSharedPreferences(SHAREDPREF, 0)
+
+            val heightGrid = prefs.getInt(SHARED_PREF_GRID_DHEIGHT,0)
+
+            if(heightGrid<=0) {
+                val vto = holder.itemView.grid.viewTreeObserver
+                vto.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+                    override fun onPreDraw(): Boolean {
+                        // Remove after the first run so it doesn't fire forever
+                        holder.itemView.grid.viewTreeObserver.removeOnPreDrawListener(this)
+                        prefs.edit().putInt(SHARED_PREF_GRID_DHEIGHT, holder.itemView.grid.layoutParams.height).apply()
+                        notifyDataSetChanged()
+                        return true
+                    }
+                })
+            } else {
+                val factor = ceil(list[position].item.size.toDouble() / 4.toDouble()).toInt()
+                holder.itemView.framelayout_timeline.layoutParams.height = factor * heightGrid + (0.6666 * heightGrid).toInt()
+            }
+        }
+    }
 }
 
 /** ADAPTER FOR GRIDVIEW TO DISPLAY PICTURE + NAME **/
@@ -300,8 +325,7 @@ class GridAdapter(private val listItems: List<*>, var listItemSelected: MutableL
                     configureAddButton(view)
                 }
                 else -> {
-                    view = inflater.inflate(R.layout.gridviewholder, parent, false)
-                    view.setBackgroundResource(android.R.color.darker_gray)
+                    view = inflater.inflate(R.layout.empty_gridviewholder, parent, false)
                 }
             }
         }
@@ -408,34 +432,6 @@ open class StatAdapter(mgr: FragmentManager, val context: Context, var position:
             1 -> context.resources.getString(StatType.GLOBAL_ANALYSIS_POS.titleTab)
             else -> context.resources.getString(StatType.DETAIL_ANALYSIS.titleTab)
         }
-    }
-}
-
-/** DETAIL STAT TITLE ADAPTER**/
-class DetailStatTitleAdapter(val list:List<String>, val context: Context, private val fragment:StatDetailFragment): PagerAdapter() {
-
-    override fun getCount(): Int {
-        return list.size
-    }
-
-    override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val inflater = LayoutInflater.from(context)
-        val layout = inflater.inflate(R.layout.title_stat_detail, container, false)
-        //setTextInEachTitle(layout, position)
-        //container.addView(layout)
-        return layout
-    }
-
-    override fun destroyItem(container: ViewGroup, position: Int, view: Any) {
-        container.removeView(view as View)
-    }
-
-    override fun isViewFromObject(p0: View, p1: Any): Boolean {
-        return p0 == p1
-    }
-
-    override fun getPageTitle(position: Int): CharSequence? {
-        return list[position]
     }
 }
 
@@ -599,11 +595,11 @@ enum class DayGrid(val colorId: Int){
 }
 
 enum class RowDay(val dayOfWeek: Int, val row: Int){
-    MONDAY(2, 0),
-    TUESDAY(3, 1),
-    WEDNESDAY(4, 2),
-    THURSDAY(5, 3),
-    FRIDAY(6, 4),
-    SATURDAY(7, 5),
-    SUNDAY(1, 6);
+    MONDAY(Calendar.MONDAY, 0),
+    TUESDAY(Calendar.TUESDAY, 1),
+    WEDNESDAY(Calendar.WEDNESDAY, 2),
+    THURSDAY(Calendar.THURSDAY, 3),
+    FRIDAY(Calendar.FRIDAY, 4),
+    SATURDAY(Calendar.SATURDAY, 5),
+    SUNDAY(Calendar.SUNDAY, 6);
 }

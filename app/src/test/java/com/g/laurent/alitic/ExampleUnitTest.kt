@@ -10,6 +10,7 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.Assert.*
 import java.util.*
+import kotlin.math.ceil
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -149,6 +150,26 @@ class ExampleUnitTest {
         firstDay = getFirstDayWeek(date)
 
         assertEquals("lun. 28 janv.", getTextDate(firstDay))
+    }
+
+    @Test
+    fun checkFactorCalculation(){
+
+        var size = 4
+        var factor = ceil(size.toDouble() / 4.toDouble()).toInt()
+        assertEquals(1, factor)
+
+        size = 10
+        factor = ceil(size.toDouble() / 4.toDouble()).toInt()
+        assertEquals(3, factor)
+
+        size = 12
+        factor = ceil(size.toDouble() / 4.toDouble()).toInt()
+        assertEquals(3, factor)
+
+        size = 13
+        factor = ceil(size.toDouble() / 4.toDouble()).toInt()
+        assertEquals(4, factor)
     }
 
     @Test

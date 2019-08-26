@@ -12,6 +12,7 @@ import android.widget.*
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.DialogFragments.*
 import com.g.laurent.alitic.Models.*
+import kotlinx.android.synthetic.main.timeline_viewholder.view.*
 import kotlin.math.roundToInt
 
 

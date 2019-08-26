@@ -16,8 +16,6 @@
         </activity>
         <activity android:name=".Controllers.Activities.PickEventActivity">
         </activity>
-        <activity android:name=".Controllers.Activities.PickActivity">
-        </activity>
         <activity android:name=".Controllers.Activities.StatActivity">
         </activity>
         <activity android:name=".Controllers.Activities.ChronoActivity">

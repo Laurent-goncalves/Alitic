@@ -39,14 +39,14 @@
         android:text="@string/button_bottom_right"
         android:drawableTop="@drawable/baseline_search_white_48"/>
 
-    <com.g.laurent.alitic.Views.AppTitleTextView
+    <ImageView
             android:id="@+id/app_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:layout_margin="10dp"
             android:text="@string/app_name"
-            android:textSize="70sp"
-            android:textColor="@color/colorPrimary"
-            app:fontNameAppTitle="Knewave-Regular"
+            android:src="@drawable/title"
             android:layout_centerInParent="true"/>
 
 </RelativeLayout>

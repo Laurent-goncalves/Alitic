@@ -16,28 +16,20 @@ class TimeLineViewHolder(itemView: View, viewType: Int, val mode:Boolean = false
 
     private var mTimelineView: TimelineView = itemView.findViewById(R.id.timeline)
     private var hourView : TextView
-    private var grid : GridView
+    private var grid : StaticGridView
 
     init {
         mTimelineView.initLine(viewType)
         hourView = itemView.findViewById(R.id.hour)
         grid = itemView.findViewById(R.id.grid)
 
-        grid.setOnTouchListener { v, e ->
-            (v.parent.parent.parent.parent as TimeLineRecyclerView).layoutManager?.canScrollVertically()
-            true
-        }
-
 
         //val scrollview = itemView.findViewById<ScrollView>(R.id.scrollview)
-/*
-        grid.setOnTouchListener { v, _ ->
-            v.parent.requestDisallowInterceptTouchEvent(false)
-            v.parent.parent.requestDisallowInterceptTouchEvent(false)
-            v.parent.parent.parent.requestDisallowInterceptTouchEvent(false)
-            v.parent.parent.parent.parent.requestDisallowInterceptTouchEvent(false)
+
+        grid.setOnTouchListener { _, event ->
+            event.action == MotionEvent.ACTION_MOVE
             true
-        }*/
+        }
     }
 
     fun configureTimeLineViewHolder(chrono: Chrono) {

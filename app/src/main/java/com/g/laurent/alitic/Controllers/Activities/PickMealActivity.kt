@@ -62,7 +62,7 @@ class PickMealActivity : PickActivity(), OnFoodToDeleteListener, OnMenuSelection
         val mLayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         food_recycler_view.layoutManager = mLayoutManager
         foodTypeSelected = listFoodType[0]
-        menuAdapter = FoodTypeAdapter(listFoodType, sWidth / 4, onMenuSelectionListener, context = context)
+        menuAdapter = FoodTypeAdapter(listFoodType, onMenuSelectionListener, context = context)
         food_recycler_view.adapter = menuAdapter
     }
 

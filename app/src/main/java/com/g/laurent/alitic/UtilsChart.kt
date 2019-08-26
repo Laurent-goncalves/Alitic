@@ -3,7 +3,9 @@ package com.g.laurent.alitic
 import android.content.Context
 import android.graphics.Color
 import android.support.v4.content.ContextCompat
+import android.util.DisplayMetrics
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.g.laurent.alitic.Controllers.Activities.StatType
@@ -15,6 +17,7 @@ import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.mikhaellopez.circularimageview.CircularImageView
+import org.apache.commons.math3.geometry.euclidean.twod.Line
 
 
 fun configureBigPieChart(listFoodTypes:List<FoodTypeStatEntry>, view: View, context:Context){
@@ -58,9 +61,30 @@ fun configureBigPieChart(listFoodTypes:List<FoodTypeStatEntry>, view: View, cont
     pieChart.invalidate()
 }
 
-fun configureSmallPieChart(statEntry: FoodStatEntry, statType: StatType, view: View, context:Context){
+fun configureSmallPieChart(statEntry: FoodStatEntry, statType: StatType, view: View, linearLayout:LinearLayout, context:Context){
 
     val pieChart: PieChart = view.findViewById(R.id.piechart_around_circle)
+    val foodImage = view.findViewById<CircularImageView>(R.id.food_image)
+
+    /*val linearLayoutParam = linearLayout.layoutParams
+
+    //val prefs = context.getSharedPreferences(SHAREDPREF, 0)
+    //val itemSize = prefs.getInt(SHARED_PREF_SWIDTH, 0) / 4
+
+    val itemSize = linearLayoutParam.width / 4
+
+    // Change width and height of piechart and food image (use default instead - see xml)
+    if(itemSize!=0){
+        val chartLayoutParam = pieChart.layoutParams
+        chartLayoutParam.width = itemSize
+        chartLayoutParam.height = itemSize
+        pieChart.layoutParams = chartLayoutParam
+
+        val foodImageLayoutParam = foodImage.layoutParams
+        chartLayoutParam.width = itemSize
+        chartLayoutParam.height = itemSize
+        foodImage.layoutParams = foodImageLayoutParam
+    }*/
 
     // Create list of bar entries
     val valueSet = listOf(PieEntry(1 - statEntry.ratio, ""), PieEntry(statEntry.ratio, ""))
@@ -69,13 +93,13 @@ fun configureSmallPieChart(statEntry: FoodStatEntry, statType: StatType, view: V
     if (statType == StatType.GLOBAL_ANALYSIS_NEG) {
         listColors = listOf(android.R.color.transparent, android.R.color.holo_red_dark)
         val red = context.resources.getColor(R.color.colorSmallPieChartNok,null)
-        view.findViewById<CircularImageView>(R.id.food_image).setBackgroundColor(red)
-        view.findViewById<CircularImageView>(R.id.white_circle).setImageDrawable(ContextCompat.getDrawable(context, R.drawable.red_circle))
+        foodImage.setBackgroundColor(red)
+        foodImage.setBorderColor(red)
     } else {
         listColors = listOf(android.R.color.transparent, android.R.color.holo_green_dark)
         val green = context.resources.getColor(R.color.colorSmallPieChartOk,null)
-        view.findViewById<CircularImageView>(R.id.food_image).setBackgroundColor(green)
-        view.findViewById<CircularImageView>(R.id.white_circle).setImageDrawable(ContextCompat.getDrawable(context, R.drawable.green_circle))
+        foodImage.setBackgroundColor(green)
+        foodImage.setBorderColor(green)
     }
 
     val dataSet = PieDataSet(valueSet, null)
@@ -86,6 +110,7 @@ fun configureSmallPieChart(statEntry: FoodStatEntry, statType: StatType, view: V
     data.dataSet = dataSet
     pieChart.data = data
     pieChart.setDrawEntryLabels(false)
+    pieChart.data.setDrawValues(false) // remove y-Values
     pieChart.isClickable = false
     pieChart.focusable = View.NOT_FOCUSABLE
     pieChart.setTouchEnabled(false)
