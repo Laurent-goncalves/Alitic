@@ -38,6 +38,7 @@
                     android:layout_toStartOf="@+id/button_yes"
                     android:text="@string/no"
                     android:layout_marginEnd="8dp"
+                    style="?android:attr/borderlessButtonStyle"
                     android:background="@android:color/white"/>
 
             <Button
@@ -47,6 +48,7 @@
                     android:layout_height="@dimen/button_height"
                     android:textColor="@android:color/white"
                     android:text="@string/yes"
+                    style="?android:attr/borderlessButtonStyle"
                     android:background="@color/colorAccent"/>
 
     </RelativeLayout>

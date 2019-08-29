@@ -114,6 +114,7 @@
             android:textColor="@android:color/white"
             android:background="@color/colorAccent"
             android:layout_below="@+id/text_click_allowance"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

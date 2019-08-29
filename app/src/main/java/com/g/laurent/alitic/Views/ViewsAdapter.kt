@@ -585,6 +585,22 @@ class MealPickAdapter(private val listSelected: MutableList<Food>, private val o
     }
 }
 
+/**  TOP 10 FOOD STAT **/
+class FoodTop10Adapter(val list:List<FoodStatEntry>, val view:View, private val statType: StatType, private val onDeleteAction:OnDeleteAction, val context: Context): RecyclerView.Adapter<FoodTop10ViewHolder>() {
+
+    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): FoodTop10ViewHolder {
+        val view = View.inflate(p0.context, R.layout.food_stat_layout, null)
+        return FoodTop10ViewHolder(view, context)
+    }
+
+    override fun getItemCount(): Int {
+        return list.size
+    }
+
+    override fun onBindViewHolder(p0: FoodTop10ViewHolder, p1: Int) {
+        p0.configureFoodTop10ViewHolder(list[p1], view, statType, onDeleteAction)
+    }
+}
 
 enum class DayGrid(val colorId: Int){
     DONT_EXISTS(android.R.color.transparent),

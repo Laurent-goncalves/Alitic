@@ -2,6 +2,8 @@ package com.g.laurent.alitic.Controllers.Fragments
 
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +12,15 @@ import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.Activities.StatType
 import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Models.EventType
+import com.g.laurent.alitic.Views.FoodTop10Adapter
 import com.github.mikephil.charting.charts.PieChart
 import com.mikhaellopez.circularimageview.CircularImageView
+import kotlinx.android.synthetic.main.food_stat_layout.*
 
 
-class StatGlobalFragment : StatFragment() {
+class StatGlobalFragment : StatFragment(), OnDeleteAction {
+
+    private val onDeleteAction = this
 
     fun newInstance(statType: StatType):StatGlobalFragment{
 
@@ -64,106 +70,73 @@ class StatGlobalFragment : StatFragment() {
 
     /** FOOD LABELS **/
     private fun configureEachFood(view:View) {
+
         val listFood = getFoodStat(statType, EventType(), context = contextFrag)
 
+        fun showGraph(show:Boolean){
+            view.findViewById<TextView>(R.id.not_enough_data_small_piecharts).visibility = if(show) View.GONE else View.VISIBLE
+            view.findViewById<RecyclerView>(R.id.food_recycler_view).visibility = if(show) View.VISIBLE else View.GONE
+        }
+
+        showGraph(listFood.isNotEmpty())
+
         if(listFood.isNotEmpty()){
-            for ((j, i) in getListUsedViewIndex(listFood.size).withIndex()) {
 
-                // --------------------------- Initialize layout
-                val foodLayout:LinearLayout = when {
-                    i<=3 -> view.findViewById(R.id.food_layout_line1)
-                    i<=7 -> view.findViewById(R.id.food_layout_line2)
-                    else -> view.findViewById(R.id.food_layout_line3)
-                }
-
-                val id = contextFrag.resources.getIdentifier("food$i",  "id", contextFrag.packageName)
-                val framelayout = (foodLayout.findViewById<View>(id) as ViewGroup).getChildAt(0) as FrameLayout
-                val foodTitle = (foodLayout.findViewById<View>(id) as ViewGroup).getChildAt(1) as TextView
-                val linearLayout = view.findViewById<LinearLayout>(R.id.content_small_piecharts)
-
-                // -------------------------- Configure layout
-                val item = listFood[j]
-
-                // Set food title
-                foodTitle.text = item.food.name
-
-                // Set food picture
-                val foodPic = framelayout.findViewById<CircularImageView>(R.id.food_image)
-                setImageResource(item.food.foodPic, foodPic, contextFrag)
-
-                // Set piechart around found picture
-                configureSmallPieChart(item, statType, framelayout, linearLayout, contextFrag)
-
-                // Configure pop up menu
-                configurePopUpMenuFood(item, framelayout, view)
-            }
-
-            for(i in getListUnusedViewIndex(listFood.size)){
-                val id = contextFrag.resources.getIdentifier("food$i",  "id", contextFrag.packageName)
-                val foodLayout:LinearLayout = when {
-                    i<=3 -> view.findViewById(R.id.food_layout_line1)
-                    i<=7 -> view.findViewById(R.id.food_layout_line2)
-                    else -> view.findViewById(R.id.food_layout_line3)
-                }
-                foodLayout.findViewById<View>(id).visibility = View.GONE
-            }
-
-        } else {
-            view.findViewById<TextView>(R.id.not_enough_data_small_piecharts).visibility = View.VISIBLE
-            view.findViewById<LinearLayout>(R.id.content_small_piecharts).visibility = View.GONE
+            val foodRecyclerView = view.findViewById<RecyclerView>(R.id.food_recycler_view)
+            val mLayoutManager = LinearLayoutManager(contextFrag, RecyclerView.HORIZONTAL, false)
+            foodRecyclerView.layoutManager = mLayoutManager
+            val adapter = FoodTop10Adapter(listFood, view, statType, onDeleteAction, context = contextFrag)
+            foodRecyclerView.adapter = adapter
         }
     }
 
-    private fun configurePopUpMenuFood(statEntry: FoodStatEntry, frameLayout:View, view:View){
-        frameLayout.findViewById<CircularImageView>(R.id.food_image).setOnLongClickListener{
-            val popupMenu = PopupMenu(activity, frameLayout)
-            popupMenu.setOnMenuItemClickListener{
+    override fun configurePopUpMenuFood(statEntry: FoodStatEntry, foodImage:View, view:View){
+        val popupMenu = PopupMenu(activity, foodImage)
+        popupMenu.setOnMenuItemClickListener{
 
-                if(it.itemId == R.id.menu_not_for_analysis){
+            if(it.itemId == R.id.menu_not_for_analysis){
 
-                    val builder = AlertDialog.Builder(contextFrag)
+                val builder = AlertDialog.Builder(contextFrag)
 
-                    // Display a message on alert dialog
-                    builder.setTitle(contextFrag.resources.getString(R.string.menu_not_for_analysis_title)) // TITLE
+                // Display a message on alert dialog
+                builder.setTitle(contextFrag.resources.getString(R.string.menu_not_for_analysis_title)) // TITLE
 
-                    val contentMessage = contextFrag.resources.getString(R.string.menu_not_for_analysis_content1) +
-                            statEntry.food.name + contextFrag.resources.getString(R.string.menu_not_for_analysis_content2)
-                    builder.setMessage(contentMessage) // MESSAGE
+                val contentMessage = contextFrag.resources.getString(R.string.menu_not_for_analysis_content1) +
+                        statEntry.food.name + contextFrag.resources.getString(R.string.menu_not_for_analysis_content2)
+                builder.setMessage(contentMessage) // MESSAGE
 
-                    // Set positive button and its click listener on alert dialog
-                    builder.setPositiveButton(contextFrag.resources.getString(R.string.yes)){ dialog, _ ->
-                        dialog.dismiss()
+                // Set positive button and its click listener on alert dialog
+                builder.setPositiveButton(contextFrag.resources.getString(R.string.yes)){ dialog, _ ->
+                    dialog.dismiss()
 
-                        // Ignore food
-                        ignoreFood(statEntry.food.id, context = contextFrag)
+                    // Ignore food
+                    ignoreFood(statEntry.food.id, context = contextFrag)
 
-                        // Update layout analysis
-                        configureEachFood(view)
-                        configureBigPieChart(view)
+                    // Update layout analysis
+                    configureEachFood(view)
+                    configureBigPieChart(view)
 
-                        // Show message to user
-                        val messageToUser = contextFrag.resources.getString(R.string.menu_not_for_analysis_confirm)
-                        Toast.makeText(contextFrag, messageToUser, Toast.LENGTH_LONG).show()
-                    }
-
-                    // Display negative button on alert dialog
-                    builder.setNegativeButton(contextFrag.resources.getString(R.string.no)){ dialog, _ ->
-                        dialog.dismiss()
-                    }
-
-                    // Finally, make the alert dialog using builder
-                    val dialog: AlertDialog = builder.create()
-
-                    // Display the alert dialog on app interface
-                    dialog.show()
+                    // Show message to user
+                    val messageToUser = contextFrag.resources.getString(R.string.menu_not_for_analysis_confirm)
+                    Toast.makeText(contextFrag, messageToUser, Toast.LENGTH_LONG).show()
                 }
 
-                true
+                // Display negative button on alert dialog
+                builder.setNegativeButton(contextFrag.resources.getString(R.string.no)){ dialog, _ ->
+                    dialog.dismiss()
+                }
+
+                // Finally, make the alert dialog using builder
+                val dialog: AlertDialog = builder.create()
+
+                // Display the alert dialog on app interface
+                dialog.show()
             }
-            popupMenu.inflate(R.menu.menu_stats)
-            popupMenu.show()
+
             true
         }
+        popupMenu.inflate(R.menu.menu_stats)
+        popupMenu.show()
     }
 
     /** PIE CHART FOODTYPES **/
@@ -178,4 +151,8 @@ class StatGlobalFragment : StatFragment() {
             view.findViewById<PieChart>(R.id.global_pie_chart).visibility = View.GONE
         }
     }
+}
+
+interface OnDeleteAction {
+    fun configurePopUpMenuFood(statEntry: FoodStatEntry, foodImage:View, view:View)
 }

@@ -3,13 +3,17 @@ package com.g.laurent.alitic.Views
 import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
-import android.view.MotionEvent
 import android.view.View
 import android.widget.*
 import com.g.laurent.alitic.*
+import com.g.laurent.alitic.Controllers.Activities.StatType
 import com.g.laurent.alitic.Controllers.ClassControllers.Chrono
+import com.g.laurent.alitic.Controllers.ClassControllers.FoodStatEntry
+import com.g.laurent.alitic.Controllers.Fragments.OnDeleteAction
 import com.g.laurent.alitic.Models.FoodType
+import com.github.mikephil.charting.charts.PieChart
 import com.github.vipulasri.timelineview.TimelineView
+import com.mikhaellopez.circularimageview.CircularImageView
 
 
 class TimeLineViewHolder(itemView: View, viewType: Int, val mode:Boolean = false, val context: Context) : RecyclerView.ViewHolder(itemView) {
@@ -22,14 +26,6 @@ class TimeLineViewHolder(itemView: View, viewType: Int, val mode:Boolean = false
         mTimelineView.initLine(viewType)
         hourView = itemView.findViewById(R.id.hour)
         grid = itemView.findViewById(R.id.grid)
-
-
-        //val scrollview = itemView.findViewById<ScrollView>(R.id.scrollview)
-
-        grid.setOnTouchListener { _, event ->
-            event.action == MotionEvent.ACTION_MOVE
-            true
-        }
     }
 
     fun configureTimeLineViewHolder(chrono: Chrono) {
@@ -86,4 +82,28 @@ class MealPickViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
 class StatChronoHolder(itemView: View): RecyclerView.ViewHolder(itemView){
     var monthView: TextView = itemView.findViewById(R.id.month_text)
     var gridView: GridView = itemView.findViewById(R.id.grid_month)
+}
+
+class FoodTop10ViewHolder(itemView: View, val context: Context) : RecyclerView.ViewHolder(itemView) {
+
+    private var titleFood: TextView = itemView.findViewById(R.id.title_food)
+    private var imageFood : ImageView =  itemView.findViewById(R.id.food_image)
+
+    fun configureFoodTop10ViewHolder(foodStatEntry: FoodStatEntry, view:View, statType:StatType, onDeleteAction: OnDeleteAction) {
+
+        // Set food title
+        titleFood.text = foodStatEntry.food.name
+
+        // Set food picture
+        setImageResource(foodStatEntry.food.foodPic, imageFood, context)
+
+        // Set piechart around found picture
+        configureSmallPieChart(foodStatEntry, statType, itemView, context)
+
+        // Configure pop up menu
+        imageFood.setOnLongClickListener {
+            onDeleteAction.configurePopUpMenuFood(foodStatEntry, itemView, view)
+            true
+        }
+    }
 }

@@ -2,10 +2,9 @@ package com.g.laurent.alitic
 
 import android.content.Context
 import android.graphics.Color
-import android.support.v4.content.ContextCompat
-import android.util.DisplayMetrics
+import android.graphics.drawable.ColorDrawable
 import android.view.View
-import android.widget.LinearLayout
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.g.laurent.alitic.Controllers.Activities.StatType
@@ -17,7 +16,6 @@ import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.mikhaellopez.circularimageview.CircularImageView
-import org.apache.commons.math3.geometry.euclidean.twod.Line
 
 
 fun configureBigPieChart(listFoodTypes:List<FoodTypeStatEntry>, view: View, context:Context){
@@ -30,7 +28,7 @@ fun configureBigPieChart(listFoodTypes:List<FoodTypeStatEntry>, view: View, cont
     val listColors = mutableListOf<Int>()
 
     if(listFoodTypes.isNotEmpty()){
-        for(i in 0 until listFoodTypes.size) {
+        for(i in listFoodTypes.indices) {
             valueSet.add(PieEntry(listFoodTypes[i].ratio.toFloat() * 100, listFoodTypes[i].foodType.name))
             // Add foodtype color
             listColors.add(listFoodTypes[i].foodType.foodTypeColor)
@@ -61,30 +59,10 @@ fun configureBigPieChart(listFoodTypes:List<FoodTypeStatEntry>, view: View, cont
     pieChart.invalidate()
 }
 
-fun configureSmallPieChart(statEntry: FoodStatEntry, statType: StatType, view: View, linearLayout:LinearLayout, context:Context){
+fun configureSmallPieChart(statEntry: FoodStatEntry, statType: StatType, view: View, context:Context){
 
     val pieChart: PieChart = view.findViewById(R.id.piechart_around_circle)
-    val foodImage = view.findViewById<CircularImageView>(R.id.food_image)
-
-    /*val linearLayoutParam = linearLayout.layoutParams
-
-    //val prefs = context.getSharedPreferences(SHAREDPREF, 0)
-    //val itemSize = prefs.getInt(SHARED_PREF_SWIDTH, 0) / 4
-
-    val itemSize = linearLayoutParam.width / 4
-
-    // Change width and height of piechart and food image (use default instead - see xml)
-    if(itemSize!=0){
-        val chartLayoutParam = pieChart.layoutParams
-        chartLayoutParam.width = itemSize
-        chartLayoutParam.height = itemSize
-        pieChart.layoutParams = chartLayoutParam
-
-        val foodImageLayoutParam = foodImage.layoutParams
-        chartLayoutParam.width = itemSize
-        chartLayoutParam.height = itemSize
-        foodImage.layoutParams = foodImageLayoutParam
-    }*/
+    val foodImage = view.findViewById<ImageView>(R.id.bg_food_image)
 
     // Create list of bar entries
     val valueSet = listOf(PieEntry(1 - statEntry.ratio, ""), PieEntry(statEntry.ratio, ""))
@@ -93,13 +71,11 @@ fun configureSmallPieChart(statEntry: FoodStatEntry, statType: StatType, view: V
     if (statType == StatType.GLOBAL_ANALYSIS_NEG) {
         listColors = listOf(android.R.color.transparent, android.R.color.holo_red_dark)
         val red = context.resources.getColor(R.color.colorSmallPieChartNok,null)
-        foodImage.setBackgroundColor(red)
-        foodImage.setBorderColor(red)
+        foodImage.setColorFilter(red)
     } else {
         listColors = listOf(android.R.color.transparent, android.R.color.holo_green_dark)
         val green = context.resources.getColor(R.color.colorSmallPieChartOk,null)
-        foodImage.setBackgroundColor(green)
-        foodImage.setBorderColor(green)
+        foodImage.setColorFilter(green)
     }
 
     val dataSet = PieDataSet(valueSet, null)
@@ -118,36 +94,6 @@ fun configureSmallPieChart(statEntry: FoodStatEntry, statType: StatType, view: V
     pieChart.isRotationEnabled = false
     pieChart.description.isEnabled = false
     pieChart.invalidate()
-}
-
-fun getListUsedViewIndex(size:Int):List<Int>{
-    return when(size){
-        1 -> listOf(1)
-        2 -> listOf(1,2)
-        3 -> listOf(1,2,3)
-        4 -> listOf(1,2,4,5)
-        5 -> listOf(1,2,3,4,5)
-        6 -> listOf(1,2,3,4,5,6)
-        7 -> listOf(1,2,4,5,6,8,9)
-        8 -> listOf(1,2,3,4,5,6,8,9)
-        9 -> listOf(1,2,3,4,5,6,8,9,10)
-        else -> listOf(1,2,3,4,5,6,7,8,9,10)
-    }
-}
-
-fun getListUnusedViewIndex(size:Int):List<Int>{
-    return when(size){
-        1 -> listOf(2,3,4,5,6,7,8,9,10)
-        2 -> listOf(3,4,5,6,7,8,9,10)
-        3 -> listOf(4,5,6,7,8,9,10)
-        4 -> listOf(3,6,7,8,9,10)
-        5 -> listOf(6,7,8,9,10)
-        6 -> listOf(7,8,9,10)
-        7 -> listOf(3,7,10)
-        8 -> listOf(7,10)
-        9 -> listOf(7)
-        else -> listOf()
-    }
 }
 
 fun createBarChartTwoColumns(listStats:List<FoodStatEntry>, view: View, context:Context){

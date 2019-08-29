@@ -3,7 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="3dp"
+        android:layout_margin="10dp"
         android:gravity="center_horizontal"
         android:id="@+id/linearlayout_food_stat"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,8 +11,8 @@
 
     <FrameLayout
             android:id="@+id/framelayout_food_stat"
-            android:layout_width="90dp"
-            android:layout_height="90dp">
+            android:layout_width="110dp"
+            android:layout_height="110dp">
 
         <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/piechart_around_circle"
@@ -20,26 +20,31 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"/>
 
-        <com.mikhaellopez.circularimageview.CircularImageView
+        <ImageView
+                android:id="@+id/bg_food_image"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_gravity="center"
+                android:src="@drawable/circle_white"/>
+
+        <ImageView
                 android:id="@+id/food_image"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_gravity="center"
-                android:scaleType="centerInside"
-                android:padding="5dp"
-                android:background="@drawable/circle_white"
-                app:civ_border_width="5dp"
-                app:civ_shadow="false"/>
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"/>
 
     </FrameLayout>
 
     <TextView
             android:id="@+id/title_food"
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:gravity="center"
             android:maxLines="2"
+            android:textStyle="bold"
             android:layout_marginTop="5dp"
             android:layout_marginHorizontal="3dp"/>
 

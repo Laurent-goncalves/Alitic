@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.Toast
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.ClassControllers.*
@@ -106,7 +107,14 @@ class PickMealActivity : PickActivity(), OnFoodToDeleteListener, OnMenuSelection
 
         searchIcon.isVisible = true
 
-        (searchIcon.actionView as SearchView).setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        val searchView = (searchIcon.actionView as SearchView)
+
+        fun hideKeyboard() {
+            val imm : InputMethodManager= context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(searchView.windowToken, 0)
+        }
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(newText: String): Boolean {
 
@@ -121,11 +129,17 @@ class PickMealActivity : PickActivity(), OnFoodToDeleteListener, OnMenuSelection
             }
         })
 
-        (searchIcon.actionView as SearchView).setOnCloseListener {
+        searchView.setOnCloseListener {
             resetMealPickingScreenAfterSearch()
+            searchView.clearFocus()
             true
         }
 
+        searchView.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if(!hasFocus){
+                hideKeyboard()
+            }
+        }
 
         return super.onCreateOptionsMenu(menu)
     }

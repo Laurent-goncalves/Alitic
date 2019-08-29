@@ -6,10 +6,21 @@
          android:background="@android:color/white"
          android:padding="30dp">
 
+    <TextView
+            android:id="@+id/text_select_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="@string/select_time_date"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp"/>
+
+
     <LinearLayout
         android:id="@+id/date_picker_layout"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/text_select_date"
         android:orientation="vertical">
 
         <TextView
@@ -43,6 +54,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginStart="20dp"
+            android:layout_below="@+id/text_select_date"
             android:layout_toEndOf="@+id/date_picker_layout">
 
         <TextView
@@ -79,6 +91,7 @@
             android:background="@android:color/white"
             android:layout_below="@id/time_picker_layout"
             android:layout_marginTop="20dp"
+            style="?android:attr/borderlessButtonStyle"
             android:text="@string/save"/>
 
 </RelativeLayout>

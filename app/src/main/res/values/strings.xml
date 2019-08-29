@@ -62,7 +62,8 @@
     <string name="panel_title">Mon repas</string>
     <string name="message_no_food">aucun aliment sélectionné</string>
     <string name="date">Date</string>
-    <string name="time">Time</string>
+    <string name="time">Heure</string>
+    <string name="select_time_date">Sélectionner une date et une heure.</string>
 
     <integer name="duration_anim">500</integer>
 

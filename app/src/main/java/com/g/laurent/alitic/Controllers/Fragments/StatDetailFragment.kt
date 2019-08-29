@@ -164,18 +164,15 @@ class StatDetailFragment : StatFragment(), AdapterView.OnItemSelectedListener {
             view.findViewById<View>(R.id.legend_chrono).visibility = if(show) View.VISIBLE else View.GONE
         }
 
-        if(listDates.isNotEmpty()){
+        showGraph(listDates.isNotEmpty())
 
-            showGraph(true)
+        if(listDates.isNotEmpty()){
 
             val chronology = view.findViewById<RecyclerView>(R.id.chronology)
             val mLayoutManager = LinearLayoutManager(contextFrag, RecyclerView.HORIZONTAL, false)
             chronology.layoutManager = mLayoutManager
             val adapter = StatChronoAdapter(listDates, context = contextFrag)
             chronology.adapter = adapter
-
-        } else {
-            showGraph(false)
         }
     }
 
