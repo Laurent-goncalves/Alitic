@@ -9,7 +9,6 @@ import android.view.Menu
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
-import android.widget.ImageView
 import android.widget.Toast
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.ClassControllers.*

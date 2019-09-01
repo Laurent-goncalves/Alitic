@@ -68,10 +68,19 @@ class AddFoodDialog : DialogFragment(){
     }
 
     private fun configureViews(view: View) {
+        configureTitle(view)
         configureChoiceFoodType(view)
         configureCheckBox(view)
         configureFieldName(view)
-        configureButtonSave(view)
+        configureButtons(view)
+    }
+
+    private fun configureTitle(view: View) {
+        if(foodToSave.id == null) {
+            view.findViewById<TextView>(R.id.title).text = contextDialog.resources.getString(R.string.addfood)
+        } else {
+            view.findViewById<TextView>(R.id.title).text = contextDialog.resources.getString(R.string.modifyfood)
+        }
     }
 
     private fun configureFieldName(view: View){
@@ -182,7 +191,11 @@ class AddFoodDialog : DialogFragment(){
         return true
     }
 
-    private fun configureButtonSave(view: View) {
+    private fun configureButtons(view: View) {
+
+        view.findViewById<Button>(R.id.button_cancel).setOnClickListener {
+            dismiss()
+        }
 
         val buttonSave = view.findViewById<Button>(R.id.button_save_food)
         buttonSave.setOnClickListener {

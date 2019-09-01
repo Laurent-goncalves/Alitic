@@ -173,6 +173,25 @@ abstract class PickActivity : BaseActivity(), DialogCloseListener {
 
     fun updateListSelected(any:Any, list:MutableList<Any>?):MutableList<Any>{
 
+        fun isAlreadySelected(idSelected:Long?,  list:MutableList<Any>?):Boolean{
+
+            if(idSelected!=null && list!=null){
+                for(item in list){
+                    when(item){
+                        is Food -> {
+                            if(item.id == idSelected)
+                                return true
+                        }
+                        is EventType -> {
+                            if(item.id == idSelected)
+                                return true
+                        }
+                    }
+                }
+            }
+            return false
+        }
+
         val listUpdated = mutableListOf<Any>()
 
         if(list!=null)
@@ -207,26 +226,6 @@ abstract class PickActivity : BaseActivity(), DialogCloseListener {
 
         return listUpdated
     }
-
-    fun isAlreadySelected(idSelected:Long?,  list:MutableList<Any>?):Boolean{
-
-        if(idSelected!=null && list!=null){
-            for(item in list){
-                when(item){
-                    is Food -> {
-                        if(item.id == idSelected)
-                            return true
-                    }
-                    is EventType -> {
-                        if(item.id == idSelected)
-                            return true
-                    }
-                }
-            }
-        }
-        return false
-    }
-
 }
 
 interface OnMenuSelectionListener {
@@ -241,8 +240,6 @@ interface OnActionPickListener {
     fun showPopUpMenu(view:View, any : Any)
 
     fun updateListSelected(any:Any, list:MutableList<Any>?):MutableList<Any>
-
-    fun isAlreadySelected(idSelected:Long?,  list:MutableList<Any>?):Boolean
 }
 
 interface OnFoodToDeleteListener {

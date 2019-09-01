@@ -6,7 +6,6 @@
         android:layout_margin="10dp"
         android:gravity="center_horizontal"
         android:id="@+id/linearlayout_food_stat"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical">
 
     <FrameLayout

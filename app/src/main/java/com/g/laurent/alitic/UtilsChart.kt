@@ -2,7 +2,6 @@ package com.g.laurent.alitic
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -15,7 +14,6 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.PercentFormatter
-import com.mikhaellopez.circularimageview.CircularImageView
 
 
 fun configureBigPieChart(listFoodTypes:List<FoodTypeStatEntry>, view: View, context:Context){

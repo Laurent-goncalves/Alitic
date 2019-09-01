@@ -2,6 +2,7 @@ package com.g.laurent.alitic.Controllers.ClassControllers
 
 import android.content.Context
 import com.g.laurent.alitic.Models.*
+import java.util.*
 
 // ---------------------------------------------------------------------------------------------------------------
 // ------------------------------------------- FOOD --------------------------------------------------------------
@@ -36,7 +37,7 @@ fun getListFood(word:String, mode:Boolean = false, context:Context):List<Food>?{
     AppDataBase.TEST_MODE = mode
     val foodDao = AppDataBase.getInstance(context)?.foodDao()
     val keywordDao = AppDataBase.getInstance(context)?.keywordDao()
-    val search = "${word.toLowerCase()}%"
+    val search = "${word.toLowerCase(Locale.FRANCE)}%"
 
     if(foodDao!=null) {
 
@@ -108,19 +109,6 @@ fun getFoodType(idFoodType:Long?, mode:Boolean = false, context:Context):FoodTyp
     AppDataBase.TEST_MODE = mode
     val foodTypeDao = AppDataBase.getInstance(context)?.foodTypeDao()
     return foodTypeDao?.getFoodType(idFoodType)
-}
-
-fun getFoodTypeFromFood(idFood: Long?, mode:Boolean = false, context:Context):FoodType?{
-
-    AppDataBase.TEST_MODE = mode
-    // Recover food from idFood
-    val food = getFood(idFood, mode, context)
-
-    // Recover foodtype
-    if(food!=null){
-        return getFoodType(food.idFoodType, mode, context)
-    }
-    return null
 }
 
 fun getFoodType(nameFoodType:String?, mode:Boolean = false, context:Context):FoodType?{

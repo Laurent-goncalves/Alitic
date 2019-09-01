@@ -11,6 +11,7 @@ import com.g.laurent.alitic.Views.CalendarAdapter
 import com.g.laurent.alitic.getMonth
 import com.g.laurent.alitic.getYear
 import com.roomorama.caldroid.CaldroidFragment
+import com.roomorama.caldroid.CaldroidListener
 import hirondelle.date4j.DateTime
 import java.util.*
 
@@ -20,10 +21,10 @@ class ChronoFragment : CaldroidFragment() {
     private lateinit var contextFragment:Context
     private lateinit var onTimeLineDisplay:OnTimeLineDisplay
     private lateinit var onCalendarLoaded:OnCalendarLoaded
-    lateinit var calendarAdapter:CalendarAdapter
+    private lateinit var calendarAdapter:CalendarAdapter
     lateinit var chronoEvents:List<DateTime>
     lateinit var chronoMeals:List<DateTime>
-    var dateSelected:Long? = null
+    private var dateSelected:Long? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -48,16 +49,18 @@ class ChronoFragment : CaldroidFragment() {
         args.putBoolean(DISABLE_DATES, false)
         this.arguments = args
 
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
+        this.caldroidListener = object:CaldroidListener(){
+            override fun onSelectDate(date: Date?, view: View?) {
+                // NO IMPLEMENTATION
+            }
 
-    fun updateData(dateSelected:Long?){
-        if(::calendarAdapter.isInitialized && dateSelected!=null){
-            chronoEvents = updateChronoEvents(chronoEvents.toMutableList(), dateSelected, context = contextFragment)
-            chronoMeals = updateChonoMeals(chronoMeals.toMutableList(), dateSelected, context = contextFragment)
-            this.dateSelected = dateSelected
-            calendarAdapter.notifyDataSetChanged()
+            override fun onChangeMonth(month: Int, year: Int) {
+                super.onChangeMonth(month, year)
+                getNewDatesGridAdapter(month, year)
+            }
         }
+
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun getNewDatesGridAdapter(month: Int, year: Int): CalendarAdapter {
@@ -65,11 +68,10 @@ class ChronoFragment : CaldroidFragment() {
         calendarAdapter = CalendarAdapter(this,
             contextFragment,
             onTimeLineDisplay,
-            this.month,
-            this.year,
+            month,
+            year,
             false,
-            getCaldroidData(),
-            HashMap()
+            getCaldroidData(), extraData
         )
 
         onCalendarLoaded.calendarLoaded()

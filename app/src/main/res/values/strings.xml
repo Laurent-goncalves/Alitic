@@ -47,6 +47,8 @@
     <string name="menu_delete">Supprimer</string>
     <string name="menu_modify">Modifier paramètres</string>
 
+    <string name="nom_de_l_aliment">Nom de l\'aliment:</string>
+
     <string name="food_delete_title">Suppression aliment</string>
     <string name="meal_delete_title">Suppression repas</string>
     <string name="event_type_delete_title">Suppression ressenti</string>
@@ -105,8 +107,12 @@
     <string name="name_addeventtype">Entrer un type de ressenti</string>
     <string name="time_occurrence_add_eventtype">Temps d\'apparition du ressenti après repas</string>
     <string name="name_addfood">Entrer un nom</string>
+
     <string name="addfood">Ajouter un aliment</string>
     <string name="addeventtype">Ajouter un ressenti</string>
+    <string name="modifyfood">Modifier un aliment</string>
+    <string name="modifyeventtype">Modifier un ressenti</string>
+
     <string name="foodtype_addfood">Type d\'aliment:</string>
     <string name="take_into_account_addfood">Prendre en compte pour l\'analyse ?</string>
     <string name="take_last_meal_add_eventtype">Prendre dernier repas avant apparition</string>
@@ -144,9 +150,26 @@
     </string>
     <string name="excel_file_name">Données_Alitic.xls</string>
 
+    <string name="settings_foods_text">Paramètres des aliments</string>
+    <string name="settings_events_text">Paramètres des ressentis</string>
+
+    <string name="no_foodtype_found">Pas de type d\'aliment trouvé. Impossible d\'afficher les paramètres</string>
+    <string name="no_eventtype_found">Pas de type de ressenti trouvé. Impossible d\'afficher les paramètres</string>
+    <string name="food_settings_header_col_start">Aliment</string>
+    <string name="food_settings_header_col_end">Pris en compte?</string>
+    <string name="event_settings_header_col_start">Ressenti</string>
+    <string name="event_settings_header_col_end">Modalités de prise en compte</string>
+    <string name="settings_saved">Paramètres enregistrés</string>
+    <string name="quit">Quitter</string>
+    <string name="for_last_meal">Lié au dernier repas</string>
+    <string name="undefined">Indéfini</string>
+    <string name="occur_between">Apparaît entre</string>
+    <string name="and">et</string>
+    <string name="hrs_after_meal">hrs après un repas</string>
+
     <string name="col_date_meal">Date Repas</string>
     <string name="col_date_meal_long">Date Repas (en ms)</string>
-    <string name="col_foodtype">Type aliment</string>
+    <string name="col_foodtype">Type d\'aliment</string>
     <string name="col_foods">Aliments</string>
     <string name="col_food_taken_into_acc">Aliment pris en compte pour l\'analyse?</string>
     <string name="col_date_event">Date Ressenti</string>
@@ -160,7 +183,7 @@
     <string name="confirmation_data_reset">Etes-vous sûr de vouloir supprimer de la base de données tous les ressentis
         et repas que vous avez renseignés? Les données seront définitivement perdues. Avant suppression, vous avez la
         possibilité d\'exporter les
-        données sous excel dans le menu paramètres. \n \n Les aliments et types de ressenti ajoutés seront aussi
+        données sous excel dans le menu paramètres.\n\nLes aliments et types de ressenti ajoutés seront aussi
         supprimés.
     </string>
     <string name="data_reset">Tous les ressentis et repas ont été supprimés de la base de données.</string>
@@ -283,6 +306,7 @@
         10 aliments, qui correspondent aux aliments causant le plus de ressentis.
     </string>
     <string name="hello">Hello</string>
+
 
 
 </resources>

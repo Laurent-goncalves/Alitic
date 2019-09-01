@@ -8,7 +8,6 @@ import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Models.AppDataBase
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.Models.Food
-import com.g.laurent.alitic.Models.MealItem
 import org.junit.After
 import org.junit.Assert
 import org.junit.Assert.*

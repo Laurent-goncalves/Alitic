@@ -32,6 +32,12 @@
         <item name="android:background">@drawable/spinner_background</item>
     </style>
 
+    <!-- Custom Spinner dropdown background theme. -->
+    <style name="SpinnerSetting" parent="@style/Widget.AppCompat.Spinner">
+        <item name="overlapAnchor">true</item>
+        <item name="android:background">@drawable/spinner_settings_background</item>
+    </style>
+
     <!-- Style for Caldroid fragment (Calendar). -->
     <style name="CaldroidDefaultDark" parent="CaldroidDefault">
         <item name="styleCaldroidViewLayout">@style/CaldroidDefaultDarkCalendarViewLayout</item>

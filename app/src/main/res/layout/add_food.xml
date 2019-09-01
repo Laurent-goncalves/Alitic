@@ -7,46 +7,46 @@
         android:orientation="vertical">
 
     <TextView
+            android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/addfood"
             android:textStyle="bold"
-            android:textSize="20sp"/>
+            android:textSize="22sp"/>
 
     <!--NAME FOOD -->
     <EditText
             android:id="@+id/field_name_food"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
             android:hint="@string/name_addfood"
-            android:inputType="text"/>
-
-    <!--SELECT FOODTYPE -->
-    <TextView
-            android:id="@+id/foodtype_select"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="@string/foodtype_addfood"/>
+            android:importantForAutofill="no"
+            android:backgroundTint="@color/colorAccent"
+            android:inputType="text"/>
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="3"
-            android:layout_marginTop="15dp">
+            android:layout_marginTop="15dp"
+            android:gravity="center_vertical">
+
+        <!--SELECT FOODTYPE -->
+        <TextView
+                android:id="@+id/foodtype_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
+                android:text="@string/foodtype_addfood"/>
 
         <Spinner
                 android:id="@+id/field_foodtype"
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"/>
-
-        <View
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="0dp"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorAccent"/>
 
     </LinearLayout>
 
@@ -55,19 +55,40 @@
             android:id="@+id/count_for_analysis"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/colorAccent"
             android:text="@string/take_into_account_addfood"
             android:layout_marginTop="15dp"/>
 
-    <!-- BUTTON SAVE -->
-    <Button
-            android:id="@+id/button_save_food"
-            android:layout_width="@dimen/button_width"
-            android:layout_height="@dimen/button_height"
-            android:layout_gravity="end|bottom"
-            android:layout_marginTop="15dp"
-            android:text="@string/save"
-            style="?android:attr/borderlessButtonStyle"
-            android:textColor="@color/colorAccent"
-            android:background="@android:color/white"/>
+    <!-- BUTTONS -->
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="end"
+            android:orientation="horizontal">
+
+        <!-- BUTTON QUIT -->
+        <Button
+                android:id="@+id/button_cancel"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
+                android:text="@string/cancel"
+                android:textColor="@color/colorAccent"
+                style="?android:attr/borderlessButtonStyle"
+                android:background="@android:color/white"/>
+
+        <!-- BUTTON SAVE -->
+        <Button
+                android:id="@+id/button_save_food"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginStart="10dp"
+                android:text="@string/save"
+                android:textColor="@android:color/white"
+                style="?android:attr/borderlessButtonStyle"
+                android:background="@color/colorAccent"/>
+
+    </LinearLayout>
+
 
 </LinearLayout>

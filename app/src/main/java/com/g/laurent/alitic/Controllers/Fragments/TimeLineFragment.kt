@@ -9,10 +9,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.GridView
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import com.g.laurent.alitic.Controllers.ClassControllers.Chrono
 import com.g.laurent.alitic.Controllers.ClassControllers.getChronology
 import com.g.laurent.alitic.DAY_ARGS
@@ -58,23 +54,6 @@ class TimeLineFragment : Fragment(), OnChronoItemDeleted {
         recyclerView.layoutManager = layoutManager
         timeAdapter = TimeLineAdapter(list.toMutableList(), this, this, context = contextTimeLine)
         recyclerView.adapter = timeAdapter
-    }
-
-
-    class CustomLinearLayoutManager(context: Context):LinearLayoutManager(context, RecyclerView.VERTICAL, false){
-
-        override fun canScrollVertically(): Boolean {
-
-                for(i in 0 .. this.childCount){
-
-                    val gridview = (((this.getChildAt(i) as LinearLayout).getChildAt(1) as FrameLayout).getChildAt(0) as RelativeLayout).getChildAt(2) as GridView
-
-                    if(gridview.isInTouchMode)
-                        return false
-                }
-
-            return true
-        }
     }
 
     override fun chronoItemDeleted(chrono:Chrono) {

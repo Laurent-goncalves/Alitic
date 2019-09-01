@@ -15,6 +15,7 @@ import android.widget.*
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.Activities.*
 import com.g.laurent.alitic.Controllers.ClassControllers.*
+import com.g.laurent.alitic.Controllers.DialogFragments.OnChangeStateForAnalysis
 import com.g.laurent.alitic.Controllers.Fragments.*
 import com.g.laurent.alitic.Models.*
 import com.roomorama.caldroid.CaldroidGridAdapter
@@ -86,11 +87,11 @@ class TimeLineAdapter(val list: MutableList<Chrono>, private val onChronoItemDel
         val onLongClickListener = View.OnLongClickListener {
 
             val popupMenu = PopupMenu(fragment.context, it, Gravity.CENTER)
-            popupMenu.setOnMenuItemClickListener {
+            popupMenu.setOnMenuItemClickListener { item ->
 
                 val context = this.context
 
-                if (it.itemId == R.id.menu_delete && chrono.item.isNotEmpty()) {
+                if (item.itemId == R.id.menu_delete && chrono.item.isNotEmpty()) {
 
                     val builder = AlertDialog.Builder(context)
 
@@ -215,6 +216,25 @@ class GridAdapter(private val listItems: List<*>, var listItemSelected: MutableL
 
         fun setPickItem(frame:FrameLayout, pickIcon:ImageView){
 
+            fun isAlreadySelected(idSelected:Long?,  list:MutableList<Any>?):Boolean{
+
+                if(idSelected!=null && list!=null){
+                    for(item in list){
+                        when(item){
+                            is Food -> {
+                                if(item.id == idSelected)
+                                    return true
+                            }
+                            is EventType -> {
+                                if(item.id == idSelected)
+                                    return true
+                            }
+                        }
+                    }
+                }
+                return false
+            }
+
             fun selectItem(select:Boolean){
                 if(select){
                     frame.setBackgroundResource(R.drawable.border_validation)
@@ -229,11 +249,11 @@ class GridAdapter(private val listItems: List<*>, var listItemSelected: MutableL
                 when (listItems[position]) {
                     is EventType -> { // if eventType
                         val eventType = listItems[position] as EventType
-                        selectItem(onActionPickListener.isAlreadySelected(eventType.id, listItemSelected))
+                        selectItem(isAlreadySelected(eventType.id, listItemSelected))
                     }
                     is Food -> {
                         val food = listItems[position] as Food
-                        selectItem(onActionPickListener.isAlreadySelected(food.id, listItemSelected))
+                        selectItem(isAlreadySelected(food.id, listItemSelected))
                     }
                 }
             }
@@ -353,7 +373,6 @@ class CalendarAdapter(private val frag:ChronoFragment, context: Context, private
             val view = inflater.inflate(R.layout.calendar_item, parent, false)
             val holder = ChronoViewHolder(view)
             val dateTime = this.datetimeList[position]
-
 
             // Change content of textview and imageview
             if (dateTime.month == month) {
@@ -599,6 +618,52 @@ class FoodTop10Adapter(val list:List<FoodStatEntry>, val view:View, private val 
 
     override fun onBindViewHolder(p0: FoodTop10ViewHolder, p1: Int) {
         p0.configureFoodTop10ViewHolder(list[p1], view, statType, onDeleteAction)
+    }
+}
+
+/**  FOOD SETTINGS **/
+class FoodSettingsAdapter(val list:List<Food>, private val onChangeStateForAnalysis: OnChangeStateForAnalysis, val context: Context): RecyclerView.Adapter<FoodSettingsViewHolder>() {
+
+    private val listFood = list.toMutableList()
+
+    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): FoodSettingsViewHolder {
+        val view = View.inflate(p0.context, R.layout.food_setting_layout, null)
+        return FoodSettingsViewHolder(view, context)
+    }
+
+    override fun getItemCount(): Int {
+        return listFood.size
+    }
+
+    override fun onBindViewHolder(holder: FoodSettingsViewHolder, p1: Int) {
+        holder.configureFoodSettingsViewHolder(listFood[holder.adapterPosition])
+
+        holder.itemView.findViewById<CheckBox>(R.id.checkbox_taken_into_acc).setOnCheckedChangeListener { _, isChecked ->
+
+            if(holder.adapterPosition >= 0 && holder.adapterPosition < list.size){
+                val food = listFood[holder.adapterPosition]
+                food.forAnalysis = isChecked
+                listFood[holder.adapterPosition] = food
+                onChangeStateForAnalysis.changeStateForAnalysis(food)
+            }
+        }
+    }
+}
+
+/**  EVENT SETTINGS **/
+class EventTypeSettingsAdapter(val list:List<EventType>, val context: Context): RecyclerView.Adapter<EventTypeSettingsViewHolder>() {
+
+    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): EventTypeSettingsViewHolder {
+        val view = View.inflate(p0.context, R.layout.event_setting_layout, null)
+        return EventTypeSettingsViewHolder(view, context)
+    }
+
+    override fun getItemCount(): Int {
+        return list.size
+    }
+
+    override fun onBindViewHolder(holder: EventTypeSettingsViewHolder, p1: Int) {
+        holder.configureEventTypeSettingsViewHolder(list[holder.adapterPosition])
     }
 }
 

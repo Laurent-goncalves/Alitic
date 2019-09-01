@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Matrix
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -12,11 +13,10 @@ import android.widget.*
 import com.g.laurent.alitic.*
 import com.g.laurent.alitic.Controllers.DialogFragments.*
 import com.g.laurent.alitic.Models.*
-import kotlinx.android.synthetic.main.timeline_viewholder.view.*
 import kotlin.math.roundToInt
 
 
-class MainActivity : AppCompatActivity(), View.OnClickListener, ResetDatabaseListener {
+class MainActivity : AppCompatActivity(), View.OnClickListener, ResetDatabaseListener, OnFoodEventSettingsClick {
 
     private lateinit var toolbar: Toolbar
     private var matrix = Matrix()
@@ -118,7 +118,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ResetDatabaseLis
 
         // Check if database has already been populated
         val prefs = applicationContext.getSharedPreferences(SHAREDPREF, 0)
-        //prefs.edit().putBoolean(POPULATE_DATABASE, false).apply()
         val isDatabasePopulated = prefs.getBoolean(POPULATE_DATABASE, false)
 
         if(!isDatabasePopulated){
@@ -276,6 +275,26 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ResetDatabaseLis
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
         overridePendingTransition(0, 0)
+    }
+
+    /** ---------------------------- DIALOG ---------------------------------------
+     *  ---------------------------------------------------------------------------
+     */
+
+    override fun showFoodSettingsDialog() {
+        val fm = supportFragmentManager
+        val myDialogFragment = FoodSettingsDialog().newInstance()
+        myDialogFragment.show(fm, TAG_FOOD_SETTINGS_DIALOG)
+    }
+
+    override fun showEventSettingsDialog() {
+        val fm = supportFragmentManager
+        val myDialogFragment = EventSettingsDialog().newInstance()
+        myDialogFragment.show(fm, TAG_EVENT_SETTINGS_DIALOG)
+    }
+
+    override fun showSnackBarSettingsSaved(message:String) {
+        Snackbar.make(this.findViewById(R.id.layout_main_activity), message, Snackbar.LENGTH_SHORT).show()
     }
 }
 

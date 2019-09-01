@@ -27,20 +27,6 @@ enum class Loc(var position : Position) {
     }
 }
 
-enum class Pan(var min : Float, var max:Float) {
-
-    DIAMETER_PANEL(0.toFloat(),0.toFloat()),
-    DELTA_Y(0.toFloat(),0.toFloat()),
-    SCALE_PANEL(0.toFloat(),0.toFloat());
-
-    companion object {
-        fun setMinMax(pan:Pan, min : Float, max:Float){
-            pan.min = min
-            pan.max = max
-        }
-    }
-}
-
 enum class TypeDisplay(val type:String, val idCancel : Int, val idSave : Int){
     EVENT("EVENT", R.id.button_cancel_event, R.id.button_save_event),
     MEAL("MEAL", R.id.button_cancel_meal, R.id.button_save_meal);
@@ -373,10 +359,6 @@ abstract class AppDataBase : RoomDatabase() {
 
         fun clearDatabase() {
             INSTANCE?.clearAllTables()
-        }
-
-        fun destroyInstance() {
-            INSTANCE = null
         }
 
         private val IO_EXECUTOR = Executors.newSingleThreadExecutor()

@@ -74,7 +74,8 @@ fun getListDayGridForGridView(listDates:List<Long>, month:Int, year:Int): List<D
                 val row = getRowDate(day)
                 val col = getColumnDate(day, first, nbCol)
 
-                table[row][col] = DayGrid.DONT_EXISTS
+                if(col < nbCol)
+                 table[row][col] = DayGrid.DONT_EXISTS
             }
             day+=DAY
         }
@@ -89,7 +90,8 @@ fun getListDayGridForGridView(listDates:List<Long>, month:Int, year:Int): List<D
             val row = getRowDate(date.key)
             val col = getColumnDate(date.key, first, nbCol)
 
-            table[row][col] = getLevel(date.value, maxCountEventByDay)
+            if(col < nbCol)
+                table[row][col] = getLevel(date.value, maxCountEventByDay)
         }
     }
 
@@ -137,8 +139,10 @@ fun getRowDate(date:Long):Int{
 
 fun getColumnDate(date:Long, first:Long, nbCol:Int):Int{
 
+    val WEEK = 7 * DAY
+
     for(i in 0 .. nbCol){
-        if(date >= first + (i) * 7 * DAY && date < first + (i+1) * 7 * DAY){
+        if(date >= first + (i) * WEEK && date < first + (i+1) * WEEK){
             return i
         }
     }
@@ -195,16 +199,16 @@ fun getNumberOfMonths(list:List<Long>):Int{
     val maxDate = getTodayDate()
 
     if(minDate!=null){
-        if(getYear(maxDate) - getYear(minDate)==0){ // SAME YEAR
-             return getMonth(maxDate) - getMonth(minDate) + 1
+        return if(getYear(maxDate) - getYear(minDate)==0){ // SAME YEAR
+            getMonth(maxDate) - getMonth(minDate) + 1
         } else { // DIFFERENT YEARS
             val monthsY1 = 12 - getMonth(minDate) + 1
             val monthsY2 = getMonth(maxDate)
 
             if(getYear(maxDate) - getYear(minDate)==1)
-                return monthsY2 + monthsY1
+                monthsY2 + monthsY1
             else
-                 return monthsY2 + monthsY1 + (getYear(maxDate) - getYear(minDate))*12
+                monthsY2 + monthsY1 + (getYear(maxDate) - getYear(minDate))*12
         }
     }
 

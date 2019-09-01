@@ -14,8 +14,6 @@ import com.g.laurent.alitic.Controllers.ClassControllers.*
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.Views.FoodTop10Adapter
 import com.github.mikephil.charting.charts.PieChart
-import com.mikhaellopez.circularimageview.CircularImageView
-import kotlinx.android.synthetic.main.food_stat_layout.*
 
 
 class StatGlobalFragment : StatFragment(), OnDeleteAction {

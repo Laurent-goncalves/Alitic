@@ -1,6 +1,7 @@
 package com.g.laurent.alitic
 
 import android.content.Context
+import com.g.laurent.alitic.Models.EventType
 import hirondelle.date4j.DateTime
 import java.text.SimpleDateFormat
 import java.util.*
@@ -103,7 +104,7 @@ fun getMonthText(month:Int, year:Int):String{
     val dateToConvert = dateCal.time
     var monthText = dateFormat.format(dateToConvert)
     monthText = monthText.replace(".", "")
-    monthText = monthText.substring(0,1).toUpperCase() + monthText.substring(1,monthText.length)
+    monthText = monthText.substring(0,1).toUpperCase(Locale.FRANCE) + monthText.substring(1,monthText.length)
 
     return if(month == 1 || month == 12)
         "$monthText ${year.toString().substring(2,4)}"
@@ -127,28 +128,12 @@ fun getTimeAsLong(hour:Int, min:Int):Long {
     return ((min + hour * 60) * 60 * 1000).toLong()
 }
 
-fun getDateTime(day:Int, month:Int, year:Int):DateTime{
-    return DateTime(year, month, day, 0,0,0,0)
-}
-
 fun getDateTimeFromLong(date:Long):DateTime{
 
     val calendar = Calendar.getInstance()
     calendar.timeInMillis = date
 
     return DateTime(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH), 0,0,0,0)
-}
-
-fun getFirstDayMonth(dateCode:Long):Long{
-    val cal = Calendar.getInstance()
-    cal.timeInMillis = dateCode
-    cal.set(Calendar.DAY_OF_MONTH, 1)
-    cal.set(Calendar.HOUR_OF_DAY, 0)
-    cal.set(Calendar.MINUTE, 0)
-    cal.set(Calendar.SECOND, 0)
-    cal.set(Calendar.MILLISECOND, 0)
-
-    return cal.timeInMillis
 }
 
 fun getLastDayMonth(month:Int, year:Int ):Int{
@@ -172,14 +157,6 @@ fun getMinutesAsInt(dateCode:Long):Int {
     return date.get(Calendar.MINUTE)
 }
 
-fun transformHourInLong(hour:Double):Long{
-    return 60 * 60 * (1000 * hour).toLong()
-}
-
-fun transformLongInHour(hour:Long):Double{
-    return (hour / 100000).toDouble() / 36
-}
-
 fun getMinTime(minEvent:Long?, minMeal:Long?):Long?{
     return if(minEvent==null && minMeal == null)
         null
@@ -198,4 +175,24 @@ fun getMaxTime(maxEvent:Long?, maxMeal:Long?):Long?{
     else if(maxMeal == null)
         maxEvent
     else max(maxEvent, maxMeal)
+}
+
+fun getMinTimeFromEventType(eventType: EventType):Int?{
+
+    val minTime:Long? = eventType.minTime
+
+    return if(minTime!=null){
+        (minTime / (60 * 60 * 1000)).toInt()
+    } else
+        null
+}
+
+fun getMaxTimeFromEventType(eventType: EventType):Int?{
+
+    val maxTime:Long? = eventType.maxTime
+
+    return if(maxTime!=null){
+        (maxTime / (60 * 60 * 1000)).toInt()
+    } else
+        null
 }

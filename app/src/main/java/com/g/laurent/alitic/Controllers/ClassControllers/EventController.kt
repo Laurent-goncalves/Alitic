@@ -157,37 +157,3 @@ fun getChronoEvents(mode:Boolean=false, context: Context):List<DateTime>{
 
     return chronoEvents
 }
-
-fun updateChronoEvents(chronoEvents:MutableList<DateTime>, date:Long, mode:Boolean=false, context: Context):List<DateTime>{
-
-    val events = getEventsFromDate(date, mode, context)
-
-    val dateTime = getDateTimeFromLong(date)
-
-    if(events!=null && events.isNotEmpty()){
-        if(!chronoEvents.contains(dateTime))
-            chronoEvents.add(dateTime)
-    } else {
-        if(chronoEvents.contains(dateTime))
-            chronoEvents.remove(dateTime)
-    }
-
-    return chronoEvents.toList()
-}
-
-/*fun getListEventType(search:String, mode:Boolean = false, context:Context):List<EventType>?{
-
-    AppDataBase.TEST_MODE = mode
-    val eventTypeDao = AppDataBase.getInstance(context)?.eventTypeDao()
-    val listEventType = eventTypeDao?.getAll()
-    val result : MutableList<EventType> = mutableListOf()
-
-    return if(listEventType!=null){
-        for(eventType in listEventType){
-            if(eventType.name.toLowerCase().contains(search.toLowerCase())) // if the name contains the search word, add eventType to the list
-                result.add(eventType)
-        }
-        result
-    } else
-        null
-}*/

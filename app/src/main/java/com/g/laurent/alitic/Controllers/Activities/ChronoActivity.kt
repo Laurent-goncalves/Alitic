@@ -15,7 +15,7 @@ class ChronoActivity : BaseActivity(), OnTimeLineDisplay, OnCalendarLoaded {
 
     private val chronoFragment = ChronoFragment()
     private val timeLineFragment = TimeLineFragment()
-    private var dateSelected:Long?=null
+    private var dateSelected:Long= getTodayDate()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_chrono)
@@ -62,8 +62,6 @@ class ChronoActivity : BaseActivity(), OnTimeLineDisplay, OnCalendarLoaded {
     }
 
     private fun showChronoFragment(){
-
-        chronoFragment.updateData(dateSelected)
 
         val fragmentManager = supportFragmentManager.beginTransaction()
         fragmentManager.replace(R.id.fragment_place, chronoFragment, CHRONO_FRAGMENT)

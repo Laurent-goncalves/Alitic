@@ -13,7 +13,7 @@
     <color name="color_unselected_tab">#D4E0F8</color>
     <color name="colorSmallPieChartNok">#f1d1d0</color>
     <color name="colorSmallPieChartOk">#c6e3bf</color>
-
+    <color name="colorRaz">#edeac5</color>
     <!-- PICK ACTIVITY COLORS -->
     <color name="colorPanelMeal">#CCf2f2f2</color>
     <color name="colorFoodPicked">#5bc855</color>

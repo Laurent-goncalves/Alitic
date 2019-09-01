@@ -10,10 +10,10 @@ import com.g.laurent.alitic.Controllers.Activities.StatType
 import com.g.laurent.alitic.Controllers.ClassControllers.Chrono
 import com.g.laurent.alitic.Controllers.ClassControllers.FoodStatEntry
 import com.g.laurent.alitic.Controllers.Fragments.OnDeleteAction
+import com.g.laurent.alitic.Models.EventType
+import com.g.laurent.alitic.Models.Food
 import com.g.laurent.alitic.Models.FoodType
-import com.github.mikephil.charting.charts.PieChart
 import com.github.vipulasri.timelineview.TimelineView
-import com.mikhaellopez.circularimageview.CircularImageView
 
 
 class TimeLineViewHolder(itemView: View, viewType: Int, val mode:Boolean = false, val context: Context) : RecyclerView.ViewHolder(itemView) {
@@ -105,5 +105,48 @@ class FoodTop10ViewHolder(itemView: View, val context: Context) : RecyclerView.V
             onDeleteAction.configurePopUpMenuFood(foodStatEntry, itemView, view)
             true
         }
+    }
+}
+
+class FoodSettingsViewHolder(itemView: View, val context: Context):RecyclerView.ViewHolder(itemView){
+
+    private var nameFood: TextView = itemView.findViewById(R.id.food_name)
+    private var checkBox: CheckBox = itemView.findViewById(R.id.checkbox_taken_into_acc)
+
+    fun configureFoodSettingsViewHolder(food: Food){
+        nameFood.text = food.name
+        checkBox.isChecked = food.forAnalysis
+    }
+}
+
+class EventTypeSettingsViewHolder(itemView: View, val context: Context):RecyclerView.ViewHolder(itemView){
+
+    private var nameEventType: TextView = itemView.findViewById(R.id.event_name)
+    private var periodTakenIntAcc: TextView = itemView.findViewById(R.id.period_taken_into_acc)
+
+    fun configureEventTypeSettingsViewHolder(eventType: EventType){
+
+        fun getTextPeriodTakenIntoAccount():String{
+
+            val forLastMeal = eventType.forLastMeal
+
+            if(forLastMeal!=null && forLastMeal){
+                return context.resources.getString(R.string.for_last_meal)
+            } else {
+                val hourMin = eventType.minTime
+                val hourMax = eventType.maxTime
+
+                if(hourMin != null && hourMax != null){
+                    return context.resources.getString(R.string.occur_between) + " " + getMinTimeFromEventType(eventType) + " " +
+                            context.resources.getString(R.string.and) + " " + getMaxTimeFromEventType(eventType) +
+                            context.resources.getString(R.string.hrs_after_meal)
+                }
+
+                return context.resources.getString(R.string.undefined)
+            }
+        }
+
+        nameEventType.text = eventType.name
+        periodTakenIntAcc.text = getTextPeriodTakenIntoAccount()
     }
 }

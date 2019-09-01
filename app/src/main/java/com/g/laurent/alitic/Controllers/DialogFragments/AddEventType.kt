@@ -17,6 +17,8 @@ import com.g.laurent.alitic.EVENT_TYPE_PARAMS
 import com.g.laurent.alitic.Models.EventType
 import com.g.laurent.alitic.Models.TypeDisplay
 import com.g.laurent.alitic.R
+import com.g.laurent.alitic.getMaxTimeFromEventType
+import com.g.laurent.alitic.getMinTimeFromEventType
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.ianpinto.androidrangeseekbar.rangeseekbar.RangeSeekBar
@@ -59,9 +61,18 @@ class AddEventTypeDialog : DialogFragment(), RangeSeekBar.OnRangeSeekBarChangeLi
     }
 
     private fun configureViews(view: View) {
+        configureTitle(view)
         configureFieldName(view)
         configureRange(view)
-        configureButtonSave(view)
+        configureButtons(view)
+    }
+
+    private fun configureTitle(view: View) {
+        if(eventTypeToSave.id == null) {
+            view.findViewById<TextView>(R.id.title).text = contextDialog.resources.getString(R.string.addeventtype)
+        } else {
+            view.findViewById<TextView>(R.id.title).text = contextDialog.resources.getString(R.string.modifyeventtype)
+        }
     }
 
     private fun configureFieldName(view:View){
@@ -216,7 +227,11 @@ class AddEventTypeDialog : DialogFragment(), RangeSeekBar.OnRangeSeekBarChangeLi
         return true
     }
 
-    private fun configureButtonSave(view:View) {
+    private fun configureButtons(view:View) {
+
+        view.findViewById<Button>(R.id.button_cancel).setOnClickListener{
+            dismiss()
+        }
 
         val buttonSave = view.findViewById<Button>(R.id.button_save_eventtype)
         buttonSave.setOnClickListener {
@@ -269,26 +284,6 @@ class AddEventTypeDialog : DialogFragment(), RangeSeekBar.OnRangeSeekBarChangeLi
         return contextDialog.getString(R.string.select_period_add_eventtype1) + " " + getMinTimeFromEventType(eventTypeToSave) +
                 contextDialog.getString(R.string.select_period_add_eventtype2) + " " + getMaxTimeFromEventType(eventTypeToSave) +
                 contextDialog.getString(R.string.select_period_add_eventtype3)
-    }
-
-    private fun getMinTimeFromEventType(eventType:EventType):Int?{
-
-        val minTime:Long? = eventType.minTime
-
-        return if(minTime!=null){
-            (minTime / (60 * 60 * 1000)).toInt()
-        } else
-            null
-    }
-
-    private fun getMaxTimeFromEventType(eventType:EventType):Int?{
-
-        val maxTime:Long? = eventType.maxTime
-
-        return if(maxTime!=null){
-            (maxTime / (60 * 60 * 1000)).toInt()
-        } else
-            null
     }
 }
 

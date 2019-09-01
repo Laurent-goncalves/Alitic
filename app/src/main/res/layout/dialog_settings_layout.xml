@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="20dp">
+
+    <TextView
+            android:id="@+id/title_settings"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/baseline_settings_white_24"
+            android:drawableTint="@android:color/darker_gray"
+            android:drawablePadding="5dp"
+            android:text="@string/title_settings"
+            android:textSize="25sp"/>
+
+    <!--NAME USER -->
+    <LinearLayout
+            android:id="@+id/layout_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/title_settings">
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/name_user"/>
+
+        <EditText
+                android:id="@+id/name_user"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorAccent"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:layout_marginStart="10dp"/>
+
+    </LinearLayout>
+
+    <!-- SETTINGS FOR FOOD -->
+    <LinearLayout
+            android:id="@+id/layout_food_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/layout_user_name">
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_foods_text"/>
+
+        <ImageButton
+                android:id="@+id/button_settings_foods"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:background="@color/color_unselected_tab"
+                android:layout_height="wrap_content"
+                style="?android:attr/borderlessButtonStyle"
+                android:src="@drawable/baseline_local_dining_white_48"
+                android:layout_marginStart="10dp"/>
+
+    </LinearLayout>
+
+    <!-- SETTINGS FOR EVENTS -->
+    <LinearLayout
+            android:id="@+id/layout_event_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/layout_food_settings">
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_events_text"/>
+
+        <ImageButton
+                android:id="@+id/button_settings_events"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:background="@color/colorSmallPieChartNok"
+                android:layout_height="wrap_content"
+                style="?android:attr/borderlessButtonStyle"
+                android:src="@drawable/baseline_offline_bolt_white_48"
+                android:layout_marginStart="10dp"/>
+
+    </LinearLayout>
+
+    <!-- EXPORT DATA AS EXCEL SHEET -->
+    <LinearLayout
+            android:id="@+id/layout_export"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/layout_event_settings">
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:text="@string/export_data_excel"/>
+
+        <ImageButton
+                android:id="@+id/button_export"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:background="@color/colorSmallPieChartOk"
+                android:src="@drawable/excel"/>
+
+    </LinearLayout>
+
+    <!-- RESET DATA -->
+    <LinearLayout
+            android:id="@+id/layout_reset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/layout_export">
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:text="@string/reset_data"/>
+
+        <ImageButton
+                android:id="@+id/button_reset"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:background="@color/colorRaz"
+                android:layout_height="wrap_content"
+                style="?android:attr/borderlessButtonStyle"
+                android:src="@drawable/baseline_delete_sweep_white_48"
+                android:layout_marginStart="10dp"/>
+
+    </LinearLayout>
+
+    <!-- BUTTONS -->
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="end"
+            android:layout_below="@+id/layout_reset"
+            android:layout_alignParentEnd="true"
+            android:orientation="horizontal">
+
+        <!-- BUTTON QUIT -->
+        <Button
+                android:id="@+id/button_quit"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
+                android:text="@string/quit"
+                android:textColor="@color/colorAccent"
+                style="?android:attr/borderlessButtonStyle"
+                android:background="@android:color/white"/>
+
+        <!-- BUTTON SAVE -->
+        <Button
+                android:id="@+id/button_save"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginStart="10dp"
+                android:text="@string/save"
+                android:textColor="@android:color/white"
+                style="?android:attr/borderlessButtonStyle"
+                android:background="@color/colorAccent"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -24,27 +24,6 @@ fun saveNewMeal(foodList:List<Long?>, dateCode:Long, mode:Boolean = false, conte
     return idMeal
 }
 
-fun updateMeal(mealItems:List<MealItem>, dateCode:Long, mode:Boolean = false, context: Context):Long?{
-
-    AppDataBase.TEST_MODE = mode
-    val mealItemDao = AppDataBase.getInstance(context)?.mealItemDao()
-    val mealDao = AppDataBase.getInstance(context)?.mealDao()
-
-    // DELETE meal and mealitems
-    deleteMeal(mealItems[0].id, mode, context)
-
-    // INSERT NEW meal
-    val idMeal = mealDao?.insert(Meal(null, dateCode, mealItems))
-
-    // INSERT each mealItem
-    for(item in mealItems){
-        mealItemDao?.insert(MealItem(null, idMeal,item.idFood))
-    }
-
-    // RETURN idMeal
-    return idMeal
-}
-
 fun getMealFromDatabase(idMeal:Long?, mode:Boolean = false, context: Context):Meal?{
 
     AppDataBase.TEST_MODE = mode
@@ -57,16 +36,6 @@ fun getMealFromDatabase(idMeal:Long?, mode:Boolean = false, context: Context):Me
     meal?.listMealItems = mealItems
 
     return meal
-}
-
-fun getMealItemsFromListFoods(listFood:List<Any>):List<MealItem>{
-
-    val listMealItems = mutableListOf<MealItem>()
-    for(any in listFood){
-        val food = any as Food
-        listMealItems.add(MealItem(null,null, food.id))
-    }
-    return listMealItems.toList()
 }
 
 fun getFoodsFromMeal(meal:Meal, mode:Boolean = false, context: Context):List<Food>{
@@ -116,24 +85,6 @@ fun getChonoMeals(mode:Boolean=false, context: Context):List<DateTime>{
 
     return chronoMeals
 }
-
-fun updateChonoMeals(chronoMeals:MutableList<DateTime>, date:Long, mode:Boolean=false, context: Context):List<DateTime>{
-
-    val meals = getAllMealsFromDate(date, mode, context)
-
-    val dateTime = getDateTimeFromLong(date)
-
-    if(meals!=null && meals.isNotEmpty()){
-        if(!chronoMeals.contains(dateTime))
-            chronoMeals.add(dateTime)
-    } else {
-        if(chronoMeals.contains(dateTime))
-            chronoMeals.remove(dateTime)
-    }
-
-    return chronoMeals.toList()
-}
-
 
 fun getAllMeals(mode:Boolean = false, context: Context):List<Meal>?{
 

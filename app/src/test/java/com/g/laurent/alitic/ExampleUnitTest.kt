@@ -1,15 +1,11 @@
 package com.g.laurent.alitic
 
-import com.g.laurent.alitic.Controllers.ClassControllers.organizeEventsByTime
 import com.g.laurent.alitic.Models.Event
-import com.g.laurent.alitic.Models.Food
 import com.g.laurent.alitic.Models.Meal
 import com.g.laurent.alitic.Views.DayGrid
-import hirondelle.date4j.DateTime
 import org.junit.Assert
 import org.junit.Test
 import org.junit.Assert.*
-import java.util.*
 import kotlin.math.ceil
 
 /**

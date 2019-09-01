@@ -135,7 +135,7 @@ fun getListFoodsWithCounters(statType:StatType, eventType:EventType, mode:Boolea
             }
 
             fun findLastMeal(event: Event, listMeals:List<Meal>):Meal?{
-                for(i in 0 until listMeals.size){
+                for(i in listMeals.indices){
                     if(listMeals[i].dateCode <= event.dateCode)
                         return listMeals[i]
                 }
@@ -316,14 +316,14 @@ fun getEvolution(listDates:List<Long>, mode:Boolean = false, context:Context):Ev
                 val regression = SimpleRegression()
                 val counts = getCountsList(minTime, period)
 
-                for (i in 0 until dates.size)
+                for (i in dates.indices)
                     regression.addData(dates[i],counts[i])
 
                 val slope = regression.slope
 
                 return when {
                     slope > 0 -> Evolution.NEGATIVE
-                    slope.equals(0) -> Evolution.NEUTRAL
+                    slope.toInt() == 0 -> Evolution.NEUTRAL
                     else -> Evolution.POSITIVE
                 }
             }
