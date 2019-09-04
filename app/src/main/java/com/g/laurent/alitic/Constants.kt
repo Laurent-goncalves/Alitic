@@ -32,3 +32,4 @@ const val CHRONO_FRAGMENT = "Chrono_fragment"
 const val OPACITY_LIMIT = 0.25f
 const val DURATION_MOVE_CAMERA = 3000.toLong()
 const val DURATION_MIN_ANALYSIS_IN_DAYS = 10
+const val SHARED_PREF_VERSION = "shared_pref_version"

@@ -65,6 +65,7 @@ class SettingsDialog : DialogFragment(), EasyPermissions.PermissionCallbacks{
         configureReset(view)
         configureButtonFoodsSettings(view)
         configureButtons(view, prefs)
+        configureLegalNotice(view)
     }
 
     private fun configureFieldName(view: View, prefs: SharedPreferences){
@@ -187,6 +188,26 @@ class SettingsDialog : DialogFragment(), EasyPermissions.PermissionCallbacks{
             Toast.makeText(contextDialog, contextDialog.resources.getString(R.string.data_saved), Toast.LENGTH_LONG).show()
 
             this.dismiss()
+        }
+    }
+
+    private fun configureLegalNotice(view: View) {
+
+        view.findViewById<ImageView>(R.id.legal_notice).setOnClickListener {
+
+            val alertDialog = AlertDialog.Builder(contextDialog)
+            alertDialog.setTitle(contextDialog.resources.getString(R.string.legal_notice_title))
+            alertDialog.setMessage(getLegalNotice(contextDialog))
+
+            alertDialog.setPositiveButton(contextDialog.resources.getString(R.string.ok)){ dialog, _ ->
+                dialog.dismiss()
+            }
+
+            // Finally, make the alert dialog using builder
+            val legNotDialog: AlertDialog = alertDialog.create()
+
+            // Display the alert dialog on app interface
+            legNotDialog.show()
         }
     }
 

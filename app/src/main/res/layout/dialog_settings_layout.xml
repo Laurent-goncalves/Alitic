@@ -166,6 +166,16 @@
 
     </LinearLayout>
 
+    <ImageView
+            android:id="@+id/legal_notice"
+            android:layout_width="@dimen/button_height"
+            android:layout_height="@dimen/button_height"
+            android:src="@drawable/baseline_gavel_white_48"
+            android:layout_marginTop="30dp"
+            android:scaleType="centerInside"
+            android:layout_below="@+id/layout_reset"
+            android:tint="@color/colorAccent"/>
+
     <!-- BUTTONS -->
     <LinearLayout
             android:layout_width="wrap_content"

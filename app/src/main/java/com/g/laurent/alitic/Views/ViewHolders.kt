@@ -97,6 +97,8 @@ class FoodTop10ViewHolder(itemView: View, val context: Context) : RecyclerView.V
         // Set food picture
         setImageResource(foodStatEntry.food.foodPic, imageFood, context)
 
+        println("eee  ${foodStatEntry.food.name}     ${foodStatEntry.food.foodPic} ")
+
         // Set piechart around found picture
         configureSmallPieChart(foodStatEntry, statType, itemView, context)
 

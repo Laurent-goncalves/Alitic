@@ -118,11 +118,24 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ResetDatabaseLis
 
         // Check if database has already been populated
         val prefs = applicationContext.getSharedPreferences(SHAREDPREF, 0)
+        //prefs.edit().putBoolean(POPULATE_DATABASE, false).apply()
         val isDatabasePopulated = prefs.getBoolean(POPULATE_DATABASE, false)
 
         if(!isDatabasePopulated){
             populateDatabase(applicationContext)
             prefs.edit().putBoolean(POPULATE_DATABASE, true).apply()
+        }
+
+        // Perform actions if new version
+        val version = BuildConfig.VERSION_CODE
+        for(i in 1 .. version){
+
+            val sharedPrefVers = prefs.getBoolean(SHARED_PREF_VERSION + i, false)
+
+            if(!sharedPrefVers){
+                performActionsForVersion(i, applicationContext)
+                prefs.edit().putBoolean(SHARED_PREF_VERSION + i, true).apply()
+            }
         }
 
         // Configure the 5 areas to click

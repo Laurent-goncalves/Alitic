@@ -129,6 +129,12 @@ fun deleteAllFoodType(mode:Boolean = false, context: Context){
     foodTypeDao?.deleteAll()
 }
 
+fun updateFoodType(foodtype:FoodType, mode:Boolean = false, context: Context){
+    AppDataBase.TEST_MODE = mode
+    val foodTypeDao = AppDataBase.getInstance(context)?.foodTypeDao()
+    foodTypeDao?.update(foodtype)
+}
+
 // ---------------------------------------------------------------------------------------------------------------
 // ----------------------------------------- KEYWORDS ------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------------

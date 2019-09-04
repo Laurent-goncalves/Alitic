@@ -1,79 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="5dp">
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_panel1_info"
-        android:layout_centerHorizontal="true"
-        android:textSize="18sp"
-        android:textStyle="bold"/>
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false"
+        android:scrollbarThumbVertical="@android:color/darker_gray">
 
-    <TextView
-        android:id="@+id/content_1st_panel_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/content_1st_panel_1"
-        android:layout_below="@+id/title"
-        android:layout_marginTop="10dp"/>
-
-    <LinearLayout
-        android:id="@+id/exemple1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/content_1st_panel_1">
-
-        <ImageView
-            android:id="@+id/exemple1_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/pain100"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/content_1st_panel_2"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="10dp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-            android:id="@+id/exemple2"
+    <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/exemple1">
-
-        <ImageView
-                android:id="@+id/exemple2_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/pain50"/>
+            android:padding="5dp">
 
         <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_panel1_info"
+                android:layout_centerHorizontal="true"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+        <TextView
+                android:id="@+id/content_1st_panel_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/content_1st_panel_1"
+                android:layout_below="@+id/title"
+                android:layout_marginTop="10dp"/>
+
+        <TextView
+                android:id="@+id/exemple1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/content_1st_panel_2"
+                android:layout_gravity="center_vertical"
+                android:layout_below="@+id/content_1st_panel_1"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:drawableStart="@drawable/pain100"
+                android:drawablePadding="10dp"
+                android:layout_marginStart="10dp"/>
+
+        <TextView
+                android:id="@+id/exemple2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/content_1st_panel_3"
                 android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:layout_below="@+id/exemple1"
+                android:layout_marginTop="10dp"
+                android:drawableStart="@drawable/pain50"
+                android:drawablePadding="10dp"
                 android:layout_marginStart="10dp"/>
 
-    </LinearLayout>
+        <TextView
+                android:id="@+id/content_1st_panel_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/content_1st_panel_4"
+                android:layout_below="@+id/exemple2"
+                android:layout_marginTop="20dp"/>
 
-    <TextView
-        android:id="@+id/content_1st_panel_4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/content_1st_panel_4"
-        android:layout_below="@+id/exemple2"
-        android:layout_marginTop="20dp"/>
+    </RelativeLayout>
 
-</RelativeLayout>
+</ScrollView>

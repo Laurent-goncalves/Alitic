@@ -462,7 +462,7 @@ class StatInfoAdapter (mgr: FragmentManager): FragmentPagerAdapter(mgr){
     }
 
     override fun getCount(): Int {
-        return 6
+        return 5
     }
 
     class StatInfoFragment : Fragment() {
@@ -492,8 +492,7 @@ class StatInfoAdapter (mgr: FragmentManager): FragmentPagerAdapter(mgr){
                     1-> inflater.inflate(R.layout.stat_info_panel2, container, false)
                     2-> inflater.inflate(R.layout.stat_info_panel3, container, false)
                     3-> inflater.inflate(R.layout.stat_info_panel4, container, false)
-                    4-> inflater.inflate(R.layout.stat_info_panel5, container, false)
-                    else -> inflater.inflate(R.layout.stat_info_panel6, container, false)
+                    else -> inflater.inflate(R.layout.stat_info_panel5, container, false)
                 }
             } else
                 inflater.inflate(R.layout.stat_info_panel1, container, false)
@@ -613,7 +612,10 @@ class FoodTop10Adapter(val list:List<FoodStatEntry>, val view:View, private val 
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return if(list.size > 10)
+            10
+        else
+            list.size
     }
 
     override fun onBindViewHolder(p0: FoodTop10ViewHolder, p1: Int) {

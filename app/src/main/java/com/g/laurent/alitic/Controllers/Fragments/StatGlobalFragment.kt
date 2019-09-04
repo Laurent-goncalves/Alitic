@@ -5,6 +5,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -83,6 +84,20 @@ class StatGlobalFragment : StatFragment(), OnDeleteAction {
             val foodRecyclerView = view.findViewById<RecyclerView>(R.id.food_recycler_view)
             val mLayoutManager = LinearLayoutManager(contextFrag, RecyclerView.HORIZONTAL, false)
             foodRecyclerView.layoutManager = mLayoutManager
+            foodRecyclerView.addOnItemTouchListener(object:RecyclerView.OnItemTouchListener{
+
+                override fun onInterceptTouchEvent(recycler: RecyclerView, e: MotionEvent): Boolean {
+                    val action = e.action
+                    if(action == MotionEvent.ACTION_MOVE){
+                        recycler.parent.parent.parent.requestDisallowInterceptTouchEvent(true)
+                    }
+                    return false
+                }
+
+                override fun onTouchEvent(p0: RecyclerView, p1: MotionEvent) {}
+                override fun onRequestDisallowInterceptTouchEvent(p0: Boolean) {}
+            })
+
             val adapter = FoodTop10Adapter(listFood, view, statType, onDeleteAction, context = contextFrag)
             foodRecyclerView.adapter = adapter
         }

@@ -31,20 +31,4 @@
             style="@style/ToolBarStyle"
             tools:context="searchview.toolbar.com.searchviewtoolbar.MainActivity"/>
 
-    <include
-            android:id="@+id/layout_meal"
-            layout="@layout/pick_meal_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/activity_toolbar"
-            android:visibility="gone"/>
-
-    <include
-            android:id="@+id/layout_event"
-            layout="@layout/pick_event_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/activity_toolbar"
-            android:visibility="gone"/>
-
 </RelativeLayout>

@@ -144,6 +144,7 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     val autresSucre = foodDao?.insert(Food(null,"Autres sucreries", idSucre,0,"gateau"))
 
     // CEREALES - GRAINS
+    val pates = foodDao?.insert(Food(null,"pâtes", idCereale,0,"pates"))
     val amande = foodDao?.insert(Food(null,"Amande", idCereale,0,"amande"))
     val noisette = foodDao?.insert(Food(null,"Noisette", idCereale,0,"noisette"))
     val cacahuete = foodDao?.insert(Food(null,"Cacahuètes", idCereale,0,"cacahuete"))
@@ -153,7 +154,7 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     val ble = foodDao?.insert(Food(null,"Blé", idCereale,0,"ble"))
     val olives = foodDao?.insert(Food(null,"Olives", idCereale,0,"olive"))
     val avoine = foodDao?.insert(Food(null,"Avoine", idCereale,0,"avoine" ))
-    val autresCereales = foodDao?.insert(Food(null,"Autres céréales", idCereale,0,""))
+    val autresCereales = foodDao?.insert(Food(null,"Autres céréales", idCereale,0,"cereale"))
 
     // SAUCES
     val mayonnaise = foodDao?.insert(Food(null,"Mayonnaise", idSauce,0,"mayonnaise"))
@@ -161,7 +162,7 @@ fun insertData(foodTypeDao:FoodTypeDao?, foodDao:FoodDao?, keywordDao:KeywordDao
     val vinaigrette = foodDao?.insert(Food(null,"Vinaigrette", idSauce,0,"vinaigrette"))
     val moutarde = foodDao?.insert(Food(null,"Moutarde", idSauce,0,"moutarde"))
     val soja = foodDao?.insert(Food(null,"Soja", idSauce,0,"soja"))
-    val autresSauces = foodDao?.insert(Food(null,"Autres sauces", idSauce,0,""))
+    val autresSauces = foodDao?.insert(Food(null,"Autres sauces", idSauce,0,"sauce"))
 
     // AUTRES
     val pain = foodDao?.insert(Food(null,"Pain", idAutres,0,"pain"))

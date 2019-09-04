@@ -95,11 +95,11 @@
     <string name="first_day_week">Lun.</string>
     <string name="last_day_week">Dim.</string>
 
-    <string name="title_foods_list_positive">Aliments causant le moins de problème</string>
-    <string name="title_piechart_positive">Répartition des types d\'aliments causant le moins de problème</string>
+    <string name="title_foods_list_positive">Aliments causant le moins de ressenti</string>
+    <string name="title_piechart_positive">Répartition des types d\'aliments causant le moins de ressenti</string>
 
-    <string name="title_foods_list_negative">Aliments causant le plus de problème</string>
-    <string name="title_piechart_negative">Répartition des types d\'aliments causant le plus de problème</string>
+    <string name="title_foods_list_negative">Aliments causant le plus de ressentis</string>
+    <string name="title_piechart_negative">Répartition des types d\'aliments causant le plus de ressentis</string>
 
 
     <!--CREATE NEW EVENT OR NEW MEAL -->
@@ -210,11 +210,9 @@
     <!--INFO STATS -->
     <string name="title_panel1_info">Informations 1er onglet</string>
     <string name="content_1st_panel_1" tools:ignore="Typos">Le premier onglet montre les statistiques liées aux aliments
-        causant le plus de
-        ressentis: \n \n
-        - Aliments les plus \"perturbants\". La photo et le nom de l\'aliment est indiqué. La portion de cercle en rouge
-        autour
-        de la photo correspond à la proportion de repas (contenant l\'aliment en question) qui sont à l\'origine d\'un
+        causant le plus de ressentis: \n \n
+        - Aliments les plus \"perturbants\". La photo et le nom de l\'aliment sont indiqués. La portion de cercle en rouge
+        autour de la photo correspond à la proportion de repas (contenant l\'aliment en question) qui sont à l\'origine d\'un
         ressenti. Par exemple:
     </string>
     <string name="content_1st_panel_2">100% des repas contenant du pain ont causé au moins un ressenti par la suite.
@@ -223,8 +221,7 @@
     </string>
     <string name="content_1st_panel_4" tools:ignore="Typos">- Répartition des aliments les plus \"perturbants\". Par
         exemple, un taux de 50% pour la viande signifie que, parmi tous les aliments à l\'origine d\'au moins un
-        ressenti,
-        la moitié d\'entre eux sont de la viande.
+        ressenti, la moitié d\'entre eux sont de la viande.
     </string>
 
     <string name="title_panel2_info">Remarques</string>
@@ -307,6 +304,8 @@
     </string>
     <string name="hello">Hello</string>
 
+    <string name="legal_notice_title">Mentions légales</string>
 
+    <string name="legal_notice">Application Android développée par Laurent Gonçalves avec le logiciel Android Studio</string>
 
 </resources>
